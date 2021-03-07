@@ -1,0 +1,21 @@
+version: "3.7"
+
+services:
+  db:
+    image: "mysql:${VERSION}"
+    container_name: work-assistant-mysql
+    ports:
+    - "3306:3306"
+    environment:
+      MYSQL_DATABASE: "${MYSQL_DATABASE}"
+      MYSQL_USER: "${MYSQL_USER}"
+      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    volumes:
+    - work-assistant-data:/var/lib/mysql
+
+volumes:
+  work-assistant-data:
