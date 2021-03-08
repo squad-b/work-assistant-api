@@ -1,4 +1,6 @@
-package com.squadb.workassistantapi.domain;
+package com.squadb.workassistantapi.book.domain;
+
+import com.squadb.workassistantapi.member.domain.Member;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
