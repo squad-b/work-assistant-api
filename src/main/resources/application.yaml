@@ -5,6 +5,8 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  profiles:
+    include: third-party
 
 logging:
   level:
