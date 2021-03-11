@@ -1,4 +1,4 @@
-package com.squadb.workassistantapi.book.domain;
+package com.squadb.workassistantapi.domain;
 
 public enum RentalStatus {
     ON_RENTAL,

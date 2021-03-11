@@ -1,6 +1,6 @@
-package com.squadb.workassistantapi.book.web;
+package com.squadb.workassistantapi.controller;
 
-import com.squadb.workassistantapi.book.service.BookService;
+import com.squadb.workassistantapi.service.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,13 +14,14 @@ public class BookApiController {
 
     private final BookService bookService;
 
-    @GetMapping("/")
-    public ResponseEntity<String> hello() {
-        return new ResponseEntity("ㅎㅇ", HttpStatus.OK);
+    @GetMapping("/books")
+    public ResponseEntity<String> searchBook(@RequestParam String query) {
+        return new ResponseEntity<>(bookService.search(query), HttpStatus.OK);
     }
 
-    @GetMapping("books")
-    public ResponseEntity<String> searchBook(@RequestParam String query) {
-        return new ResponseEntity(bookService.search(query), HttpStatus.OK);
-    }
+//    @PostMapping("/rent/books/{bookId}")
+//    public ResponseEntity<Long> rentBook(@PathVariable Long bookId, @LoginMemberId Long memberId ) {
+//        long rentalId = bookService.rentBook(bookId, memberId);
+//        return ResponseEntity.ok(rentalId);
+//    }
 }
