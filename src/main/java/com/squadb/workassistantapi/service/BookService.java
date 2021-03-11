@@ -1,11 +1,12 @@
 package com.squadb.workassistantapi.service;
 
-import com.squadb.workassistantapi.domain.Rental;
+import com.squadb.workassistantapi.domain.Book;
+import com.squadb.workassistantapi.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.nio.charset.Charset;
@@ -20,12 +21,9 @@ public class BookService {
     @Value("${kakao.api.key}")
     private String kakaoApiKey;
 
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
-    @Autowired
-    public BookService(RestTemplate restTemplate) {
-        this.restTemplate = restTemplate;
-    }
+    private final BookRepository bookRepository;
 
     // TODO: 인근, 코드 정리하기
     public String search(String query) {
@@ -45,8 +43,9 @@ public class BookService {
         return response.getBody();
     }
 
-    public Rental rentBook(Long bookId, Long memberId) {
-        if (bookId == null || memberId == null) { throw new IllegalArgumentException(""); }
-        return null;
+    @Transactional(readOnly = true)
+    public Book findById(final long bookId) {
+        return bookRepository.findById(bookId)
+                .orElseThrow(() -> new IllegalArgumentException(String.format("No Book:[%d]", bookId)));
     }
 }
