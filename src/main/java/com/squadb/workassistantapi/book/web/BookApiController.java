@@ -16,11 +16,11 @@ public class BookApiController {
 
     @GetMapping("/")
     public ResponseEntity<String> hello() {
-        return new ResponseEntity("ㅎㅇ", HttpStatus.OK);
+        return new ResponseEntity<>("ㅎㅇ", HttpStatus.OK);
     }
 
     @GetMapping("books")
     public ResponseEntity<String> searchBook(@RequestParam String query) {
-        return new ResponseEntity(bookService.search(query), HttpStatus.OK);
+        return new ResponseEntity<>(bookService.search(query), HttpStatus.OK);
     }
 }
