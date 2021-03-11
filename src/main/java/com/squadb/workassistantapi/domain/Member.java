@@ -1,4 +1,4 @@
-package com.squadb.workassistantapi.member.domain;
+package com.squadb.workassistantapi.domain;
 
 import javax.persistence.*;
 

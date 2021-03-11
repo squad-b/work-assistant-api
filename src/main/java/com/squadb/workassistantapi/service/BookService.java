@@ -1,5 +1,6 @@
-package com.squadb.workassistantapi.book.service;
+package com.squadb.workassistantapi.service;
 
+import com.squadb.workassistantapi.domain.Rental;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,5 +43,10 @@ public class BookService {
                 String.class
         );
         return response.getBody();
+    }
+
+    public Rental rentBook(Long bookId, Long memberId) {
+        if (bookId == null || memberId == null) { throw new IllegalArgumentException(""); }
+        return null;
     }
 }
