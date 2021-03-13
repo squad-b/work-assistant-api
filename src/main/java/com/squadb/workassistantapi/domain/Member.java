@@ -28,4 +28,8 @@ public class Member {
         member.type = memberType;
         return member;
     }
+
+    public boolean isAdmin() {
+        return type.isAdmin();
+    }
 }

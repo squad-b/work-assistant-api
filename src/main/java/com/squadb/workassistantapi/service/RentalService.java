@@ -21,7 +21,7 @@ public class RentalService {
     }
 
     @Transactional
-    public long rentBook(long bookId, long memberId, boolean isLongTerm) {
+    public long rentBook(final long bookId, final long memberId, final boolean isLongTerm) {
         final Book book = bookService.findById(bookId);
         final Member member = memberService.findById(memberId);
         final Rental rental = Rental.createRental(book, member, isLongTerm);

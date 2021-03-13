@@ -49,6 +49,10 @@ public class Book {
     @Column
     private BookCategory category;
 
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "registrant_id", nullable = false)
+    private Member registrant;
+
     public void removeStock() {
         if (isOutOfStock()) { throw new IllegalStateException(String.format("Out of stock, Id:[%d]", id)); }
         stockQuantity -= 1;
@@ -59,7 +63,10 @@ public class Book {
     }
 
     @Builder
-    public Book(String isbn, String title, String description, String author, int stockQuantity, String imageUrl, LocalDateTime publishingDate, String publisher, BookCategory category) {
+    public Book(String isbn, String title, String description, String author, int stockQuantity, String imageUrl, LocalDateTime publishingDate, String publisher, BookCategory category, Member registrant) {
+        if (!registrant.isAdmin()) {
+            throw new IllegalArgumentException("관리자만 책을 등록할 수 있습니다.");
+        }
         this.isbn = isbn;
         this.title = title;
         this.description = description;
@@ -70,5 +77,6 @@ public class Book {
         this.registrationDate = LocalDateTime.now();
         this.publisher = publisher;
         this.category = category;
+        this.registrant = registrant;
     }
 }

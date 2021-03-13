@@ -27,7 +27,7 @@ class RentalServiceTest {
     @BeforeEach
     public void setup() {
         testMember = createMember();
-        testBook = createBook();
+        testBook = createBook(testMember);
     }
 
     @DisplayName("기본 책 대여 테스트")
@@ -72,7 +72,7 @@ class RentalServiceTest {
         assertThat(rental.isLongTerm()).isTrue();
     }
 
-    private Book createBook() {
+    private Book createBook(Member admin) {
         Book book = Book.builder()
                 .isbn("1234")
                 .title("제목")
@@ -83,13 +83,14 @@ class RentalServiceTest {
                 .publisher("출판사")
                 .stockQuantity(1)
                 .publishingDate(LocalDateTime.now())
+                .registrant(admin)
                 .build();
         entityManager.persist(book);
         return book;
     }
 
     private Member createMember() {
-        Member member = Member.createMember("test@naver.com", "12345", MemberType.NORMAL);
+        Member member = Member.createMember("test@naver.com", "12345", MemberType.ADMIN);
         entityManager.persist(member);
         return member;
     }
