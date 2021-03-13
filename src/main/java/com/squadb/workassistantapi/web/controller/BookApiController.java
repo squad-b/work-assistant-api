@@ -1,4 +1,4 @@
-package com.squadb.workassistantapi.controller;
+package com.squadb.workassistantapi.web.controller;
 
 import com.squadb.workassistantapi.service.BookService;
 import lombok.RequiredArgsConstructor;
@@ -18,10 +18,4 @@ public class BookApiController {
     public ResponseEntity<String> searchBook(@RequestParam String query) {
         return new ResponseEntity<>(bookService.search(query), HttpStatus.OK);
     }
-
-//    @PostMapping("/rent/books/{bookId}")
-//    public ResponseEntity<Long> rentBook(@PathVariable Long bookId, @LoginMemberId Long memberId ) {
-//        long rentalId = bookService.rentBook(bookId, memberId);
-//        return ResponseEntity.ok(rentalId);
-//    }
 }

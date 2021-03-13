@@ -1,8 +1,7 @@
-package com.squadb.workassistantapi.config;
+package com.squadb.workassistantapi.web.config;
 
-import com.squadb.workassistantapi.config.auth.LoginMemberIdArgumentResolver;
+import com.squadb.workassistantapi.web.config.auth.LoginMemberIdArgumentResolver;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;

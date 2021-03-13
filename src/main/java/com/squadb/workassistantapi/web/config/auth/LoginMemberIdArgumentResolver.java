@@ -1,4 +1,4 @@
-package com.squadb.workassistantapi.config.auth;
+package com.squadb.workassistantapi.web.config.auth;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
