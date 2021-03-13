@@ -41,6 +41,8 @@ class RentalServiceTest {
         Rental rental = rentalService.findById(rentalId);
         assertThat(rental.getMemberId()).isEqualTo(testMember.getId());
         assertThat(rental.getBookId()).isEqualTo(testBook.getId());
+        assertThat(rental.onRental()).isTrue();
+        assertThat(rental.isLongTerm()).isFalse();
         assertThat(rentalId).isGreaterThan(0L);
 
         testBook = entityManager.find(Book.class, testBook.getId());
@@ -58,6 +60,16 @@ class RentalServiceTest {
         Assertions.assertThrows(IllegalStateException.class, () -> {
             rentalService.rentBook(testBook.getId(), testMember.getId(), false);
         });
+    }
+
+    @DisplayName("장기 대여시에는 rental 의 endDate 가 null 값이다.")
+    @Test
+    public void longTermRentalTest() {
+        final long rentalId = rentalService.rentBook(testBook.getId(), testMember.getId(), true);
+        clearPersistenceContext();
+
+        Rental rental = rentalService.findById(rentalId);
+        assertThat(rental.isLongTerm()).isTrue();
     }
 
     private Book createBook() {

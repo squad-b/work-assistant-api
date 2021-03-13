@@ -57,4 +57,12 @@ public class Rental {
     public long getBookId() {
         return book.getId();
     }
+
+    public boolean onRental() {
+        return status.onRental();
+    }
+
+    public boolean isLongTerm() {
+        return endDate == null;
+    }
 }
