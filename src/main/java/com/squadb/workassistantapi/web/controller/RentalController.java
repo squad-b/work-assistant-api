@@ -1,7 +1,7 @@
-package com.squadb.workassistantapi.controller;
+package com.squadb.workassistantapi.web.controller;
 
-import com.squadb.workassistantapi.config.auth.LoginMemberId;
-import com.squadb.workassistantapi.controller.dto.RentalRequestDto;
+import com.squadb.workassistantapi.web.config.auth.LoginMemberId;
+import com.squadb.workassistantapi.web.controller.dto.RentalRequestDto;
 import com.squadb.workassistantapi.service.RentalService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;

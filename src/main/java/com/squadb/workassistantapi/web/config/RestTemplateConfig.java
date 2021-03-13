@@ -1,4 +1,4 @@
-package com.squadb.workassistantapi.config;
+package com.squadb.workassistantapi.web.config;
 
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;

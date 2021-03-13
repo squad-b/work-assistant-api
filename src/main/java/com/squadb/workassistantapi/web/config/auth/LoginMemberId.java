@@ -1,4 +1,4 @@
-package com.squadb.workassistantapi.config.auth;
+package com.squadb.workassistantapi.web.config.auth;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
