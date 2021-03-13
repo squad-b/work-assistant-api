@@ -27,8 +27,8 @@ class RentalServiceTest {
 
         // when
         final long rentalId = rentalService.rentBook(book.getId(), member.getId(), false);
-        entityManager.clear();
         entityManager.flush();
+        entityManager.clear();
 
         // then
         Rental rental = rentalService.findById(rentalId);
@@ -37,7 +37,7 @@ class RentalServiceTest {
         assertThat(rentalId).isGreaterThan(0L);
 
         book = entityManager.find(Book.class, book.getId());
-        System.out.println("=======" + book.stockQuantity);
+        assertThat(book.isOutOfStock()).isTrue();
     }
 
     private Book createBook() {
@@ -53,16 +53,12 @@ class RentalServiceTest {
                 .publishingDate(LocalDateTime.now())
                 .build();
         entityManager.persist(book);
-//        entityManager.clear();
-//        entityManager.flush();
         return book;
     }
 
     private Member createMember() {
         Member member = Member.createMember("test@naver.com", "12345", MemberType.NORMAL);
         entityManager.persist(member);
-//        entityManager.clear();
-//        entityManager.flush();
         return member;
     }
 

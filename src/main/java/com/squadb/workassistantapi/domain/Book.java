@@ -50,8 +50,12 @@ public class Book {
     private BookCategory category;
 
     public void removeStock() {
-        if (stockQuantity <= 0) { throw new IllegalStateException(String.format("Out of stock, Id:[%d]", id)); }
+        if (isOutOfStock()) { throw new IllegalStateException(String.format("Out of stock, Id:[%d]", id)); }
         stockQuantity -= 1;
+    }
+
+    public boolean isOutOfStock() {
+        return stockQuantity <= 0;
     }
 
     @Builder
