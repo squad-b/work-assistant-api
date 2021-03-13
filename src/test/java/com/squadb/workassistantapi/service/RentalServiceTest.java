@@ -1,6 +1,8 @@
 package com.squadb.workassistantapi.service;
 
 import com.squadb.workassistantapi.domain.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 @Transactional
@@ -18,26 +21,43 @@ class RentalServiceTest {
     @Autowired EntityManager entityManager;
     @Autowired RentalService rentalService;
 
+    private Member testMember;
+    private Book testBook;
+
+    @BeforeEach
+    public void setup() {
+        testMember = createMember();
+        testBook = createBook();
+    }
+
     @DisplayName("기본 책 대여 테스트")
     @Test
     public void rentBookTest() {
-        // givenR
-        Member member = createMember();
-        Book book = createBook();
-
         // when
-        final long rentalId = rentalService.rentBook(book.getId(), member.getId(), false);
-        entityManager.flush();
-        entityManager.clear();
+        final long rentalId = rentalService.rentBook(testBook.getId(), testMember.getId(), false);
+        clearPersistenceContext();
 
         // then
         Rental rental = rentalService.findById(rentalId);
-        assertThat(rental.getMemberId()).isEqualTo(member.getId());
-        assertThat(rental.getBookId()).isEqualTo(book.getId());
+        assertThat(rental.getMemberId()).isEqualTo(testMember.getId());
+        assertThat(rental.getBookId()).isEqualTo(testBook.getId());
         assertThat(rentalId).isGreaterThan(0L);
 
-        book = entityManager.find(Book.class, book.getId());
-        assertThat(book.isOutOfStock()).isTrue();
+        testBook = entityManager.find(Book.class, testBook.getId());
+        assertThat(testBook.isOutOfStock()).isTrue();
+    }
+
+    @DisplayName("책 재고가 없을때는 대여할 수 없다.")
+    @Test
+    public void outOfStockTest() {
+        // given
+        testBook.removeStock();
+        clearPersistenceContext();
+
+        // then
+        Assertions.assertThrows(IllegalStateException.class, () -> {
+            rentalService.rentBook(testBook.getId(), testMember.getId(), false);
+        });
     }
 
     private Book createBook() {
@@ -62,7 +82,9 @@ class RentalServiceTest {
         return member;
     }
 
-
-
+    private void clearPersistenceContext() {
+        entityManager.flush();
+        entityManager.clear();
+    }
 
 }
