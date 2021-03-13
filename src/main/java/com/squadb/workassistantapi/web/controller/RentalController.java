@@ -15,7 +15,7 @@ public class RentalController {
     public final RentalService rentalService;
 
     @PostMapping(value = "/rent/book/{bookId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Long> rentBook(@PathVariable long bookId, @LoginMemberId long loginMemberId, @RequestBody RentalRequestDto rentalRequestDto) {
+    public ResponseEntity<Long> rentBook(@PathVariable long bookId, @LoginMemberId long loginMemberId, @RequestBody(required = false) RentalRequestDto rentalRequestDto) {
         final long rentalId = rentalService.rentBook(bookId, loginMemberId, rentalRequestDto.isLongTerm());
         return ResponseEntity.ok(rentalId);
     }
