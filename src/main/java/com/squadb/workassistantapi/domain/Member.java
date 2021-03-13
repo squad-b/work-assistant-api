@@ -1,10 +1,13 @@
 package com.squadb.workassistantapi.domain;
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
 
     @Getter
@@ -18,6 +21,7 @@ public class Member {
     @Column(nullable = false)
     private String passwordHash;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private MemberType type;
 

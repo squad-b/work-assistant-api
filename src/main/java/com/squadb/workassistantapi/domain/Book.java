@@ -1,5 +1,6 @@
 package com.squadb.workassistantapi.domain;
 
+import com.squadb.workassistantapi.domain.exceptions.OutOfStockException;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -54,7 +55,7 @@ public class Book {
     private Member registrant;
 
     public void removeStock() {
-        if (isOutOfStock()) { throw new IllegalStateException(String.format("Out of stock, Id:[%d]", id)); }
+        if (isOutOfStock()) { throw new OutOfStockException(String.format("Out of stock, Id:[%d]", id)); }
         stockQuantity -= 1;
     }
 

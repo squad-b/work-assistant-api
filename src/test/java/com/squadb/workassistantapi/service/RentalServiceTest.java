@@ -1,6 +1,7 @@
 package com.squadb.workassistantapi.service;
 
 import com.squadb.workassistantapi.domain.*;
+import com.squadb.workassistantapi.domain.exceptions.OutOfStockException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -57,7 +58,7 @@ class RentalServiceTest {
         clearPersistenceContext();
 
         // then
-        Assertions.assertThrows(IllegalStateException.class, () -> {
+        Assertions.assertThrows(OutOfStockException.class, () -> {
             rentalService.rentBook(testBook.getId(), testMember.getId(), false);
         });
     }

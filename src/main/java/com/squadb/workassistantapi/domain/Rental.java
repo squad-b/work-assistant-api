@@ -1,6 +1,8 @@
 package com.squadb.workassistantapi.domain;
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -8,6 +10,7 @@ import java.time.LocalDateTime;
 import static com.squadb.workassistantapi.domain.RentalStatus.ON_RENTAL;
 
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Rental {
     private static final long NORMAL_RENTAL_DAYS = 14;
 
