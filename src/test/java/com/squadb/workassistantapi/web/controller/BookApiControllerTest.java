@@ -2,6 +2,7 @@ package com.squadb.workassistantapi.web.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squadb.workassistantapi.domain.Book;
+import com.squadb.workassistantapi.domain.exceptions.NoAuthorizationException;
 import com.squadb.workassistantapi.service.BookService;
 import com.squadb.workassistantapi.web.controller.dto.BookRegisterRequestDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -80,5 +81,28 @@ class BookApiControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("SUCCESS")))
                 .andExpect(content().string(containsString(String.valueOf(registerBookId))));
+    }
+
+    @DisplayName("관리자가 아닌 일반유저가 책 등록을 시도하면 NO_AUTHORIZATION 이란 메시지와 함께 status code 403 을 리턴한다")
+    @Test
+    public void bookRegisterApiNotAuthorizationTest() throws Exception {
+        //given
+        BookRegisterRequestDto bookRegisterRequestDto = new BookRegisterRequestDto();
+        bookRegisterRequestDto.setIsbn("1234567890123");
+        bookRegisterRequestDto.setTitle("테스트제목");
+        bookRegisterRequestDto.setStockQuantity(2);
+
+        given(bookService.register(any(Book.class), anyLong())).willThrow(NoAuthorizationException.class);
+
+        //when
+        ResultActions perform = mockMvc.perform(post("/books")
+                .session(mockHttpSession)
+                .content(objectMapper.writeValueAsString(bookRegisterRequestDto))
+                .contentType(MediaType.APPLICATION_JSON));
+
+        //then
+        perform.andDo(print())
+                .andExpect(status().isForbidden())
+                .andExpect(content().string(containsString("NO_AUTHORIZATION")));
     }
 }

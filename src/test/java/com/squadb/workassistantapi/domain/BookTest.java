@@ -1,5 +1,6 @@
 package com.squadb.workassistantapi.domain;
 
+import com.squadb.workassistantapi.domain.exceptions.NoAuthorizationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -15,7 +16,7 @@ class BookTest {
         Book book = new Book();
 
         //when then
-        assertThrows(IllegalArgumentException.class, () -> book.setRegistrant(member));
+        assertThrows(NoAuthorizationException.class, () -> book.setRegistrant(member));
     }
 
 }
