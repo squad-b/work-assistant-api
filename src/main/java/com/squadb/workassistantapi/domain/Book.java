@@ -40,6 +40,7 @@ public class Book {
     @Column
     private LocalDateTime publishingDate;
 
+    @Getter
     @Column(nullable = false)
     private LocalDateTime registrationDate;
 
