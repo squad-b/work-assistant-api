@@ -3,6 +3,8 @@ package com.squadb.workassistantapi.web.controller;
 import com.squadb.workassistantapi.domain.exceptions.NoAuthorizationException;
 import com.squadb.workassistantapi.service.BookService;
 import com.squadb.workassistantapi.web.agent.BookSearchAgent;
+import com.squadb.workassistantapi.web.agent.dto.BookSearchRequestDto;
+import com.squadb.workassistantapi.web.agent.dto.BookSearchResponseDto;
 import com.squadb.workassistantapi.web.config.auth.LoginMemberId;
 import com.squadb.workassistantapi.web.controller.dto.BookRegisterRequestDto;
 import com.squadb.workassistantapi.web.controller.dto.BookRegisterResponseDto;
@@ -20,9 +22,9 @@ public class BookApiController {
     private final BookService bookService;
     private final BookSearchAgent bookSearchAgent;
 
-    @GetMapping("/books")
-    public ResponseEntity<String> searchBook(@RequestParam String query) {
-        return new ResponseEntity<>(bookSearchAgent.search(query), HttpStatus.OK);
+    @GetMapping(value = "/books", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<BookSearchResponseDto> searchBook(BookSearchRequestDto request) {
+        return bookSearchAgent.search(request);
     }
 
     @PostMapping(value = "/books", consumes = MediaType.APPLICATION_JSON_VALUE)
