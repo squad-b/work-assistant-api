@@ -40,6 +40,7 @@ public class Book {
     @Column
     private LocalDateTime publishingDate;
 
+    @Getter
     @Column(nullable = false)
     private LocalDateTime registrationDate;
 
@@ -64,10 +65,7 @@ public class Book {
     }
 
     @Builder
-    public Book(String isbn, String title, String description, String author, int stockQuantity, String imageUrl, LocalDateTime publishingDate, String publisher, BookCategory category, Member registrant) {
-        if (!registrant.isAdmin()) {
-            throw new IllegalArgumentException("관리자만 책을 등록할 수 있습니다.");
-        }
+    public Book(String isbn, String title, String description, String author, int stockQuantity, String imageUrl, LocalDateTime publishingDate, String publisher, BookCategory category) {
         this.isbn = isbn;
         this.title = title;
         this.description = description;
@@ -78,6 +76,10 @@ public class Book {
         this.registrationDate = LocalDateTime.now();
         this.publisher = publisher;
         this.category = category;
-        this.registrant = registrant;
+    }
+
+    public void setRegistrant(Member member) {
+        if (!member.isAdmin()) { throw new IllegalArgumentException("관리자만 책을 등록할 수 있습니다."); }
+        this.registrant = member;
     }
 }

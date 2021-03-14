@@ -1,6 +1,7 @@
 package com.squadb.workassistantapi.service;
 
 import com.squadb.workassistantapi.domain.Book;
+import com.squadb.workassistantapi.domain.Member;
 import com.squadb.workassistantapi.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,6 +26,8 @@ public class BookService {
 
     private final BookRepository bookRepository;
 
+    private final MemberService memberService;
+
     // TODO: 인근, 코드 정리하기
     public String search(String query) {
         HttpHeaders headers = new HttpHeaders();
@@ -47,5 +50,13 @@ public class BookService {
     public Book findById(final long bookId) {
         return bookRepository.findById(bookId)
                 .orElseThrow(() -> new IllegalArgumentException(String.format("No Book:[%d]", bookId)));
+    }
+
+    @Transactional
+    public long register(final Book book, final long registrantId) {
+        final Member member = memberService.findById(registrantId);
+        book.setRegistrant(member);
+        final Book saveBook = bookRepository.save(book);
+        return saveBook.getId();
     }
 }
