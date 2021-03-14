@@ -1,5 +1,6 @@
 package com.squadb.workassistantapi.domain;
 
+import com.squadb.workassistantapi.domain.exceptions.NoAuthorizationException;
 import com.squadb.workassistantapi.domain.exceptions.OutOfStockException;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -79,7 +80,7 @@ public class Book {
     }
 
     public void setRegistrant(Member member) {
-        if (!member.isAdmin()) { throw new IllegalArgumentException("관리자만 책을 등록할 수 있습니다."); }
+        if (!member.isAdmin()) { throw new NoAuthorizationException("관리자만 책을 등록할 수 있습니다."); }
         this.registrant = member;
     }
 }

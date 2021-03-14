@@ -1,5 +1,6 @@
 package com.squadb.workassistantapi.web.controller;
 
+import com.squadb.workassistantapi.domain.exceptions.NoAuthorizationException;
 import com.squadb.workassistantapi.service.BookService;
 import com.squadb.workassistantapi.web.config.auth.LoginMemberId;
 import com.squadb.workassistantapi.web.controller.dto.BookRegisterRequestDto;
@@ -32,5 +33,10 @@ public class BookApiController {
     @ExceptionHandler(InvalidRequestBodyException.class)
     public ResponseEntity<BookRegisterResponseDto> handlerInvalidRequestBodyException() {
         return new ResponseEntity<>(BookRegisterResponseDto.fail("INVALID_BODY"), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NoAuthorizationException.class)
+    public ResponseEntity<BookRegisterResponseDto> handleNoAuthorizationException() {
+        return new ResponseEntity<>(BookRegisterResponseDto.fail("NO_AUTHORIZATION"), HttpStatus.FORBIDDEN);
     }
 }
