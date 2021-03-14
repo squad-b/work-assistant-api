@@ -84,8 +84,8 @@ class RentalServiceTest {
                 .publisher("출판사")
                 .stockQuantity(1)
                 .publishingDate(LocalDateTime.now())
-                .registrant(admin)
                 .build();
+        book.setRegistrant(admin);
         entityManager.persist(book);
         return book;
     }

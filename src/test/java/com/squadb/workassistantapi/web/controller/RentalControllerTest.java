@@ -34,7 +34,7 @@ class RentalControllerTest {
         mockHttpSession.setAttribute("MEMBER_ID", mockLoginMemberId);
     }
 
-    @DisplayName("책 등록 api 성공 테스트")
+    @DisplayName("책 대여 api 성공 테스트")
     @Test
     public void rentBookApiTest() throws Exception {
         //given
@@ -52,7 +52,7 @@ class RentalControllerTest {
                 .andExpect(content().string(containsString("SUCCESS")));
     }
 
-    @DisplayName("책 등록 api 재고 소진 테스트, OUT_OF_STOCK 이란 메시지가 응답해야함")
+    @DisplayName("책 대여 api 재고 소진 테스트, OUT_OF_STOCK 이란 메시지가 응답해야함")
     @Test
     public void outOfStockTest() throws Exception {
         //given
