@@ -2,6 +2,7 @@ package com.squadb.workassistantapi.service;
 
 import com.squadb.workassistantapi.domain.Member;
 import com.squadb.workassistantapi.repository.MemberRepository;
+import com.squadb.workassistantapi.util.HashUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,8 +25,7 @@ public class MemberService {
         if (findMember == null) {
             throw new NoSuchElementException("존재하지 않는 회원입니다.");
         }
-        // TODO: 비밀번호 해시 해야됨.
-        if (!findMember.getPasswordHash().equals(password)) {
+        if (!HashUtil.validatePassword(password, findMember.getPasswordHash())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
         return findMember.getId();
