@@ -1,0 +1,12 @@
+Mastering Windows Sever 2012 R2
+SQL Sever 2005 완벽가이드
+뇌를자극하는SQL Sever 2008
+SQL Sever 운영과 튜닝
+Swift 2 꼼꼼한재은씨의 스위프트2 프로그래밍
+Refactoring (영문판)
+Head First Design Patterns
+(스토리가 있는 패턴 학습법)
+코딩인터뷰 완전분석 187가지 프로그래밍 문제와 해법
+gradle 그레이들 철저 입문        
+소프트웨어 아키텍처로의 초대 (소프트웨어 아키텍처 설게의 근본 원리들)
+타임스크립트 디자인 패턴
