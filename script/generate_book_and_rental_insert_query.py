@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import csv
 import requests
+import datetime
 
 # key = 책 제목, value = 재고 수
 book_stock_quantity_dict = {}
@@ -67,7 +68,7 @@ def generate_book_insert_query():
     matched_title_list = []
 
     for row in list(rows)[2:]:
-        title = row[1]
+        title = row[1].strip()
 
         # 이미 insert 쿼리로 생성된 책은 제외(중복 방지)
         if title in matched_title_list:
@@ -102,7 +103,7 @@ def generate_book_insert_query():
 
                 # insert_query 생성
                 insert_query = f'insert into book(isbn, title, description, author, stock_quantity, image_url, publishing_date, registration_date, publisher, category, registrant_id)' \
-                               f' values(\'{datum["isbn"].split(" ")[1]}\', \'{datum["title"]}\', \'{description}\', \'{author_str}\', {book_stock_quantity_dict[title.replace(" ","")]}, \'{datum["thumbnail"]}\', \'{datum["datetime"]}\', now(), \'{datum["publisher"]}\', \'{book_category_dict[category]}\', 1);'
+                               f' values(\'{datum["isbn"].split(" ")[1]}\', \'{datum["title"]}\', \'{description}\', \'{author_str}\', {book_stock_quantity_dict[title.replace(" ", "")]}, \'{datum["thumbnail"]}\', \'{datum["datetime"]}\', now(), \'{datum["publisher"]}\', \'{book_category_dict[category]}\', 1);'
                 result_file.write(insert_query + '\n')
                 matched_title_list.append(title)
 
@@ -115,9 +116,38 @@ def generate_book_insert_query():
     no_search_result_title_list_file.close()
     match_title_list_file.close()
     mismatch_title_list_file.close()
+    result_file.close()
+    book_list_file.close()
+
+
+def generate_rental_insert_query():
+    book_list_file = open('input/[미리디] 미리도서관_관리대장  - 도서목록.csv', 'r', encoding='utf-8')
+    rows = csv.reader(book_list_file)
+
+    # 대여 정보 insert query
+    result_file = open("output/generated_rental_insert_query.txt", "a")
+    result_file.truncate(0)
+
+    for row in list(rows)[2:]:
+        if row[2] == '아니오':
+            continue
+
+        title = row[1].strip()
+        borrower = row[3]
+        start_date = datetime.datetime.now()
+        end_date = 'null' if row[4] == '장기대여' else "\'" + str(datetime.datetime.now() + datetime.timedelta(days=14)) + "\'"
+        return_date = 'null'
+
+        # insert_query 생성
+        insert_query = f'insert into rental(end_date, return_date, start_date, status, book_id, member_id)' \
+                       f' values({end_date}, {return_date}, \'{start_date}\', \'ON_RENTAL\', (select id from book where title = \'{title}\'), (select id from member where name = \'{borrower}\'));'
+        result_file.write(insert_query + '\n')
+
+    result_file.close()
     book_list_file.close()
 
 
 if __name__ == "__main__":
     init_book_stock_quantity_dict()
     generate_book_insert_query()
+    generate_rental_insert_query()
