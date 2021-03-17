@@ -10,10 +10,13 @@ import com.squadb.workassistantapi.web.controller.dto.BookRegisterRequestDto;
 import com.squadb.workassistantapi.web.controller.dto.BookRegisterResponseDto;
 import com.squadb.workassistantapi.web.exception.InvalidRequestBodyException;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Objects;
 
 @RequiredArgsConstructor
 @RestController
@@ -24,7 +27,8 @@ public class BookApiController {
 
     @GetMapping(value = "/books", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BookSearchResponseDto> searchBook(BookSearchRequestDto request) {
-        return bookSearchAgent.search(request);
+        ResponseEntity<BookSearchResponseDto> search = bookSearchAgent.search(request);
+        return ResponseEntity.ok(Objects.requireNonNull(search.getBody()));
     }
 
     @PostMapping(value = "/books", consumes = MediaType.APPLICATION_JSON_VALUE)
