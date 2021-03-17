@@ -20,7 +20,7 @@ book_category_dict = {
 
 
 def init_book_stock_quantity_dict():
-    book_list_file = open('input/[미리디] 미리도서관_관리대장  - 도서목록.csv', 'r', encoding='utf-8')
+    book_list_file = open('input/book_list.csv', 'r', encoding='utf-8')
     rows = csv.reader(book_list_file)
 
     for row in list(rows)[2:]:
@@ -37,7 +37,7 @@ def init_book_stock_quantity_dict():
 
 
 def generate_book_insert_query():
-    book_list_file = open('input/[미리디] 미리도서관_관리대장  - 도서목록.csv', 'r', encoding='utf-8')
+    book_list_file = open('input/book_list.csv', 'r', encoding='utf-8')
     rows = csv.reader(book_list_file)
 
     # 책 검색 API에 결과가 없는 책
@@ -121,7 +121,7 @@ def generate_book_insert_query():
 
 
 def generate_rental_insert_query():
-    book_list_file = open('input/[미리디] 미리도서관_관리대장  - 도서목록.csv', 'r', encoding='utf-8')
+    book_list_file = open('input/book_list.csv', 'r', encoding='utf-8')
     rows = csv.reader(book_list_file)
 
     # 대여 정보 insert query
