@@ -59,7 +59,7 @@ def generate_book_insert_query():
     # TODO: key 값 분리하기
     url = 'https://dapi.kakao.com/v3/search/book'
     auth_type = 'KakaoAK'
-    key = ''
+    key = '3c01aa602b1860ffec4d5a979a78d78b'
     headers = {'Authorization': auth_type + ' ' + key}
 
     category = ''
