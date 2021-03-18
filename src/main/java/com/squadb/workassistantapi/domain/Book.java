@@ -10,11 +10,11 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Book {
 
-    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -41,7 +41,6 @@ public class Book {
     @Column
     private LocalDateTime publishingDate;
 
-    @Getter
     @Column(nullable = false)
     private LocalDateTime registrationDate;
 
