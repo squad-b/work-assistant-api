@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 
 @RequiredArgsConstructor
 @Service
@@ -28,5 +30,10 @@ public class BookService {
         book.setRegistrant(member);
         final Book saveBook = bookRepository.save(book);
         return saveBook.getId();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Book> findAll() {
+        return bookRepository.findAll();
     }
 }
