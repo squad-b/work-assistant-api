@@ -7,6 +7,7 @@ import com.squadb.workassistantapi.web.agent.BookSearchAgent;
 import com.squadb.workassistantapi.web.agent.dto.BookSearchRequestDto;
 import com.squadb.workassistantapi.web.agent.dto.BookSearchResponseDto;
 import com.squadb.workassistantapi.web.config.auth.LoginMemberId;
+import com.squadb.workassistantapi.web.controller.dto.BookDetailResponseDto;
 import com.squadb.workassistantapi.web.controller.dto.BookListResponseDto;
 import com.squadb.workassistantapi.web.controller.dto.BookRegisterRequestDto;
 import com.squadb.workassistantapi.web.controller.dto.BookRegisterResponseDto;
@@ -43,6 +44,12 @@ public class BookApiController {
     public ResponseEntity<List<BookListResponseDto>> findAll() {
         List<Book> bookList = bookService.findAll();
         return new ResponseEntity<>(BookListResponseDto.of(bookList), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/books/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<BookDetailResponseDto> findOne(@PathVariable long id) {
+        Book book = bookService.findById(id);
+        return new ResponseEntity<>(BookDetailResponseDto.of(book), HttpStatus.OK);
     }
 
     @ExceptionHandler(InvalidRequestBodyException.class)
