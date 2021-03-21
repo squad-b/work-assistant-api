@@ -29,7 +29,7 @@ class BookServiceTest {
     @Test
     public void bookRegisterTest() {
         //given
-        final Member member = Member.createMember("admin@test.com", "1234", MemberType.ADMIN);
+        final Member member = Member.createMember("admin@test.com", "피플팀", "1234", MemberType.ADMIN);
         entityManager.persist(member);
         entityManager.flush();
 

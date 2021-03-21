@@ -18,6 +18,9 @@ public class Member {
     @Column(unique = true, nullable = false)
     private String email;
 
+    @Column(nullable = false)
+    private String name;
+
     @Getter
     @Column(nullable = false)
     private String passwordHash;
@@ -26,9 +29,10 @@ public class Member {
     @Column(nullable = false)
     private MemberType type;
 
-    public static Member createMember(String email, String passwordHash, MemberType memberType) {
+    public static Member createMember(String email, String name, String passwordHash, MemberType memberType) {
         Member member = new Member();
         member.email = email;
+        member.name = name;
         member.passwordHash = passwordHash;
         member.type = memberType;
         return member;

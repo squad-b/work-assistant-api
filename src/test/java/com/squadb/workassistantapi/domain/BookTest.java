@@ -12,7 +12,7 @@ class BookTest {
     @Test
     public void setRegistrantTest() {
         //given
-        Member member = Member.createMember("admin@miridih.com", "1234", MemberType.NORMAL);
+        Member member = Member.createMember("admin@miridih.com", "피플팀", "1234", MemberType.NORMAL);
         Book book = new Book();
 
         //when then
