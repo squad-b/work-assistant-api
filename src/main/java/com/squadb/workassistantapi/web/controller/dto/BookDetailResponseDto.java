@@ -7,7 +7,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @JsonInclude(Include.NON_NULL)
 @Getter
@@ -22,8 +22,8 @@ public class BookDetailResponseDto {
     private String imageUrl;
     private int stockQuantity;
     private String description;
-    private LocalDateTime publishingDate;
-    private LocalDateTime registrationDate;
+    private String publishingDate;
+    private String registrationDate;
 
     public static BookDetailResponseDto of(Book book) {
         BookDetailResponseDto bookDetailResponseDto = new BookDetailResponseDto();
@@ -35,8 +35,10 @@ public class BookDetailResponseDto {
         bookDetailResponseDto.imageUrl = book.getImageUrl();
         bookDetailResponseDto.stockQuantity = book.getStockQuantity();
         bookDetailResponseDto.description = book.getDescription();
-        bookDetailResponseDto.publishingDate = book.getPublishingDate();
-        bookDetailResponseDto.registrationDate = book.getRegistrationDate();
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        bookDetailResponseDto.publishingDate = book.getPublishingDate().format(formatter);
+        bookDetailResponseDto.registrationDate = book.getRegistrationDate().format(formatter);
         return bookDetailResponseDto;
     }
 }
