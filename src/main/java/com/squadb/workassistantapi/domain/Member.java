@@ -1,6 +1,7 @@
 package com.squadb.workassistantapi.domain;
 
 import com.squadb.workassistantapi.util.HashUtil;
+import com.squadb.workassistantapi.web.exception.LoginFailedException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -45,7 +46,7 @@ public class Member {
 
     public void validatePassword(String passwordInput) {
         if (!HashUtil.validatePassword(passwordInput, passwordHash)) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw LoginFailedException.wrongPassword();
         }
     }
 
