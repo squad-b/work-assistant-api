@@ -29,4 +29,11 @@ public class MemberService {
         }
         return findMember.getId();
     }
+
+    @Transactional
+    public void updatePassword(long loginMemberId, String oldPassword, String newPassword) {
+        final Member findMember = memberRepository.findById(loginMemberId).orElseThrow();
+        findMember.validatePassword(oldPassword);
+        findMember.updatePassword(newPassword);
+    }
 }
