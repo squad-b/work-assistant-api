@@ -91,7 +91,7 @@ class RentalServiceTest {
     }
 
     private Member createMember() {
-        Member member = Member.createMember("test@naver.com", "12345", MemberType.ADMIN);
+        Member member = Member.createMember("test@naver.com", "피플팀", "12345", MemberType.ADMIN);
         entityManager.persist(member);
         return member;
     }
