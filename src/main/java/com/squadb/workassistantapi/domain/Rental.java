@@ -27,9 +27,11 @@ public class Rental {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private Member member;
 
+    @Getter
     @Column(nullable = false)
     private LocalDateTime startDate;
 
+    @Getter
     @Column
     private LocalDateTime endDate;
 
@@ -55,6 +57,10 @@ public class Rental {
 
     public long getMemberId() {
         return member.getId();
+    }
+
+    public String getMemberName() {
+        return member.getName();
     }
 
     public long getBookId() {

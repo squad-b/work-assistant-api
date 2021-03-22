@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.*;
+
 @RequiredArgsConstructor
 @Service
 public class RentalService {
@@ -27,5 +29,11 @@ public class RentalService {
         final Rental rental = Rental.createRental(book, member, isLongTerm);
         final Rental saveRental = rentalRepository.save(rental);
         return saveRental.getId();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Rental> findAllByBook(final long bookId) {
+        final Book book = bookService.findById(bookId);
+        return rentalRepository.findAllByBook(book);
     }
 }
