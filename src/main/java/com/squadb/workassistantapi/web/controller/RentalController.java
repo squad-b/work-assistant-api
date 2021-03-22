@@ -1,5 +1,6 @@
 package com.squadb.workassistantapi.web.controller;
 
+import com.squadb.workassistantapi.domain.Rental;
 import com.squadb.workassistantapi.domain.exceptions.OutOfStockException;
 import com.squadb.workassistantapi.web.config.auth.LoginMemberId;
 import com.squadb.workassistantapi.web.controller.dto.RentalRequestDto;
@@ -9,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -23,6 +26,12 @@ public class RentalController {
         rentalRequestDto = rentalRequestDto == null ? new RentalRequestDto() : rentalRequestDto;
         final long rentalId = rentalService.rentBook(bookId, loginMemberId, rentalRequestDto.isLongTerm());
         return ResponseEntity.ok(RentalResponseDto.success(rentalId));
+    }
+
+    @GetMapping(value = "/rentals/books/{bookId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<RentalResponseDto>> findBookRentals(@PathVariable long bookId) {
+        List<Rental> bookRentalList = rentalService.findAllByBook(bookId);
+        return ResponseEntity.ok(RentalResponseDto.of(bookRentalList));
     }
 
     @ExceptionHandler(OutOfStockException.class)
