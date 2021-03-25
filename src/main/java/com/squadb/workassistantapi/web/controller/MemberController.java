@@ -1,13 +1,14 @@
 package com.squadb.workassistantapi.web.controller;
 
+import com.squadb.workassistantapi.domain.Member;
 import com.squadb.workassistantapi.service.MemberService;
 import com.squadb.workassistantapi.web.controller.dto.LoginRequestDto;
+import com.squadb.workassistantapi.web.controller.dto.MemberProfileResponseDto;
+import com.squadb.workassistantapi.web.interceptor.CheckPermission;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
@@ -33,6 +34,17 @@ public class MemberController {
             return ResponseEntity.ok("SUCCESS");
         } catch (Exception e) {
             return ResponseEntity.ok("FAIL");
+        }
+    }
+
+    @CheckPermission
+    @GetMapping("/members/{memberId}/profile")
+    public ResponseEntity<MemberProfileResponseDto> getMyProfile(@PathVariable long memberId) {
+        try {
+            final Member member = memberService.findById(memberId);
+            return new ResponseEntity<>(MemberProfileResponseDto.success(member), HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(MemberProfileResponseDto.fail("NOT_FOUND"), HttpStatus.NOT_FOUND);
         }
     }
 
