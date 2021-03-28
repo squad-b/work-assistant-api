@@ -21,11 +21,11 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping("/auth")
-    public ResponseEntity<String> isLogin(HttpSession session) {
+    public ResponseEntity<LoginResponseDto> isLogin(HttpSession session) {
         if (session.getAttribute("MEMBER_ID") == null) {
-            return ResponseEntity.ok("UNAUTHORIZED");
+            return ResponseEntity.ok(LoginResponseDto.fail("UNAUTHORIZED"));
         }
-        return ResponseEntity.ok("AUTHORIZED");
+        return ResponseEntity.ok(LoginResponseDto.success((Long) session.getAttribute("MEMBER_ID")));
     }
 
     @PostMapping("/login")
