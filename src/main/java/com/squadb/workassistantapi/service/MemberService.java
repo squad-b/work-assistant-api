@@ -3,11 +3,10 @@ package com.squadb.workassistantapi.service;
 import com.squadb.workassistantapi.domain.Member;
 import com.squadb.workassistantapi.repository.MemberRepository;
 import com.squadb.workassistantapi.util.HashUtil;
+import com.squadb.workassistantapi.web.exception.LoginFailedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.NoSuchElementException;
 
 @RequiredArgsConstructor
 @Service
@@ -23,10 +22,10 @@ public class MemberService {
     public long login(String email, String password) {
         final Member findMember = memberRepository.findByEmail(email);
         if (findMember == null) {
-            throw new NoSuchElementException("존재하지 않는 회원입니다.");
+            throw LoginFailedException.noSuchMember();
         }
         if (!HashUtil.validatePassword(password, findMember.getPasswordHash())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw LoginFailedException.wrongPassword();
         }
         return findMember.getId();
     }

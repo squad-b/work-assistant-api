@@ -6,11 +6,11 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+@Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
 
-    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -18,7 +18,9 @@ public class Member {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @Getter
+    @Column(nullable = false)
+    private String name;
+
     @Column(nullable = false)
     private String name;
 
