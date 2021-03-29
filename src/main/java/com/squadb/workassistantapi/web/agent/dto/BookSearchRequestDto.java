@@ -1,11 +1,7 @@
 package com.squadb.workassistantapi.web.agent.dto;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 
 /**
  * api 문서
@@ -32,7 +28,7 @@ public class BookSearchRequestDto {
     public String makeUrl(String baseUrl) {
         return String.format("%s?query=%s&page=%s&size=%s&target=%s",
                 baseUrl,
-                URLEncoder.encode(query, StandardCharsets.UTF_8),
+₩                query,
                 page,
                 size,
                 target);

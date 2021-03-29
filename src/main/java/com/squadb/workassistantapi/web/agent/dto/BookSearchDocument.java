@@ -27,4 +27,6 @@ public class BookSearchDocument {
 
     @JsonProperty("url")
     private String descriptionUrl;
+
+    private String isbn;
 }
