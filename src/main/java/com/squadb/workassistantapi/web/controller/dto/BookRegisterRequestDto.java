@@ -1,5 +1,6 @@
 package com.squadb.workassistantapi.web.controller.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.squadb.workassistantapi.domain.Book;
 import com.squadb.workassistantapi.domain.BookCategory;
 import com.squadb.workassistantapi.web.exception.InvalidRequestBodyException;
@@ -19,6 +20,9 @@ public class BookRegisterRequestDto {
     private String title;
     private String description;
     private String author;
+
+    // 2018-05-10T00:00:00.000+09:00
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", timezone = "Asia/Seoul")
     private LocalDateTime publishingDate;
     private String publisher;
     private BookCategory category;
