@@ -2,6 +2,7 @@ package com.squadb.workassistantapi.service;
 
 import com.squadb.workassistantapi.domain.Member;
 import com.squadb.workassistantapi.repository.MemberRepository;
+import com.squadb.workassistantapi.web.controller.dto.UpdateMemberRequestDto;
 import com.squadb.workassistantapi.web.exception.LoginFailedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,9 +27,8 @@ public class MemberService {
     }
 
     @Transactional
-    public void updatePassword(long loginMemberId, String oldPassword, String newPassword) {
-        final Member findMember = memberRepository.findById(loginMemberId).orElseThrow();
-        findMember.validatePassword(oldPassword);
-        findMember.updatePassword(newPassword);
+    public void updateMember(long memberId, String newPassword) {
+        final Member member = memberRepository.findById(memberId).orElseThrow();
+        member.changePassword(newPassword);
     }
 }

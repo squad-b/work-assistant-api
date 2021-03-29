@@ -50,7 +50,7 @@ public class Member {
         }
     }
 
-    public void updatePassword(String newPassword) {
+    public void changePassword(String newPassword) {
         this.passwordHash = HashUtil.hashPassword(newPassword);
     }
 }
