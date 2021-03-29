@@ -21,7 +21,7 @@ public class MemberService {
     @Transactional(readOnly = true)
     public long login(String email, String password) {
         final Member findMember = memberRepository.findByEmail(email).orElseThrow(LoginFailedException::noSuchMember);
-        findMember.validatePassword(password);
+        findMember.equalPassword(password);
         return findMember.getId();
     }
 

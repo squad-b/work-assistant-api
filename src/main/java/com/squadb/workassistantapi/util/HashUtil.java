@@ -38,7 +38,7 @@ public class HashUtil {
         }
     }
 
-    public static boolean validatePassword(String passwordInput, String hashedPassword) {
+    public static boolean equalPassword(String passwordInput, String hashedPassword) {
         try {
             final String[] hashedPasswordInfo = hashedPassword.split(HASHED_PASSWORD_DELIMITER);
             final SecretKeyFactory factory = SecretKeyFactory.getInstance(hashedPasswordInfo[0]);

@@ -44,8 +44,8 @@ public class Member {
         return type.isAdmin();
     }
 
-    public void validatePassword(String passwordInput) {
-        if (!HashUtil.validatePassword(passwordInput, passwordHash)) {
+    public void equalPassword(String passwordInput) {
+        if (!HashUtil.equalPassword(passwordInput, passwordHash)) {
             throw LoginFailedException.wrongPassword();
         }
     }
