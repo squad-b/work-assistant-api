@@ -30,7 +30,7 @@ public class BookApiController {
     private final BookService bookService;
     private final BookSearchAgent bookSearchAgent;
 
-    @GetMapping(value = "/books", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/search/books", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BookSearchResponseDto> searchBook(BookSearchRequestDto request) {
         ResponseEntity<BookSearchResponseDto> search = bookSearchAgent.search(request);
         return ResponseEntity.ok(Objects.requireNonNull(search.getBody()));
@@ -43,7 +43,7 @@ public class BookApiController {
         return new ResponseEntity<>(BookRegisterResponseDto.success(bookId), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/books/list", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/books", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<BookListResponseDto>> findAll() {
         List<Book> bookList = bookService.findAll(Sort.by(Sort.Direction.DESC, "id"));
         return new ResponseEntity<>(BookListResponseDto.of(bookList), HttpStatus.OK);
