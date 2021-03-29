@@ -2,7 +2,7 @@ package com.squadb.workassistantapi.service;
 
 import com.squadb.workassistantapi.domain.Member;
 import com.squadb.workassistantapi.repository.MemberRepository;
-import com.squadb.workassistantapi.util.HashUtil;
+import com.squadb.workassistantapi.web.controller.dto.UpdateMemberRequestDto;
 import com.squadb.workassistantapi.web.exception.LoginFailedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,14 +19,16 @@ public class MemberService {
                 .orElseThrow(() -> new IllegalArgumentException(String.format("No Member ID:[%d]", memberId)));
     }
 
+    @Transactional(readOnly = true)
     public long login(String email, String password) {
-        final Member findMember = memberRepository.findByEmail(email);
-        if (findMember == null) {
-            throw LoginFailedException.noSuchMember();
-        }
-        if (!HashUtil.validatePassword(password, findMember.getPasswordHash())) {
-            throw LoginFailedException.wrongPassword();
-        }
+        final Member findMember = memberRepository.findByEmail(email).orElseThrow(LoginFailedException::noSuchMember);
+        findMember.equalPassword(password);
         return findMember.getId();
+    }
+
+    @Transactional
+    public void updateMember(long memberId, String newPassword) {
+        final Member member = memberRepository.findById(memberId).orElseThrow();
+        member.changePassword(newPassword);
     }
 }

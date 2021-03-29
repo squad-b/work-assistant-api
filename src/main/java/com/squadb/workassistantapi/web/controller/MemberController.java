@@ -5,6 +5,7 @@ import com.squadb.workassistantapi.service.MemberService;
 import com.squadb.workassistantapi.web.controller.dto.LoginRequestDto;
 import com.squadb.workassistantapi.web.controller.dto.LoginResponseDto;
 import com.squadb.workassistantapi.web.controller.dto.MemberProfileResponseDto;
+import com.squadb.workassistantapi.web.controller.dto.UpdateMemberRequestDto;
 import com.squadb.workassistantapi.web.exception.LoginFailedException;
 import com.squadb.workassistantapi.web.interceptor.CheckPermission;
 import lombok.RequiredArgsConstructor;
@@ -47,6 +48,18 @@ public class MemberController {
             return new ResponseEntity<>(MemberProfileResponseDto.success(member), HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(MemberProfileResponseDto.fail("NOT_FOUND"), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CheckPermission
+    @PutMapping("/members/{memberId}")
+    public ResponseEntity<String> updateMember(@RequestBody UpdateMemberRequestDto request,
+                                               @PathVariable long memberId) {
+        try {
+            memberService.updateMember(memberId, request.getPassword());
+            return ResponseEntity.ok("SUCCESS");
+        } catch (Exception e) {
+            return ResponseEntity.ok("FAIL");
         }
     }
 
