@@ -28,7 +28,7 @@ public class BookSearchRequestDto {
     public String makeUrl(String baseUrl) {
         return String.format("%s?query=%s&page=%s&size=%s&target=%s",
                 baseUrl,
-₩                query,
+                query,
                 page,
                 size,
                 target);
