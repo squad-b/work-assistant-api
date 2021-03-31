@@ -36,4 +36,10 @@ public class RentalService {
         final Book book = bookService.findById(bookId);
         return rentalRepository.findAllByBook(book);
     }
+
+    @Transactional(readOnly = true)
+    public List<Rental> findAllByMember(final long memberId) {
+        final Member member = memberService.findById(memberId);
+        return rentalRepository.findAllByMember(member);
+    }
 }

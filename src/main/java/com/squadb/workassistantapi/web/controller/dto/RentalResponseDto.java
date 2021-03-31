@@ -18,6 +18,7 @@ public class RentalResponseDto {
     private long id;
     private String result;
     private String borrowerName;
+    private String bookTitle;
     private Boolean isLongTerm;
     private String startDate;
     private String endDate;
@@ -40,6 +41,7 @@ public class RentalResponseDto {
         RentalResponseDto rentalResponseDto = new RentalResponseDto();
         rentalResponseDto.id = bookRental.getId();
         rentalResponseDto.borrowerName = bookRental.getMemberName();
+        rentalResponseDto.bookTitle = bookRental.getBookTitle();
         rentalResponseDto.isLongTerm = bookRental.isLongTerm();
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
