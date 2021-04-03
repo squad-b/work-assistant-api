@@ -1,6 +1,7 @@
 package com.squadb.workassistantapi.service;
 
 import com.squadb.workassistantapi.domain.*;
+import com.squadb.workassistantapi.domain.exceptions.NoAuthorizationException;
 import com.squadb.workassistantapi.domain.exceptions.OutOfStockException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,7 +15,6 @@ import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 @Transactional
@@ -71,6 +71,39 @@ class RentalServiceTest {
 
         Rental rental = rentalService.findById(rentalId);
         assertThat(rental.isLongTerm()).isTrue();
+    }
+
+    @DisplayName("본인이 빌린 책을 반납하면 책의 상태가 stockQuantity 가 오르고, 해당 Rental 의 status 가 RETURN 으로 바뀐다.")
+    @Test
+    public void returnBookSuccessTest() {
+        // given
+        final int stockQuantityBeforeReturn = testBook.getStockQuantity();
+        final Rental mockRental = createRental();
+
+        // when
+        final long rentalId = rentalService.updateRental(mockRental.getId(), testMember.getId(), RentalStatus.RETURN);
+
+        // then
+        assertThat(rentalId).isEqualTo(mockRental.getId());
+        assertThat(testBook.getStockQuantity()).isEqualTo(stockQuantityBeforeReturn);
+        assertThat(mockRental.onRental()).isFalse();
+    }
+
+    @DisplayName("본인이 빌리지 않은 책을 반납하면 예외가 발생한다.")
+    @Test
+    public void returnBookFailTest() {
+        // given
+        final Rental mockRental = createRental();
+        final long notRentalOwnerId = mockRental.getId() + 1;
+
+        // then
+        Assertions.assertThrows(NoAuthorizationException.class, () -> rentalService.updateRental(mockRental.getId(), notRentalOwnerId, RentalStatus.RETURN));
+    }
+
+    private Rental createRental() {
+        final Rental mockRental = Rental.createRental(testBook, testMember, false);
+        entityManager.persist(mockRental);
+        return mockRental;
     }
 
     private Book createBook(Member admin) {

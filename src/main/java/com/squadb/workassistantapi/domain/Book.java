@@ -60,6 +60,10 @@ public class Book {
         stockQuantity -= 1;
     }
 
+    public void increaseStock() {
+        stockQuantity++;
+    }
+
     public boolean isOutOfStock() {
         return stockQuantity <= 0;
     }

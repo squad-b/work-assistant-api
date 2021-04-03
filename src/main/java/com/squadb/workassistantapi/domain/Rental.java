@@ -1,5 +1,6 @@
 package com.squadb.workassistantapi.domain;
 
+import com.squadb.workassistantapi.domain.exceptions.NoAuthorizationException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,6 +9,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 import static com.squadb.workassistantapi.domain.RentalStatus.ON_RENTAL;
+import static com.squadb.workassistantapi.domain.RentalStatus.RETURN;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -74,4 +76,14 @@ public class Rental {
     public boolean isLongTerm() {
         return endDate == null;
     }
+
+    public void updateRental(long memberId, RentalStatus updateStatus) {
+        if (member.getId() != memberId) { throw new NoAuthorizationException(String.format("반납 권한이 없습니다. rentalId: %d, memberId: %d", id, memberId)); }
+        if (updateStatus == RETURN) {
+            status = RETURN;
+            book.increaseStock();
+            returnDate = LocalDateTime.now();
+        }
+    }
+
 }

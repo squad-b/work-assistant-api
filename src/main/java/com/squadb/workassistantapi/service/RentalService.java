@@ -3,12 +3,13 @@ package com.squadb.workassistantapi.service;
 import com.squadb.workassistantapi.domain.Book;
 import com.squadb.workassistantapi.domain.Member;
 import com.squadb.workassistantapi.domain.Rental;
+import com.squadb.workassistantapi.domain.RentalStatus;
 import com.squadb.workassistantapi.repository.RentalRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -35,5 +36,12 @@ public class RentalService {
     public List<Rental> findAllByBook(final long bookId) {
         final Book book = bookService.findById(bookId);
         return rentalRepository.findAllByBook(book);
+    }
+
+    @Transactional
+    public long updateRental(long rentalId, long memberId, RentalStatus status) {
+        final Rental rental = rentalRepository.findById(rentalId).orElseThrow();
+        rental.updateRental(memberId, status);
+        return rental.getId();
     }
 }
