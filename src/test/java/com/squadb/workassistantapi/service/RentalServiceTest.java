@@ -3,6 +3,7 @@ package com.squadb.workassistantapi.service;
 import com.squadb.workassistantapi.domain.*;
 import com.squadb.workassistantapi.domain.exceptions.NoAuthorizationException;
 import com.squadb.workassistantapi.domain.exceptions.OutOfStockException;
+import com.squadb.workassistantapi.repository.BookRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,14 +14,22 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.setAllowComparingPrivateFields;
 
 @SpringBootTest
 @Transactional
 class RentalServiceTest {
     @Autowired EntityManager entityManager;
     @Autowired RentalService rentalService;
+    @Autowired BookService bookService;
 
     private Member testMember;
     private Book testBook;
@@ -35,7 +44,7 @@ class RentalServiceTest {
     @Test
     public void rentBookTest() {
         // when
-        final long rentalId = rentalService.rentBook(testBook.getId(), testMember.getId(), false);
+        final long rentalId = rentalService.rentBook(testBook.getId(), testMember.getId(), 1, false);
         clearPersistenceContext();
 
         // then
@@ -54,19 +63,17 @@ class RentalServiceTest {
     @Test
     public void outOfStockTest() {
         // given
-        testBook.removeStock();
+        testBook.removeStock(1); // 재고소진
         clearPersistenceContext();
 
         // then
-        Assertions.assertThrows(OutOfStockException.class, () -> {
-            rentalService.rentBook(testBook.getId(), testMember.getId(), false);
-        });
+        Assertions.assertThrows(OutOfStockException.class, () -> rentalService.rentBook(testBook.getId(), testMember.getId(), 1, false));
     }
 
     @DisplayName("장기 대여시에는 rental 의 endDate 가 null 값이다.")
     @Test
     public void longTermRentalTest() {
-        final long rentalId = rentalService.rentBook(testBook.getId(), testMember.getId(), true);
+        final long rentalId = rentalService.rentBook(testBook.getId(), testMember.getId(), 1, true);
         clearPersistenceContext();
 
         Rental rental = rentalService.findById(rentalId);
@@ -101,7 +108,7 @@ class RentalServiceTest {
     }
 
     private Rental createRental() {
-        final Rental mockRental = Rental.createRental(testBook, testMember, false);
+        final Rental mockRental = Rental.createRental(testBook, testMember, 1, false);
         entityManager.persist(mockRental);
         return mockRental;
     }

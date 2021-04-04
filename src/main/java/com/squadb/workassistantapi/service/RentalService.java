@@ -24,10 +24,10 @@ public class RentalService {
     }
 
     @Transactional
-    public long rentBook(final long bookId, final long memberId, final boolean isLongTerm) {
+    public long rentBook(final long bookId, final long memberId, final int bookCount, final boolean isLongTerm) {
         final Book book = bookService.findById(bookId);
         final Member member = memberService.findById(memberId);
-        final Rental rental = Rental.createRental(book, member, isLongTerm);
+        final Rental rental = Rental.createRental(book, member, bookCount, isLongTerm);
         final Rental saveRental = rentalRepository.save(rental);
         return saveRental.getId();
     }

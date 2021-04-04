@@ -44,8 +44,8 @@ public class Rental {
     @Column(nullable = false)
     private RentalStatus status;
 
-    public static Rental createRental(Book book, Member member, boolean isLongTerm) {
-        book.removeStock();
+    public static Rental createRental(Book book, Member member, int bookCount, boolean isLongTerm) {
+        book.removeStock(bookCount);
 
         Rental rental = new Rental();
         rental.status = ON_RENTAL;

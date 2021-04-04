@@ -26,7 +26,7 @@ public class RentalController {
                                                       @LoginMemberId long loginMemberId,
                                                       @RequestBody(required = false) RentalRequestDto rentalRequestDto) {
         rentalRequestDto = rentalRequestDto == null ? new RentalRequestDto() : rentalRequestDto;
-        final long rentalId = rentalService.rentBook(bookId, loginMemberId, rentalRequestDto.isLongTerm());
+        final long rentalId = rentalService.rentBook(bookId, loginMemberId, rentalRequestDto.getRentCount(), rentalRequestDto.isLongTerm());
         return ResponseEntity.ok(RentalResponseDto.success(rentalId));
     }
 

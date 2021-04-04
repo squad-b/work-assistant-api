@@ -55,9 +55,9 @@ public class Book {
     @JoinColumn(name = "registrant_id", nullable = false)
     private Member registrant;
 
-    public void removeStock() {
-        if (isOutOfStock()) { throw new OutOfStockException(String.format("Out of stock, Id:[%d]", id)); }
-        stockQuantity -= 1;
+    public void removeStock(int rentCount) {
+        if (isNotEnoughStock(rentCount)) { throw new OutOfStockException(String.format("Out of stock, Id:[%d]", id)); }
+        stockQuantity -= rentCount;
     }
 
     public void increaseStock() {
@@ -66,6 +66,10 @@ public class Book {
 
     public boolean isOutOfStock() {
         return stockQuantity <= 0;
+    }
+
+    public boolean isNotEnoughStock(int rentCount) {
+        return stockQuantity - rentCount < 0;
     }
 
     @Builder

@@ -48,7 +48,7 @@ class RentalControllerTest {
     public void rentBookApiTest() throws Exception {
         //given
         final long mockBookId = 1L;
-        given(rentalService.rentBook(mockBookId, mockLoginMemberId, false)).willReturn(1L);
+        given(rentalService.rentBook(mockBookId, mockLoginMemberId, 1, false)).willReturn(1L);
 
         //when
         ResultActions perform = mockMvc.perform(post("/rent/books/1")
@@ -66,7 +66,7 @@ class RentalControllerTest {
     public void outOfStockTest() throws Exception {
         //given
         final long mockBookId = 1L;
-        given(rentalService.rentBook(mockBookId, mockLoginMemberId, false)).willThrow(OutOfStockException.class);
+        given(rentalService.rentBook(mockBookId, mockLoginMemberId, 1, false)).willThrow(OutOfStockException.class);
 
         //when
         ResultActions perform = mockMvc.perform(post("/rent/books/1")

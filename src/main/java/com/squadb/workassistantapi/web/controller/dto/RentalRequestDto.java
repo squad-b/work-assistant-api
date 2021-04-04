@@ -7,4 +7,5 @@ import lombok.Getter;
 public class RentalRequestDto {
     private boolean longTerm;
     private RentalStatus status;
+    private int rentCount = 1;
 }
