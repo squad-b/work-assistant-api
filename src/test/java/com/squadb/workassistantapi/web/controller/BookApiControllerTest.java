@@ -2,6 +2,7 @@ package com.squadb.workassistantapi.web.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squadb.workassistantapi.domain.Book;
+import com.squadb.workassistantapi.domain.Member;
 import com.squadb.workassistantapi.domain.exceptions.NoAuthorizationException;
 import com.squadb.workassistantapi.service.BookService;
 import com.squadb.workassistantapi.web.agent.BookSearchAgent;
@@ -39,7 +40,7 @@ class BookApiControllerTest {
     @BeforeEach
     public void setup() {
         mockHttpSession = new MockHttpSession();
-        mockHttpSession.setAttribute("MEMBER_ID", mockLoginMemberId);
+        mockHttpSession.setAttribute(Member.LOGIN_SESSION_KEY, mockLoginMemberId);
     }
 
     @DisplayName("책 등록 파라미터가 유효하지 않으면 INVALID_BODY 란 메시지와 함께 status code 400을 리턴한다.")

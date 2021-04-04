@@ -35,7 +35,7 @@ public class CheckPermissionInterceptor implements HandlerInterceptor {
         }
 
         try {
-            final long loginMemberId = Long.parseLong(String.valueOf(session.getAttribute("MEMBER_ID")));
+            final long loginMemberId = Long.parseLong(String.valueOf(session.getAttribute(Member.LOGIN_SESSION_KEY)));
             final Map pathAttributes = (Map) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
             if (pathAttributes != null && pathAttributes.containsKey("memberId")) {
                 final long memberId = Long.parseLong((String)pathAttributes.get("memberId"));
