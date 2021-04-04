@@ -1,5 +1,6 @@
 package com.squadb.workassistantapi.web.config.auth;
 
+import com.squadb.workassistantapi.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -23,7 +24,7 @@ public class LoginMemberIdArgumentResolver implements HandlerMethodArgumentResol
 
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        Object loginMemberId = httpSession.getAttribute("MEMBER_ID");
+        Object loginMemberId = httpSession.getAttribute(Member.LOGIN_SESSION_KEY);
         return loginMemberId == null ? 0L : loginMemberId;
     }
 }

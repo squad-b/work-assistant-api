@@ -1,5 +1,6 @@
 package com.squadb.workassistantapi.web.controller;
 
+import com.squadb.workassistantapi.domain.Member;
 import com.squadb.workassistantapi.service.MemberService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,7 +26,7 @@ class MemberControllerTest {
     @DisplayName("로그인 되어있으면 AUTHORIZED")
     @Test
     public void authorizedTest() throws Exception {
-        mockSession.setAttribute("MEMBER_ID", 123);
+        mockSession.setAttribute(Member.LOGIN_SESSION_KEY, 123);
 
         mockMvc.perform(get("/auth").session(mockSession))
                 .andExpect(status().isOk())

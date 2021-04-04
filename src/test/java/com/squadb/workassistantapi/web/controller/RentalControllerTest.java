@@ -2,6 +2,7 @@ package com.squadb.workassistantapi.web.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.squadb.workassistantapi.domain.Member;
 import com.squadb.workassistantapi.domain.RentalStatus;
 import com.squadb.workassistantapi.domain.exceptions.NoAuthorizationException;
 import com.squadb.workassistantapi.domain.exceptions.OutOfStockException;
@@ -39,7 +40,7 @@ class RentalControllerTest {
     @BeforeEach
     public void setup() {
         mockHttpSession = new MockHttpSession();
-        mockHttpSession.setAttribute("MEMBER_ID", mockLoginMemberId);
+        mockHttpSession.setAttribute(Member.LOGIN_SESSION_KEY, mockLoginMemberId);
     }
 
     @DisplayName("책 대여 api 성공 테스트")

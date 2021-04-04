@@ -13,6 +13,8 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
 
+    public static final String LOGIN_SESSION_KEY = "MEMBER_ID";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
