@@ -21,6 +21,7 @@ public class Rental {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Getter
     @JoinColumn(name = "book_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private Book book;
@@ -75,6 +76,10 @@ public class Rental {
 
     public boolean isLongTerm() {
         return endDate == null;
+    }
+
+    public String getBookTitle() {
+        return book.getTitle();
     }
 
     public void updateRental(long memberId, RentalStatus updateStatus) {

@@ -1,11 +1,10 @@
 package com.squadb.workassistantapi.web.controller;
 
 import com.squadb.workassistantapi.domain.Member;
+import com.squadb.workassistantapi.domain.Rental;
 import com.squadb.workassistantapi.service.MemberService;
-import com.squadb.workassistantapi.web.controller.dto.LoginRequestDto;
-import com.squadb.workassistantapi.web.controller.dto.LoginResponseDto;
-import com.squadb.workassistantapi.web.controller.dto.MemberProfileResponseDto;
-import com.squadb.workassistantapi.web.controller.dto.UpdateMemberRequestDto;
+import com.squadb.workassistantapi.service.RentalService;
+import com.squadb.workassistantapi.web.controller.dto.*;
 import com.squadb.workassistantapi.web.exception.LoginFailedException;
 import com.squadb.workassistantapi.web.interceptor.CheckPermission;
 import lombok.RequiredArgsConstructor;
@@ -15,11 +14,14 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
+import java.util.*;
+
 @RequiredArgsConstructor
 @RestController
 public class MemberController {
 
     private final MemberService memberService;
+    private final RentalService rentalService;
 
     @GetMapping("/auth")
     public ResponseEntity<LoginResponseDto> isLogin(HttpSession session) {
@@ -58,6 +60,13 @@ public class MemberController {
     }
 
     @CheckPermission
+    @GetMapping("/members/{memberId}/rentals")
+    public ResponseEntity<List<RentalResponseDto>> getMemberBookRentals(@PathVariable long memberId) {
+        final List<Rental> rentalList = rentalService.findAllByMember(memberId);
+        return new ResponseEntity<>(RentalResponseDto.of(rentalList), HttpStatus.OK);
+    }
+
+    @CheckPermission
     @PutMapping("/members/{memberId}")
     public ResponseEntity<String> updateMember(@RequestBody UpdateMemberRequestDto request,
                                                @PathVariable long memberId) {
@@ -68,5 +77,4 @@ public class MemberController {
             return ResponseEntity.ok("FAIL");
         }
     }
-
 }
