@@ -1,5 +1,7 @@
 package com.squadb.workassistantapi.domain;
 
+import com.squadb.workassistantapi.util.HashUtil;
+import com.squadb.workassistantapi.web.exception.LoginFailedException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +12,8 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
+
+    public static final String LOGIN_SESSION_KEY = "MEMBER_ID";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,5 +44,15 @@ public class Member {
 
     public boolean isAdmin() {
         return type.isAdmin();
+    }
+
+    public void equalPassword(String passwordInput) {
+        if (!HashUtil.equalPassword(passwordInput, passwordHash)) {
+            throw LoginFailedException.wrongPassword();
+        }
+    }
+
+    public void changePassword(String newPassword) {
+        this.passwordHash = HashUtil.hashPassword(newPassword);
     }
 }

@@ -21,19 +21,24 @@ public class HashUtil {
     private static final int SALT_BYTES = 16;
     private static final String HASHED_PASSWORD_DELIMITER = ":";
 
-    public static String hashPassword(String plainPassword) throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public static String hashPassword(String plainPassword) {
         final SecureRandom random = new SecureRandom();
         final byte[] salt = new byte[SALT_BYTES];
         random.nextBytes(salt);
 
-        final SecretKeyFactory factory = SecretKeyFactory.getInstance(SECRET_KEY_ALGORITHM);
-        final KeySpec spec = new PBEKeySpec(plainPassword.toCharArray(), salt, ITERATION_COUNT, KEY_LENGTH);
-        final byte[] hash = factory.generateSecret(spec).getEncoded();
+        try {
+            final SecretKeyFactory factory = SecretKeyFactory.getInstance(SECRET_KEY_ALGORITHM);
+            final KeySpec spec = new PBEKeySpec(plainPassword.toCharArray(), salt, ITERATION_COUNT, KEY_LENGTH);
+            final byte[] hash = factory.generateSecret(spec).getEncoded();
 
-        return String.join(HASHED_PASSWORD_DELIMITER, SECRET_KEY_ALGORITHM, toHex(salt), String.valueOf(ITERATION_COUNT), String.valueOf(KEY_LENGTH), toHex(hash));
+            return String.join(HASHED_PASSWORD_DELIMITER, SECRET_KEY_ALGORITHM, toHex(salt), String.valueOf(ITERATION_COUNT), String.valueOf(KEY_LENGTH), toHex(hash));
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new IllegalArgumentException("Failed to hash password.");
+        }
     }
 
-    public static boolean validatePassword(String passwordInput, String hashedPassword) {
+    public static boolean equalPassword(String passwordInput, String hashedPassword) {
         try {
             final String[] hashedPasswordInfo = hashedPassword.split(HASHED_PASSWORD_DELIMITER);
             final SecretKeyFactory factory = SecretKeyFactory.getInstance(hashedPasswordInfo[0]);
