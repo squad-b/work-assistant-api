@@ -1,0 +1,5 @@
+INSERT INTO member (id, email, name, password_hash, type)
+VALUES (1, 'admin', 'admin', 'PBKDF2WithHmacSHA1:8E4393C9A0B997494FAC1BE43EF1C1DB:1000:128:AB23A61790A4CBCD302EAFE1B075B563', 'ADMIN');
+
+INSERT INTO book (id, author, category, description, image_url, isbn, publisher, publishing_date, registration_date, stock_quantity, title, registrant_id, version)
+VALUES (1, '조지 오웰', 'DEVELOP', '20세기 영미 문학의 가장 중요한 작가 조지 오웰 정치권력을 부패시키는 근본적 위험과 모순에 대한 빼어난 우화 문학의 사회 비판적 역할에 대한 고민이 담긴 위대한 풍자소설  ▶ 랜영리하고 동정심 많고 진실을 깨우치는 우화. -《뉴욕 타임스》 ▶ 절대적으로 최고의 작품. 볼테르와 스위프트에 견줄 만하다. -《뉴요커》 ▶ 조지 오웰을 대신할 만한 작가는 없다. -《타임》', 'https://search1.kakaocdn.net/thumb/R120x174.q85/?fname=http%3A%2F%2Ft1.daumcdn.net%2Flbook%2Fimage%2F540771%3Ftimestamp%3D20210404134805', '9788937460050', '민음사', '2009-01-07 00:00:00', '2021-04-05 01:10:28.752995', 1, '테스트 책이다', 1, 0);

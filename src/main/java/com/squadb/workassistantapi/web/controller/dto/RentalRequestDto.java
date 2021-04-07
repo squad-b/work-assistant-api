@@ -7,4 +7,10 @@ import lombok.Getter;
 public class RentalRequestDto {
     private boolean longTerm;
     private RentalStatus status;
+
+    public static RentalRequestDto of (boolean longTerm) {
+        RentalRequestDto rentalRequestDto = new RentalRequestDto();
+        rentalRequestDto.longTerm = longTerm;
+        return rentalRequestDto;
+    }
 }
