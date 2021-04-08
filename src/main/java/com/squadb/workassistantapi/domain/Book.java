@@ -55,6 +55,9 @@ public class Book {
     @JoinColumn(name = "registrant_id", nullable = false)
     private Member registrant;
 
+    @Version
+    private Long version;
+
     public void removeStock() {
         if (isOutOfStock()) { throw new OutOfStockException(String.format("Out of stock, Id:[%d]", id)); }
         stockQuantity -= 1;
