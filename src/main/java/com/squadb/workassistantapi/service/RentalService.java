@@ -39,9 +39,9 @@ public class RentalService {
     }
 
     @Transactional(readOnly = true)
-    public List<Rental> findAllByMember(final long memberId) {
+    public List<Rental> findMemberBookRentals(final long memberId, final RentalStatus rentalStatus) {
         final Member member = memberService.findById(memberId);
-        return rentalRepository.findAllByMember(member);
+        return rentalStatus == null ? rentalRepository.findAllByMember(member) : rentalRepository.findAllByMemberAndStatus(member, rentalStatus);
     }
 
     @Transactional

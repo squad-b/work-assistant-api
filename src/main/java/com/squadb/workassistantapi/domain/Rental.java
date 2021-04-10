@@ -41,6 +41,7 @@ public class Rental {
     @Column
     private LocalDateTime returnDate;
 
+    @Getter
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private RentalStatus status;

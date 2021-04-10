@@ -2,10 +2,12 @@ package com.squadb.workassistantapi.web.controller.dto;
 
 import com.squadb.workassistantapi.domain.RentalStatus;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 public class RentalRequestDto {
     private boolean longTerm;
+    @Setter
     private RentalStatus status;
 
     public static RentalRequestDto of (boolean longTerm) {

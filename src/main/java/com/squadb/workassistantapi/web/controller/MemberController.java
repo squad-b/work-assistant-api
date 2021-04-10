@@ -61,8 +61,8 @@ public class MemberController {
 
     @CheckPermission
     @GetMapping("/members/{memberId}/rentals")
-    public ResponseEntity<List<RentalResponseDto>> getMemberBookRentals(@PathVariable long memberId) {
-        final List<Rental> rentalList = rentalService.findAllByMember(memberId);
+    public ResponseEntity<List<RentalResponseDto>> getMemberBookRentals(@PathVariable long memberId, RentalRequestDto rentalRequestDto) {
+        final List<Rental> rentalList = rentalService.findMemberBookRentals(memberId, rentalRequestDto.getStatus());
         return new ResponseEntity<>(RentalResponseDto.of(rentalList), HttpStatus.OK);
     }
 
