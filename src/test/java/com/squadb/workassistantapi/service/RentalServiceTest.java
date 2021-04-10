@@ -14,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 
+import java.util.*;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -100,7 +102,43 @@ class RentalServiceTest {
         Assertions.assertThrows(NoAuthorizationException.class, () -> rentalService.updateRental(mockRental.getId(), notRentalOwnerId, RentalStatus.RETURN));
     }
 
+    @DisplayName("유저의 책 대여 목록 조회 테스트")
+    @Test
+    public void memberBookRentalTest() {
+        // given
+        Rental mockRental = createRental(createBook(testMember));
+        rentalService.updateRental(mockRental.getId(), testMember.getId(), RentalStatus.ON_RENTAL);
+
+        Rental mockReturnedRental = createRental(createBook(testMember));
+        rentalService.updateRental(mockReturnedRental.getId(), testMember.getId(), RentalStatus.RETURN);
+
+        // when
+        List<Rental> rentalList = rentalService.findMemberBookRentals(testMember.getId(), null);
+        List<Rental> onRentalList = rentalService.findMemberBookRentals(testMember.getId(), RentalStatus.ON_RENTAL);
+        List<Rental> returnedRentalList = rentalService.findMemberBookRentals(testMember.getId(), RentalStatus.RETURN);
+
+        // then
+        rentalList.forEach(rental -> {
+            assertThat(rental.getMemberId()).isEqualTo(testMember.getId());
+            assertThat(rental.getStatus()).isIn(RentalStatus.ON_RENTAL, RentalStatus.RETURN);
+        });
+        onRentalList.forEach(rental -> {
+            assertThat(rental.getMemberId()).isEqualTo(testMember.getId());
+            assertThat(rental.getStatus()).isEqualTo(RentalStatus.ON_RENTAL);
+        });
+        returnedRentalList.forEach(rental -> {
+            assertThat(rental.getMemberId()).isEqualTo(testMember.getId());
+            assertThat(rental.getStatus()).isEqualTo(RentalStatus.RETURN);
+        });
+    }
+
     private Rental createRental() {
+        final Rental mockRental = Rental.createRental(testBook, testMember, false);
+        entityManager.persist(mockRental);
+        return mockRental;
+    }
+
+    private Rental createRental(Book testBook) {
         final Rental mockRental = Rental.createRental(testBook, testMember, false);
         entityManager.persist(mockRental);
         return mockRental;
@@ -108,7 +146,7 @@ class RentalServiceTest {
 
     private Book createBook(Member admin) {
         Book book = Book.builder()
-                .isbn("1234")
+                .isbn(String.format("%.13f", Math.random()).substring(2))
                 .title("제목")
                 .author("작가")
                 .description("설명")
