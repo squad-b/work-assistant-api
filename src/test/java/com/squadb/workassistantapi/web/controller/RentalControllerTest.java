@@ -3,11 +3,13 @@ package com.squadb.workassistantapi.web.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.squadb.workassistantapi.domain.Member;
+import com.squadb.workassistantapi.domain.MemberType;
 import com.squadb.workassistantapi.domain.RentalStatus;
 import com.squadb.workassistantapi.domain.exceptions.NoAuthorizationException;
 import com.squadb.workassistantapi.domain.exceptions.OutOfStockException;
 import com.squadb.workassistantapi.service.MemberService;
 import com.squadb.workassistantapi.service.RentalService;
+import com.squadb.workassistantapi.web.controller.dto.LoginMember;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,6 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -37,10 +40,12 @@ class RentalControllerTest {
     private MockHttpSession mockHttpSession;
     private final long mockLoginMemberId = 1L;
 
+
     @BeforeEach
     public void setup() {
         mockHttpSession = new MockHttpSession();
-        mockHttpSession.setAttribute(Member.LOGIN_SESSION_KEY, mockLoginMemberId);
+        Member member = Member.createMember("test@naver.com", "피플팀", "12345", MemberType.ADMIN);
+        LoginMember.putInSession(member, mockHttpSession);
     }
 
     @DisplayName("책 대여 api 성공 테스트")
@@ -65,8 +70,7 @@ class RentalControllerTest {
     @Test
     public void outOfStockTest() throws Exception {
         //given
-        final long mockBookId = 1L;
-        given(rentalService.rentBook(mockBookId, mockLoginMemberId, false)).willThrow(OutOfStockException.class);
+        given(rentalService.rentBook(anyLong(), anyLong(), anyBoolean())).willThrow(OutOfStockException.class);
 
         //when
         ResultActions perform = mockMvc.perform(post("/rent/books/1")
@@ -105,14 +109,13 @@ class RentalControllerTest {
     @Test
     public void unauthorizedReturnBookApiTest() throws Exception {
         // given
-        final long mockRentalId = 1L;
-        given(rentalService.updateRental(mockRentalId, mockLoginMemberId, RentalStatus.RETURN)).willThrow(NoAuthorizationException.class);
+        given(rentalService.updateRental(anyLong(), anyLong(), any(RentalStatus.class))).willThrow(NoAuthorizationException.class);
 
         // when
         final ObjectNode content = objectMapper.createObjectNode();
         content.put("status", String.valueOf(RentalStatus.RETURN));
 
-        final ResultActions perform = mockMvc.perform(put("/rentals/"+mockRentalId)
+        final ResultActions perform = mockMvc.perform(put("/rentals/1")
                 .session(mockHttpSession)
                 .content(objectMapper.writeValueAsString(content))
                 .contentType(MediaType.APPLICATION_JSON_VALUE));

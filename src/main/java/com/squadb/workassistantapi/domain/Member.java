@@ -13,8 +13,6 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
 
-    public static final String LOGIN_SESSION_KEY = "MEMBER_ID";
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -46,7 +44,7 @@ public class Member {
         return type.isAdmin();
     }
 
-    public void equalPassword(String passwordInput) {
+    public void checkEqualPassword(String passwordInput) {
         if (!HashUtil.equalPassword(passwordInput, passwordHash)) {
             throw LoginFailedException.wrongPassword();
         }

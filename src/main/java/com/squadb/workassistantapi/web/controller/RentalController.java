@@ -3,9 +3,10 @@ package com.squadb.workassistantapi.web.controller;
 import com.squadb.workassistantapi.domain.Rental;
 import com.squadb.workassistantapi.domain.exceptions.NoAuthorizationException;
 import com.squadb.workassistantapi.domain.exceptions.OutOfStockException;
-import com.squadb.workassistantapi.web.config.auth.LoginMemberId;
-import com.squadb.workassistantapi.web.controller.dto.RentalRequestDto;
 import com.squadb.workassistantapi.service.RentalService;
+import com.squadb.workassistantapi.web.config.auth.CurrentLoginMember;
+import com.squadb.workassistantapi.web.controller.dto.LoginMember;
+import com.squadb.workassistantapi.web.controller.dto.RentalRequestDto;
 import com.squadb.workassistantapi.web.controller.dto.RentalResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,10 +24,10 @@ public class RentalController {
 
     @PostMapping(value = "/rent/books/{bookId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RentalResponseDto> rentBook(@PathVariable long bookId,
-                                                      @LoginMemberId long loginMemberId,
+                                                      @CurrentLoginMember LoginMember loginMember,
                                                       @RequestBody(required = false) RentalRequestDto rentalRequestDto) {
         rentalRequestDto = rentalRequestDto == null ? new RentalRequestDto() : rentalRequestDto;
-        final long rentalId = rentalService.rentBook(bookId, loginMemberId, rentalRequestDto.isLongTerm());
+        final long rentalId = rentalService.rentBook(bookId, loginMember.getId(), rentalRequestDto.isLongTerm());
         return ResponseEntity.ok(RentalResponseDto.success(rentalId));
     }
 
@@ -38,9 +39,9 @@ public class RentalController {
 
     @PutMapping(value = "/rentals/{rentalId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RentalResponseDto> returnBook(@PathVariable long rentalId,
-                                                        @LoginMemberId long loginMemberId,
+                                                        @CurrentLoginMember LoginMember loginMember,
                                                         @RequestBody RentalRequestDto rentalRequestDto) {
-        final long returnedRentalId = rentalService.updateRental(rentalId, loginMemberId, rentalRequestDto.getStatus());
+        final long returnedRentalId = rentalService.updateRental(rentalId, loginMember.getId(), rentalRequestDto.getStatus());
         return ResponseEntity.ok(RentalResponseDto.success(returnedRentalId));
     }
 

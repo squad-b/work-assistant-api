@@ -1,7 +1,7 @@
 package com.squadb.workassistantapi.web.controller;
 
+import com.squadb.workassistantapi.web.controller.dto.AuthResponseDto;
 import com.squadb.workassistantapi.web.controller.dto.LoginRequestDto;
-import com.squadb.workassistantapi.web.controller.dto.LoginResponseDto;
 import com.squadb.workassistantapi.web.controller.dto.RentalRequestDto;
 import com.squadb.workassistantapi.web.controller.dto.RentalResponseDto;
 import org.junit.jupiter.api.DisplayName;
@@ -56,7 +56,7 @@ public class ConcurrentlyRentTest {
     private List<String> login() {
         LoginRequestDto loginRequestDto = LoginRequestDto.of("admin", "admin");
         HttpEntity<LoginRequestDto> requestEntity = new HttpEntity<>(loginRequestDto);
-        ResponseEntity<LoginResponseDto> responseEntity = restTemplate.exchange("/login", HttpMethod.POST, requestEntity, LoginResponseDto.class);
+        ResponseEntity<AuthResponseDto> responseEntity = restTemplate.exchange("/login", HttpMethod.POST, requestEntity, AuthResponseDto.class);
         HttpHeaders headers = responseEntity.getHeaders();
         return headers.get(HttpHeaders.SET_COOKIE);
     }
