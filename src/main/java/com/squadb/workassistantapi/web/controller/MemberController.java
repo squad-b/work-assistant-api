@@ -4,6 +4,7 @@ import com.squadb.workassistantapi.domain.Member;
 import com.squadb.workassistantapi.domain.Rental;
 import com.squadb.workassistantapi.service.MemberService;
 import com.squadb.workassistantapi.service.RentalService;
+import com.squadb.workassistantapi.web.config.auth.CurrentLoginMember;
 import com.squadb.workassistantapi.web.controller.dto.*;
 import com.squadb.workassistantapi.web.exception.LoginFailedException;
 import com.squadb.workassistantapi.web.interceptor.CheckPermission;
@@ -13,8 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-
-import java.util.*;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -24,21 +24,19 @@ public class MemberController {
     private final RentalService rentalService;
 
     @GetMapping("/auth")
-    public ResponseEntity<LoginResponseDto> isLogin(HttpSession session) {
-        if (session.getAttribute(Member.LOGIN_SESSION_KEY) == null) {
-            return ResponseEntity.ok(LoginResponseDto.fail("UNAUTHORIZED"));
-        }
-        return ResponseEntity.ok(LoginResponseDto.success((Long) session.getAttribute(Member.LOGIN_SESSION_KEY)));
+    public ResponseEntity<AuthResponseDto> isLogin(@CurrentLoginMember LoginMember loginMember) {
+        if (loginMember == null) { return ResponseEntity.ok(AuthResponseDto.fail("UNAUTHORIZED")); }
+        return ResponseEntity.ok(AuthResponseDto.success(loginMember));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto request, HttpSession session) {
+    public ResponseEntity<AuthResponseDto> login(@RequestBody LoginRequestDto request, HttpSession session) {
         try {
-            long memberId = memberService.login(request.getEmail(), request.getPassword());
-            session.setAttribute(Member.LOGIN_SESSION_KEY, memberId);
-            return ResponseEntity.ok(LoginResponseDto.success(memberId));
+            Member member = memberService.login(request.getEmail(), request.getPassword());
+            LoginMember loginMember = LoginMember.putInSession(member, session);
+            return ResponseEntity.ok(AuthResponseDto.success(loginMember));
         } catch (LoginFailedException e) {
-            return ResponseEntity.ok(LoginResponseDto.fail(e.getResult()));
+            return ResponseEntity.ok(AuthResponseDto.fail(e.getResult()));
         }
     }
 

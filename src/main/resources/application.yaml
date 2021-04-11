@@ -7,6 +7,12 @@ spring:
         format_sql: true
   profiles:
     include: third-party
+  session:
+    store-type: redis
+  data:
+    redis:
+      repositories:
+        enabled: false
 
 logging:
   level:

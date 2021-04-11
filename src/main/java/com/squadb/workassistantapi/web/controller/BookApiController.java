@@ -7,11 +7,8 @@ import com.squadb.workassistantapi.service.exception.KeyDuplicationException;
 import com.squadb.workassistantapi.web.agent.BookSearchAgent;
 import com.squadb.workassistantapi.web.agent.dto.BookSearchRequestDto;
 import com.squadb.workassistantapi.web.agent.dto.BookSearchResponseDto;
-import com.squadb.workassistantapi.web.config.auth.LoginMemberId;
-import com.squadb.workassistantapi.web.controller.dto.BookDetailResponseDto;
-import com.squadb.workassistantapi.web.controller.dto.BookListResponseDto;
-import com.squadb.workassistantapi.web.controller.dto.BookRegisterRequestDto;
-import com.squadb.workassistantapi.web.controller.dto.BookRegisterResponseDto;
+import com.squadb.workassistantapi.web.config.auth.CurrentLoginMember;
+import com.squadb.workassistantapi.web.controller.dto.*;
 import com.squadb.workassistantapi.web.exception.InvalidRequestBodyException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
@@ -38,8 +35,8 @@ public class BookApiController {
 
     @PostMapping(value = "/books", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<BookRegisterResponseDto> registerBook(@RequestBody BookRegisterRequestDto registerRequestDto,
-                                                                @LoginMemberId long loginMemberId) {
-        long bookId = bookService.register(registerRequestDto.toEntity(), loginMemberId);
+                                                                @CurrentLoginMember LoginMember loginMember) {
+        long bookId = bookService.register(registerRequestDto.toEntity(), loginMember.getId());
         return new ResponseEntity<>(BookRegisterResponseDto.success(bookId), HttpStatus.OK);
     }
 

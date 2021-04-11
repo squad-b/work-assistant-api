@@ -1,6 +1,6 @@
 package com.squadb.workassistantapi.web.config.auth;
 
-import com.squadb.workassistantapi.domain.Member;
+import com.squadb.workassistantapi.web.controller.dto.LoginMember;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -13,18 +13,18 @@ import javax.servlet.http.HttpSession;
 
 @RequiredArgsConstructor
 @Component
-public class LoginMemberIdArgumentResolver implements HandlerMethodArgumentResolver {
+public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolver {
 
     private final HttpSession httpSession;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.getParameterAnnotation(LoginMemberId.class) != null;
+        return parameter.getParameterAnnotation(CurrentLoginMember.class) != null;
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        Object loginMemberId = httpSession.getAttribute(Member.LOGIN_SESSION_KEY);
-        return loginMemberId == null ? 0L : loginMemberId;
+    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
+                                  NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
+        return LoginMember.getFromSession(httpSession);
     }
 }

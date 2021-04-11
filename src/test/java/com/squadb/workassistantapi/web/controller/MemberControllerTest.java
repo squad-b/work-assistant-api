@@ -1,7 +1,11 @@
 package com.squadb.workassistantapi.web.controller;
 
 import com.squadb.workassistantapi.domain.Member;
+import com.squadb.workassistantapi.domain.MemberType;
 import com.squadb.workassistantapi.service.MemberService;
+import com.squadb.workassistantapi.service.RentalService;
+import com.squadb.workassistantapi.web.controller.dto.LoginMember;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,17 +25,24 @@ class MemberControllerTest {
 
     @Autowired MockMvc mockMvc;
     @MockBean MemberService memberService;
-    MockHttpSession mockSession = new MockHttpSession();
+    @MockBean RentalService rentalService;
+    private MockHttpSession mockSession;
 
-    @DisplayName("로그인 되어있으면 AUTHORIZED")
+    @BeforeEach
+    public void setUp() {
+        mockSession = new MockHttpSession();
+    }
+
+    @DisplayName("로그인 되어있으면 SUCCESS")
     @Test
     public void authorizedTest() throws Exception {
-        mockSession.setAttribute(Member.LOGIN_SESSION_KEY, 123);
+        Member member = Member.createMember("test@naver.com", "피플팀", "12345", MemberType.ADMIN);
+        LoginMember.putInSession(member, mockSession);
 
         mockMvc.perform(get("/auth").session(mockSession))
                 .andExpect(status().isOk())
                 .andExpect(content().string(not("UNAUTHORIZED")))
-                .andExpect(content().string(containsString("AUTHORIZED")));
+                .andExpect(content().string(containsString("SUCCESS")));
     }
 
     @DisplayName("로그인 되어있지 않으면 UNAUTHORIZED")

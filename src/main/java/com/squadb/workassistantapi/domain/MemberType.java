@@ -4,7 +4,7 @@ public enum MemberType {
     NORMAL,
     ADMIN;
 
-    boolean isAdmin() {
+    public boolean isAdmin() {
         return this.equals(ADMIN);
     }
 }

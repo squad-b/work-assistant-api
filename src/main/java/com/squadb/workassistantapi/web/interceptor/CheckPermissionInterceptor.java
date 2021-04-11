@@ -1,7 +1,6 @@
 package com.squadb.workassistantapi.web.interceptor;
 
-import com.squadb.workassistantapi.domain.Member;
-import com.squadb.workassistantapi.service.MemberService;
+import com.squadb.workassistantapi.web.controller.dto.LoginMember;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,7 +20,6 @@ import java.util.Map;
 public class CheckPermissionInterceptor implements HandlerInterceptor {
 
     private final HttpSession session;
-    private final MemberService memberService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -30,18 +28,15 @@ public class CheckPermissionInterceptor implements HandlerInterceptor {
         }
 
         final CheckPermission checkPermission = ((HandlerMethod) handler).getMethodAnnotation(CheckPermission.class);
-        if (checkPermission == null) {
-            return true;
-        }
+        if (checkPermission == null) { return true; }
 
         try {
-            final long loginMemberId = Long.parseLong(String.valueOf(session.getAttribute(Member.LOGIN_SESSION_KEY)));
-            final Map pathAttributes = (Map) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
+            final Map<?, ?> pathAttributes = (Map<?, ?>) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
             if (pathAttributes != null && pathAttributes.containsKey("memberId")) {
-                final long memberId = Long.parseLong((String)pathAttributes.get("memberId"));
-                if (memberId == loginMemberId) return true;
-                final Member loginMember = memberService.findById(loginMemberId);
-                if (loginMember.isAdmin()) return true;
+                final long pathMemberId = Long.parseLong((String)pathAttributes.get("memberId"));
+                final LoginMember loginMember = LoginMember.getFromSession(session);
+                return loginMember.isAdmin() ||
+                       pathMemberId == loginMember.getId();
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
