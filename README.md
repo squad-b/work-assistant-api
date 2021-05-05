@@ -4,7 +4,7 @@ This is API for miridih work assistant project.
 
 ## Work Assistant Project
 
-### Book Management System
+### Book Management System 📚
 
 This is service that allows you to easily register and borrow books.
 
