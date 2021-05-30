@@ -56,10 +56,9 @@ def generate_book_insert_query():
     result_file = open("output/generated_book_insert_query.txt", "a")
     result_file.truncate(0)
 
-    # TODO: key 값 분리하기
     url = 'https://dapi.kakao.com/v3/search/book'
     auth_type = 'KakaoAK'
-    key = ''
+    key = '' # TODO: key 값을 환경변수 외부에서 넣어주는 방법이 없을까
     headers = {'Authorization': auth_type + ' ' + key}
 
     category = ''
@@ -102,8 +101,8 @@ def generate_book_insert_query():
                 description = datum["contents"].replace("'", "\\'")
 
                 # insert_query 생성
-                insert_query = f'insert into book(isbn, title, description, author, stock_quantity, image_url, publishing_date, registration_date, publisher, category, registrant_id)' \
-                               f' values(\'{datum["isbn"].split(" ")[1]}\', \'{datum["title"]}\', \'{description}\', \'{author_str}\', {book_stock_quantity_dict[title.replace(" ", "")]}, \'{datum["thumbnail"]}\', \'{datum["datetime"]}\', now(), \'{datum["publisher"]}\', \'{book_category_dict[category]}\', 1);'
+                insert_query = f'insert into book(isbn, title, description, author, stock_quantity, image_url, publishing_date, registration_date, publisher, category, registrant_id, version)' \
+                               f' values(\'{datum["isbn"].split(" ")[1]}\', \'{datum["title"]}\', \'{description}\', \'{author_str}\', {book_stock_quantity_dict[title.replace(" ", "")]}, \'{datum["thumbnail"]}\', \'{datum["datetime"]}\', now(), \'{datum["publisher"]}\', \'{book_category_dict[category]}\', 1, 1);'
                 result_file.write(insert_query + '\n')
                 matched_title_list.append(title)
 
