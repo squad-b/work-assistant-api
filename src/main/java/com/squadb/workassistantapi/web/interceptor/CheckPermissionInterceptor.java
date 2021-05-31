@@ -35,8 +35,7 @@ public class CheckPermissionInterceptor implements HandlerInterceptor {
             if (pathAttributes != null && pathAttributes.containsKey("memberId")) {
                 final long pathMemberId = Long.parseLong((String)pathAttributes.get("memberId"));
                 final LoginMember loginMember = LoginMember.getFromSession(session);
-                return loginMember.isAdmin() ||
-                       pathMemberId == loginMember.getId();
+                return loginMember.isAdmin() || pathMemberId == loginMember.getId();
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);

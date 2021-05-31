@@ -3,7 +3,6 @@ package com.squadb.workassistantapi.service;
 import com.squadb.workassistantapi.domain.Book;
 import com.squadb.workassistantapi.domain.Member;
 import com.squadb.workassistantapi.domain.Rental;
-import com.squadb.workassistantapi.domain.RentalStatus;
 import com.squadb.workassistantapi.repository.RentalRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -39,15 +38,7 @@ public class RentalService {
     }
 
     @Transactional(readOnly = true)
-    public List<Rental> findMemberBookRentals(final long memberId, final RentalStatus rentalStatus) {
-        final Member member = memberService.findById(memberId);
-        return rentalStatus == null ? rentalRepository.findAllByMember(member) : rentalRepository.findAllByMemberAndStatus(member, rentalStatus);
-    }
-
-    @Transactional
-    public long updateRental(long rentalId, long memberId, RentalStatus status) {
-        final Rental rental = rentalRepository.findById(rentalId).orElseThrow();
-        rental.updateRental(memberId, status);
-        return rental.getId();
+    public List<Rental> findMemberBookRentals(final long memberId) {
+        return rentalRepository.findAllByMemberId(memberId);
     }
 }
