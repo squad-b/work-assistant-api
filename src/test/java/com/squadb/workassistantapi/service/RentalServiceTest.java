@@ -3,6 +3,7 @@ package com.squadb.workassistantapi.service;
 import com.squadb.workassistantapi.domain.*;
 import com.squadb.workassistantapi.domain.exceptions.NoAuthorizationException;
 import com.squadb.workassistantapi.domain.exceptions.OutOfStockException;
+import com.squadb.workassistantapi.web.controller.dto.LoginMember;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,10 +14,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 
 @SpringBootTest
 @Transactional
@@ -80,7 +85,7 @@ class RentalServiceTest {
     public void returnBookSuccessTest() {
         // given
         final int stockQuantityBeforeReturn = testBook.getStockQuantity();
-        final Rental mockRental = createRental();
+        final Rental mockRental = createRental(testBook);
 
         // when
         final long rentalId = rentalService.updateRental(mockRental.getId(), testMember.getId(), RentalStatus.RETURN);
@@ -95,7 +100,7 @@ class RentalServiceTest {
     @Test
     public void returnBookFailTest() {
         // given
-        final Rental mockRental = createRental();
+        final Rental mockRental = createRental(testBook);
         final long notRentalOwnerId = mockRental.getId() + 1;
 
         // then
@@ -132,10 +137,24 @@ class RentalServiceTest {
         });
     }
 
-    private Rental createRental() {
-        final Rental mockRental = Rental.createRental(testBook, testMember, false);
-        entityManager.persist(mockRental);
-        return mockRental;
+    @DisplayName("책 여러권 반납 테스트")
+    @Test
+    public void returnBooksTest() {
+        LoginMember loginMember = new LoginMember(testMember.getId(), testMember.getType());
+        List<Rental> rentalList = new ArrayList<>();
+        List<Book> bookList = new ArrayList<>();
+        Map<Long, Integer> stockQuantityBeforeReturn = new HashMap<>();
+        for (int i=0; i<3; ++i) {
+            Book book = createBook(testMember);
+            bookList.add(book);
+            Rental rental = createRental(book);
+            rentalList.add(rental);
+            stockQuantityBeforeReturn.put(book.getId(), book.getStockQuantity());
+        }
+        List<Long> rentalIdList = rentalList.stream().mapToLong(Rental::getId).boxed().collect(Collectors.toList());
+        assertThatNoException().isThrownBy(() -> rentalService.returnBooks(rentalIdList, loginMember));
+        rentalList.forEach(rental -> assertThat(rental.isReturned()).isTrue());
+        bookList.forEach(book -> assertThat(book.getStockQuantity() == stockQuantityBeforeReturn.get(book.getId()) + 1).isTrue());
     }
 
     private Rental createRental(Book testBook) {
@@ -144,7 +163,7 @@ class RentalServiceTest {
         return mockRental;
     }
 
-    private Book createBook(Member admin) {
+    private Book createBook(Member member) {
         Book book = Book.builder()
                 .isbn(String.format("%.13f", Math.random()).substring(2))
                 .title("제목")
@@ -156,7 +175,7 @@ class RentalServiceTest {
                 .stockQuantity(1)
                 .publishingDate(LocalDateTime.now())
                 .build();
-        book.setRegistrant(admin);
+        book.setRegistrant(member);
         entityManager.persist(book);
         return book;
     }

@@ -6,7 +6,7 @@ import com.squadb.workassistantapi.domain.Rental;
 import com.squadb.workassistantapi.domain.RentalStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.*;
+import java.util.List;
 
 public interface RentalRepository extends JpaRepository<Rental, Long> {
     List<Rental> findAllByBook(Book book);

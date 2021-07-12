@@ -1,6 +1,6 @@
 package com.squadb.workassistantapi.web.config;
 
-import com.squadb.workassistantapi.web.config.auth.LoginMemberArgumentResolver;
+import com.squadb.workassistantapi.web.config.auth.CurrentLoginMemberArgumentResolver;
 import com.squadb.workassistantapi.web.interceptor.CheckPermissionInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +18,7 @@ import static org.springframework.http.HttpMethod.*;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    private final LoginMemberArgumentResolver loginMemberArgumentResolver;
+    private final CurrentLoginMemberArgumentResolver currentLoginMemberArgumentResolver;
     private final CheckPermissionInterceptor checkPermissionInterceptor;
 
     @Value("${cors.allowed-origin}")
@@ -26,7 +26,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(loginMemberArgumentResolver);
+        resolvers.add(currentLoginMemberArgumentResolver);
     }
 
     @Override

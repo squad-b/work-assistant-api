@@ -1,6 +1,7 @@
 package com.squadb.workassistantapi.domain;
 
 import com.squadb.workassistantapi.domain.exceptions.NoAuthorizationException;
+import com.squadb.workassistantapi.web.controller.dto.LoginMember;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -92,4 +93,16 @@ public class Rental {
         }
     }
 
+    public void returnBy(LoginMember loginMember) {
+        if (!loginMember.isAdmin() && loginMember.is(member)) {
+            throw new NoAuthorizationException("반납할 권한이 없습니다.");
+        }
+        this.status = RETURN;
+        this.book.increaseStock();
+        this.returnDate = LocalDateTime.now();
+    }
+
+    public boolean isReturned() {
+        return this.status.equals(RETURN);
+    }
 }
