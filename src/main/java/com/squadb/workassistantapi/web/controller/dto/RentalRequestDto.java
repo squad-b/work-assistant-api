@@ -13,7 +13,7 @@ public class RentalRequestDto {
     private RentalStatus status;
     private List<Long> rentalIdList;
 
-    public static RentalRequestDto of (boolean longTerm) {
+    public static RentalRequestDto of(boolean longTerm) {
         RentalRequestDto rentalRequestDto = new RentalRequestDto();
         rentalRequestDto.longTerm = longTerm;
         return rentalRequestDto;
