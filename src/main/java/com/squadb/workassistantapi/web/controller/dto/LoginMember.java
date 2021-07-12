@@ -45,4 +45,9 @@ public class LoginMember {
 
     @JsonIgnore
     public boolean isAdmin() { return type.isAdmin(); }
+
+    @JsonIgnore
+    public boolean is(Member member) {
+        return member != null && member.getId() == this.id;
+    }
 }

@@ -37,6 +37,24 @@ public class RentalController {
         return ResponseEntity.ok(RentalResponseDto.of(bookRentalList));
     }
 
+    @PutMapping(value = "/rentals/{rentalId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RentalResponseDto> returnBook(@PathVariable long rentalId,
+                                                        @CurrentLoginMember LoginMember loginMember,
+                                                        @RequestBody RentalRequestDto rentalRequestDto) {
+        final long returnedRentalId = rentalService.updateRental(rentalId, loginMember.getId(), rentalRequestDto.getStatus());
+        return ResponseEntity.ok(RentalResponseDto.success(returnedRentalId));
+    }
+
+    @PostMapping(value = "/return/rentals", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<RentalResponseDto>> returnBooks(@CurrentLoginMember LoginMember loginMember, @RequestBody RentalRequestDto rentalRequestDto) {
+        try {
+            final List<Rental> rentalList = rentalService.returnBooks(rentalRequestDto.getRentalIdList(), loginMember);
+            return ResponseEntity.ok(RentalResponseDto.of(rentalList));
+        } catch (NoAuthorizationException e) {
+            return ResponseEntity.ok(List.of(RentalResponseDto.fail("반납 권한이 없습니다.")));
+        }
+    }
+
     @ExceptionHandler(OutOfStockException.class)
     public ResponseEntity<RentalResponseDto> handleOutOfStock() {
         return ResponseEntity.ok(RentalResponseDto.fail("OUT_OF_STOCK"));
