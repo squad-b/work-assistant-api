@@ -14,9 +14,22 @@ spring:
       repositories:
         enabled: false
 
+  datasource:
+    url: jdbc:mysql://localhost:3306/wa-db
+    username: wa-user
+    password: test1234
+  redis:
+    password: test1234
+
 logging:
   level:
     org.hibernate.SQL: debug
 
 cors:
-  allowed-origin: http://localhost:3000
+  allowed-origin: http://www.mirilibrary.xyz
+
+server:
+  servlet:
+    session:
+      cookie:
+        secure: true
