@@ -4,7 +4,10 @@ import com.squadb.workassistantapi.web.config.auth.CurrentLoginMemberArgumentRes
 import com.squadb.workassistantapi.web.interceptor.CheckPermissionInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.session.web.http.CookieSerializer;
+import org.springframework.session.web.http.DefaultCookieSerializer;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -22,7 +25,7 @@ public class WebConfig implements WebMvcConfigurer {
     private final CheckPermissionInterceptor checkPermissionInterceptor;
 
     @Value("${cors.allowed-origin}")
-    private String[] allowedOrigin;
+    private String allowedOrigin;
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
@@ -40,5 +43,12 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(checkPermissionInterceptor);
+    }
+
+    @Bean
+    public CookieSerializer cookieSerializer() {
+        DefaultCookieSerializer serializer = new DefaultCookieSerializer();
+        serializer.setSameSite("none");
+        return serializer;
     }
 }
