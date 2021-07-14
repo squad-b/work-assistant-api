@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
@@ -30,10 +31,12 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponseDto> login(@RequestBody LoginRequestDto request, HttpSession session) {
+    public ResponseEntity<AuthResponseDto> login(@RequestBody LoginRequestDto request, HttpSession session,
+                                                 HttpServletResponse response) {
         try {
             Member member = memberService.login(request.getEmail(), request.getPassword());
             LoginMember loginMember = LoginMember.putInSession(member, session);
+            response.addHeader("Set-Cookie", "Secure; SameSite=None");
             return ResponseEntity.ok(AuthResponseDto.success(loginMember));
         } catch (LoginFailedException e) {
             return ResponseEntity.ok(AuthResponseDto.fail(e.getResult()));
