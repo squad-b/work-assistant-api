@@ -49,7 +49,6 @@ public class WebConfig implements WebMvcConfigurer {
     public CookieSerializer cookieSerializer() {
         DefaultCookieSerializer serializer = new DefaultCookieSerializer();
         serializer.setSameSite("None");
-        serializer.setUseSecureCookie(true);
         return serializer;
     }
 }
