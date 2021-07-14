@@ -29,6 +29,7 @@ cors:
   allowed-origin: http://www.mirilibrary.xyz
 
 server:
-  session:
-    cookie:
-      secure: true
+  servlet:
+    session:
+      cookie:
+        secure: true
