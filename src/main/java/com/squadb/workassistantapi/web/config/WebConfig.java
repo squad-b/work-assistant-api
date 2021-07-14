@@ -22,7 +22,7 @@ public class WebConfig implements WebMvcConfigurer {
     private final CheckPermissionInterceptor checkPermissionInterceptor;
 
     @Value("${cors.allowed-origin}")
-    private String allowedOrigin;
+    private String[] allowedOrigin;
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
