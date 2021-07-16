@@ -24,8 +24,8 @@ public class WebConfig implements WebMvcConfigurer {
     private final CurrentLoginMemberArgumentResolver currentLoginMemberArgumentResolver;
     private final CheckPermissionInterceptor checkPermissionInterceptor;
 
-    @Value("${cors.allowed-origin}")
-    private String allowedOrigin;
+    @Value("${cors.allowed-origins}")
+    private String[] allowedOrigins;
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
@@ -37,7 +37,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedMethods(GET.name(), POST.name(), PUT.name(), HEAD.name())
                 .allowCredentials(true)
-                .allowedOrigins(allowedOrigin);
+                .allowedOrigins(allowedOrigins);
     }
 
     @Override
