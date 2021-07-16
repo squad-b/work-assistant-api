@@ -31,12 +31,10 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponseDto> login(@RequestBody LoginRequestDto request, HttpSession session,
-                                                 HttpServletResponse response) {
+    public ResponseEntity<AuthResponseDto> login(@RequestBody LoginRequestDto request, HttpSession session) {
         try {
             Member member = memberService.login(request.getEmail(), request.getPassword());
             LoginMember loginMember = LoginMember.putInSession(member, session);
-            response.setHeader("Set-Cookie", "SameSite=None; Secure");
             return ResponseEntity.ok(AuthResponseDto.success(loginMember));
         } catch (LoginFailedException e) {
             return ResponseEntity.ok(AuthResponseDto.fail(e.getResult()));
