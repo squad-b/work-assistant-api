@@ -9,7 +9,7 @@ public class BookRegisterResponseDto {
 
     private static final long FAIL_BOOK_ID = -1;
 
-    @Getter private long id;
+    @Getter private Long id;
     @Getter private String result;
 
     public static BookRegisterResponseDto success(long bookId) {
