@@ -1,15 +1,17 @@
 package com.squadb.workassistantapi.service;
 
-import com.squadb.workassistantapi.domain.Book;
-import com.squadb.workassistantapi.domain.Member;
-import com.squadb.workassistantapi.repository.BookRepository;
-import com.squadb.workassistantapi.service.exception.KeyDuplicationException;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import com.squadb.workassistantapi.domain.Book;
+import com.squadb.workassistantapi.domain.Member;
+import com.squadb.workassistantapi.repository.BookRepository;
+import com.squadb.workassistantapi.service.exception.KeyDuplicationException;
+
+import lombok.RequiredArgsConstructor;
 
 
 @RequiredArgsConstructor
@@ -21,13 +23,13 @@ public class BookService {
     private final MemberService memberService;
 
     @Transactional(readOnly = true)
-    public Book findById(final long bookId) {
+    public Book findById(final Long bookId) {
         return bookRepository.findById(bookId)
                 .orElseThrow(() -> new IllegalArgumentException(String.format("No Book:[%d]", bookId)));
     }
 
     @Transactional
-    public long register(final Book book, final long registrantId) {
+    public Long register(final Book book, final Long registrantId) {
         checkIsbnDuplication(book.getIsbn());
         final Member member = memberService.findById(registrantId);
         book.setRegistrant(member);

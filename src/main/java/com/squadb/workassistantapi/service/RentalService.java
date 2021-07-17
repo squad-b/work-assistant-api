@@ -1,18 +1,20 @@
 package com.squadb.workassistantapi.service;
 
+import java.util.Collections;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.squadb.workassistantapi.domain.Book;
 import com.squadb.workassistantapi.domain.Member;
 import com.squadb.workassistantapi.domain.Rental;
 import com.squadb.workassistantapi.domain.RentalStatus;
 import com.squadb.workassistantapi.repository.RentalRepository;
 import com.squadb.workassistantapi.web.controller.dto.LoginMember;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Collections;
-import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -23,12 +25,12 @@ public class RentalService {
     private final RentalRepository rentalRepository;
 
     @Transactional(readOnly = true)
-    public Rental findById(final long rentalId) {
+    public Rental findById(final Long rentalId) {
         return rentalRepository.findById(rentalId).orElseThrow(() -> new IllegalArgumentException(String.format("No rental:[%d]", rentalId)));
     }
 
     @Transactional
-    public long rentBook(final long bookId, final long memberId, final boolean isLongTerm) {
+    public Long rentBook(final Long bookId, final Long memberId, final boolean isLongTerm) {
         final Book book = bookService.findById(bookId);
         final Member member = memberService.findById(memberId);
         final Rental rental = Rental.createRental(book, member, isLongTerm);
@@ -37,19 +39,19 @@ public class RentalService {
     }
 
     @Transactional(readOnly = true)
-    public List<Rental> findAllByBook(final long bookId) {
+    public List<Rental> findAllByBook(final Long bookId) {
         final Book book = bookService.findById(bookId);
         return rentalRepository.findAllByBook(book);
     }
 
     @Transactional(readOnly = true)
-    public List<Rental> findMemberBookRentals(final long memberId, final RentalStatus rentalStatus) {
+    public List<Rental> findMemberBookRentals(final Long memberId, final RentalStatus rentalStatus) {
         final Member member = memberService.findById(memberId);
         return rentalStatus == null ? rentalRepository.findAllByMember(member) : rentalRepository.findAllByMemberAndStatus(member, rentalStatus);
     }
 
     @Transactional
-    public long updateRental(long rentalId, long memberId, RentalStatus status) {
+    public long updateRental(Long rentalId, Long memberId, RentalStatus status) {
         final Rental rental = rentalRepository.findById(rentalId).orElseThrow();
         rental.updateRental(memberId, status);
         return rental.getId();

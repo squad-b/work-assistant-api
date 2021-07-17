@@ -1,5 +1,18 @@
 package com.squadb.workassistantapi.web.controller;
 
+import java.util.List;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.squadb.workassistantapi.domain.Rental;
 import com.squadb.workassistantapi.domain.exceptions.NoAuthorizationException;
 import com.squadb.workassistantapi.domain.exceptions.OutOfStockException;
@@ -8,13 +21,8 @@ import com.squadb.workassistantapi.web.config.auth.CurrentLoginMember;
 import com.squadb.workassistantapi.web.controller.dto.LoginMember;
 import com.squadb.workassistantapi.web.controller.dto.RentalRequestDto;
 import com.squadb.workassistantapi.web.controller.dto.RentalResponseDto;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RestController
@@ -23,7 +31,7 @@ public class RentalController {
     public final RentalService rentalService;
 
     @PostMapping(value = "/rent/books/{bookId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RentalResponseDto> rentBook(@PathVariable long bookId,
+    public ResponseEntity<RentalResponseDto> rentBook(@PathVariable Long bookId,
                                                       @CurrentLoginMember LoginMember loginMember,
                                                       @RequestBody(required = false) RentalRequestDto rentalRequestDto) {
         rentalRequestDto = rentalRequestDto == null ? new RentalRequestDto() : rentalRequestDto;
@@ -38,7 +46,7 @@ public class RentalController {
     }
 
     @PutMapping(value = "/rentals/{rentalId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RentalResponseDto> returnBook(@PathVariable long rentalId,
+    public ResponseEntity<RentalResponseDto> returnBook(@PathVariable Long rentalId,
                                                         @CurrentLoginMember LoginMember loginMember,
                                                         @RequestBody RentalRequestDto rentalRequestDto) {
         final long returnedRentalId = rentalService.updateRental(rentalId, loginMember.getId(), rentalRequestDto.getStatus());
