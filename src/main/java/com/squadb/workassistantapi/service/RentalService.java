@@ -1,20 +1,17 @@
 package com.squadb.workassistantapi.service;
 
-import java.util.Collections;
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.squadb.workassistantapi.domain.Book;
 import com.squadb.workassistantapi.domain.Member;
 import com.squadb.workassistantapi.domain.Rental;
 import com.squadb.workassistantapi.domain.RentalStatus;
 import com.squadb.workassistantapi.repository.RentalRepository;
 import com.squadb.workassistantapi.web.controller.dto.LoginMember;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -58,13 +55,12 @@ public class RentalService {
     }
 
     @Transactional
-    public List<Rental> returnBooks(List<Long> rentalIdList, LoginMember loginMember) {
+    public void returnBooks(List<Long> rentalIdList, LoginMember loginMember) {
         final List<Rental> rentalList = rentalRepository.findAllById(rentalIdList);
         if (rentalList.isEmpty()) {
             log.warn("존재하지 않는 대여 목록 입니다. {}", rentalIdList);
-            return Collections.emptyList();
+            return;
         }
         rentalList.forEach(rental -> rental.returnBy(loginMember));
-        return rentalList;
     }
 }

@@ -1,18 +1,5 @@
 package com.squadb.workassistantapi.web.controller;
 
-import java.util.List;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.squadb.workassistantapi.domain.Rental;
 import com.squadb.workassistantapi.domain.exceptions.NoAuthorizationException;
 import com.squadb.workassistantapi.domain.exceptions.OutOfStockException;
@@ -21,8 +8,13 @@ import com.squadb.workassistantapi.web.config.auth.CurrentLoginMember;
 import com.squadb.workassistantapi.web.controller.dto.LoginMember;
 import com.squadb.workassistantapi.web.controller.dto.RentalRequestDto;
 import com.squadb.workassistantapi.web.controller.dto.RentalResponseDto;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -54,12 +46,12 @@ public class RentalController {
     }
 
     @PostMapping(value = "/return/rentals", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<RentalResponseDto>> returnBooks(@CurrentLoginMember LoginMember loginMember, @RequestBody RentalRequestDto rentalRequestDto) {
+    public ResponseEntity<RentalResponseDto> returnBooks(@CurrentLoginMember LoginMember loginMember, @RequestBody RentalRequestDto rentalRequestDto) {
         try {
-            final List<Rental> rentalList = rentalService.returnBooks(rentalRequestDto.getRentalIdList(), loginMember);
-            return ResponseEntity.ok(RentalResponseDto.of(rentalList));
+            rentalService.returnBooks(rentalRequestDto.getRentalIdList(), loginMember);
+            return ResponseEntity.ok(RentalResponseDto.success());
         } catch (NoAuthorizationException e) {
-            return ResponseEntity.ok(List.of(RentalResponseDto.fail("반납 권한이 없습니다.")));
+            return ResponseEntity.ok(RentalResponseDto.fail("반납 권한이 없습니다."));
         }
     }
 
