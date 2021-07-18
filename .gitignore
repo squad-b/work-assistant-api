@@ -38,6 +38,7 @@ out/
 .env
 
 application-third-party.yaml
+nohup.out
 
 ### 책, 대여 정보 insert query 관련 파일 ###
 script/input/book_list.csv
