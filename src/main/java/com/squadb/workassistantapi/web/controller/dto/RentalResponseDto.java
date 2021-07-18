@@ -1,7 +1,7 @@
 package com.squadb.workassistantapi.web.controller.dto;
 
-import com.fasterxml.jackson.annotation.*;
-import com.fasterxml.jackson.annotation.JsonInclude.*;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.squadb.workassistantapi.domain.Rental;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -23,10 +23,15 @@ public class RentalResponseDto {
     private String startDate;
     private String endDate;
 
-    public static RentalResponseDto success(long rentalId) {
+    public static RentalResponseDto success() {
         RentalResponseDto rentalResponseDto = new RentalResponseDto();
-        rentalResponseDto.id = rentalId;
         rentalResponseDto.result = "SUCCESS";
+        return rentalResponseDto;
+    }
+
+    public static RentalResponseDto success(long rentalId) {
+        RentalResponseDto rentalResponseDto = success();
+        rentalResponseDto.id = rentalId;
         return rentalResponseDto;
     }
 
