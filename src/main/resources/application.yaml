@@ -24,12 +24,3 @@ spring:
 logging:
   level:
     org.hibernate.SQL: debug
-
-cors:
-  allowed-origins: http://localhost:3000, http://www.mirilibrary.xyz
-
-server:
-  servlet:
-    session:
-      cookie:
-        secure: true
