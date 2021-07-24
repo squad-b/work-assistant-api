@@ -1,12 +1,12 @@
 package com.squadb.workassistantapi.web.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.squadb.workassistantapi.domain.Member;
-import com.squadb.workassistantapi.domain.MemberType;
-import com.squadb.workassistantapi.domain.exceptions.OutOfStockException;
-import com.squadb.workassistantapi.service.MemberService;
-import com.squadb.workassistantapi.service.RentalService;
-import com.squadb.workassistantapi.web.controller.dto.LoginMember;
+import static org.hamcrest.Matchers.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.BDDMockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,14 +18,12 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.mockito.ArgumentMatchers.anyBoolean;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.squadb.workassistantapi.domain.MemberType;
+import com.squadb.workassistantapi.domain.exceptions.OutOfStockException;
+import com.squadb.workassistantapi.service.MemberService;
+import com.squadb.workassistantapi.service.RentalService;
+import com.squadb.workassistantapi.web.controller.dto.LoginMember;
 
 @WebMvcTest(controllers = RentalController.class)
 class RentalControllerTest {
@@ -41,8 +39,7 @@ class RentalControllerTest {
     @BeforeEach
     public void setup() {
         mockHttpSession = new MockHttpSession();
-        Member member = Member.createMember("test@naver.com", "피플팀", "12345", MemberType.ADMIN);
-        LoginMember.putInSession(member, mockHttpSession);
+        mockHttpSession.setAttribute("LOGIN_MEMBER", new LoginMember(1L, MemberType.NORMAL));
     }
 
     @DisplayName("책 대여 api 성공 테스트")

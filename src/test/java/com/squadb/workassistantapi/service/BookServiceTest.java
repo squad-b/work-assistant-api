@@ -1,19 +1,19 @@
 package com.squadb.workassistantapi.service;
 
-import com.squadb.workassistantapi.domain.Book;
-import com.squadb.workassistantapi.domain.Member;
-import com.squadb.workassistantapi.domain.MemberType;
-import com.squadb.workassistantapi.service.exception.KeyDuplicationException;
+import static org.assertj.core.api.Assertions.*;
+
+import javax.persistence.EntityManager;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import com.squadb.workassistantapi.domain.Book;
+import com.squadb.workassistantapi.domain.Member;
+import com.squadb.workassistantapi.domain.MemberType;
+import com.squadb.workassistantapi.service.exception.KeyDuplicationException;
 
 @SpringBootTest
 @Transactional
@@ -27,7 +27,6 @@ class BookServiceTest {
     public void bookRegisterTest() {
         //given
         final Member member = createMember();
-
         final Book book = createBook("1234567890123");
 
         //when

@@ -46,8 +46,8 @@ public class MemberController {
     @PostMapping("/login")
     public ResponseEntity<AuthResponseDto> login(@RequestBody LoginRequestDto request, HttpSession session) {
         try {
-            Member member = memberService.login(request.getEmail(), request.getPassword());
-            LoginMember loginMember = LoginMember.putInSession(member, session);
+            LoginMember loginMember = memberService.login(request.getEmail(), request.getPassword());
+            session.setAttribute("LOGIN_MEMBER", loginMember);
             return ResponseEntity.ok(AuthResponseDto.success(loginMember));
         } catch (LoginFailedException e) {
             return ResponseEntity.ok(AuthResponseDto.fail(e.getResult()));

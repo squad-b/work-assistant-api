@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.squadb.workassistantapi.domain.Member;
 import com.squadb.workassistantapi.repository.MemberRepository;
+import com.squadb.workassistantapi.web.controller.dto.LoginMember;
 import com.squadb.workassistantapi.web.exception.LoginFailedException;
 
 import lombok.RequiredArgsConstructor;
@@ -21,10 +22,10 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public Member login(String email, String password) {
+    public LoginMember login(String email, String password) {
         final Member findMember = memberRepository.findByEmail(email).orElseThrow(LoginFailedException::noSuchMember);
         findMember.checkEqualPassword(password);
-        return findMember;
+        return new LoginMember(findMember.getId(), findMember.getType());
     }
 
     @Transactional
