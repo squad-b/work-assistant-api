@@ -54,8 +54,8 @@ public class Member {
         return type.isAdmin();
     }
 
-    // 관리자 권한을 가진 사람에 대한 커스텀 액션 실행 메소드 TODO throwable 로 만들기
-    public Member ifAdmin(Consumer<Member> action) throws PermissionDeniedException {
+    // 관리자 권한을 가진 사람에 대한 커스텀 액션 실행 메소드
+    public Member ifAdmin(Consumer<Member> action) {
         if (isAdmin()) {
             action.accept(this);
             return this;
