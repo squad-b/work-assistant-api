@@ -3,6 +3,7 @@ package com.squadb.workassistantapi.web.controller;
 import java.util.List;
 import java.util.Objects;
 
+import com.squadb.workassistantapi.service.exception.PermissionDeniedException;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -49,7 +50,13 @@ public class BookApiController {
     @DeleteMapping(value = "/books/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity deleteBook(@PathVariable Long id,
                                      @CurrentLoginMember LoginMember loginMember) {
-        bookService.delete(id, loginMember.getId());
+        try {
+            bookService.delete(id, loginMember.getId());
+
+        } catch (PermissionDeniedException e) {
+            handleNoAuthorizationException();
+        }
+
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

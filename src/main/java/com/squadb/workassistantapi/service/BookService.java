@@ -42,7 +42,8 @@ public class BookService {
     public void delete(Long bookId, Long registrantId) {
 
         memberService.findById(registrantId)
-                     .ifAdmin((m) -> bookRepository.deleteById(bookId));
+                     .ifAdmin((m) -> bookRepository.deleteById(bookId))
+                     .orElseThrow(() -> new PermissionDeniedException("Authorization Required"));
     }
 
     private void checkIsbnDuplication(final String isbn) {
