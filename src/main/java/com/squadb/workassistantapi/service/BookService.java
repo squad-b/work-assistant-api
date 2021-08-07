@@ -29,6 +29,14 @@ public class BookService {
     }
 
     @Transactional
+    public void delete(Long bookId, Long adminId) {
+        Member member = memberService.findById(adminId);
+        Book book = findById(bookId);
+        book.checkDeletePermission(member);
+        bookRepository.delete(book);
+    }
+
+    @Transactional
     public Long register(final Book book, final Long registrantId) {
         checkIsbnDuplication(book.getIsbn());
         final Member member = memberService.findById(registrantId);

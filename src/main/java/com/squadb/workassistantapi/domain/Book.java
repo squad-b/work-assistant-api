@@ -102,4 +102,15 @@ public class Book {
         if (!member.isAdmin()) { throw new NoAuthorizationException("관리자만 책을 등록할 수 있습니다."); }
         this.registrant = member;
     }
+
+    public void checkDeletePermission(Member member) {
+        if (canBeDeletedBy(member)) {
+            return;
+        }
+        throw new NoAuthorizationException(String.format("책 삭제 권한이 없습니다. memberId[%s]", member.getId()));
+    }
+
+    public boolean canBeDeletedBy(Member member) {
+        return member.isAdmin();
+    }
 }
