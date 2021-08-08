@@ -3,4 +3,4 @@ spring:
     hibernate:
       ddl-auto: validate
   profiles:
-    include: third-party
+    include: third-party,production-db,production-session-storage
