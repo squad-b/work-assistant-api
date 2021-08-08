@@ -18,8 +18,6 @@ spring:
     url: jdbc:mysql://localhost:3306/wa-db
     username: wa-user
     password: test1234
-  redis:
-    password: test1234
 
 logging:
   level:
