@@ -14,7 +14,7 @@ git pull
 
 echo "app build"
 
-./gradlew clean build -x test
+./gradlew clean build
 
 echo "copy executable jar file"
 
@@ -24,7 +24,7 @@ echo "check current pid"
 
 if [ -f $PID_PATH ]; then
 	PID=$(cat $PID_PATH)
-	echo "stop currnet pid $PID"
+	echo "stop current pid $PID"
 	kill -15 $PID
 	sleep 10
 fi
