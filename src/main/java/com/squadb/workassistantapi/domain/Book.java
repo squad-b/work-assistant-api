@@ -1,28 +1,14 @@
 package com.squadb.workassistantapi.domain;
 
-import java.time.LocalDateTime;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.Version;
-
 import com.squadb.workassistantapi.domain.exceptions.NoAuthorizationException;
 import com.squadb.workassistantapi.domain.exceptions.OutOfStockException;
-
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Getter
 @Entity
@@ -85,7 +71,9 @@ public class Book {
     }
 
     @Builder
-    public Book(String isbn, String title, String description, String author, int stockQuantity, String imageUrl, LocalDateTime publishingDate, String publisher, BookCategory category) {
+    public Book(String isbn, String title, String description, String author, int stockQuantity, String imageUrl,
+                LocalDateTime publishingDate, String publisher, BookCategory category, Member registrant) {
+        if (!registrant.isAdmin()) { throw new NoAuthorizationException("관리자만 책을 등록할 수 있습니다."); }
         this.isbn = isbn;
         this.title = title;
         this.description = description;
@@ -96,10 +84,6 @@ public class Book {
         this.registrationDate = LocalDateTime.now();
         this.publisher = publisher;
         this.category = category;
-    }
-
-    public void setRegistrant(Member member) {
-        if (!member.isAdmin()) { throw new NoAuthorizationException("관리자만 책을 등록할 수 있습니다."); }
-        this.registrant = member;
+        this.registrant = registrant;
     }
 }
