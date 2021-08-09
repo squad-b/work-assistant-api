@@ -2,6 +2,7 @@ package com.squadb.workassistantapi.service;
 
 import java.util.List;
 
+import com.squadb.workassistantapi.service.exception.PermissionDeniedException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +36,14 @@ public class BookService {
         book.setRegistrant(member);
         final Book saveBook = bookRepository.save(book);
         return saveBook.getId();
+    }
+
+    @Transactional
+    public void delete(Long bookId, Long registrantId) {
+
+        memberService.findById(registrantId)
+                     .ifAdmin((m) -> bookRepository.deleteById(bookId))
+                     .orElseThrow(() -> new PermissionDeniedException("Authorization Required"));
     }
 
     private void checkIsbnDuplication(final String isbn) {
