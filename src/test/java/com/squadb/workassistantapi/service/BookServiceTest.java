@@ -45,7 +45,7 @@ class BookServiceTest {
         bookRegisterDto.setIsbn(isbn);
         bookRegisterDto.setTitle("Test");
         bookRegisterDto.setStockQuantity(1);
-        return bookService.register2(bookRegisterDto, memberId);
+        return bookService.register(bookRegisterDto, memberId);
     }
 
     private Member 멤버가_등록되어_있다() {

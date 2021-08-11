@@ -70,7 +70,7 @@ class BookApiControllerTest {
         bookRegisterDto.setStockQuantity(2);
 
         final long registerBookId = 1L;
-        given(bookService.register2(any(BookRegisterDto.class), anyLong())).willReturn(registerBookId);
+        given(bookService.register(any(BookRegisterDto.class), anyLong())).willReturn(registerBookId);
 
         //when
         ResultActions perform = mockMvc.perform(post("/books")
@@ -94,7 +94,7 @@ class BookApiControllerTest {
         bookRegisterDto.setTitle("테스트제목");
         bookRegisterDto.setStockQuantity(2);
 
-        given(bookService.register2(any(BookRegisterDto.class), anyLong())).willThrow(NoAuthorizationException.class);
+        given(bookService.register(any(BookRegisterDto.class), anyLong())).willThrow(NoAuthorizationException.class);
 
         //when
         ResultActions perform = mockMvc.perform(post("/books")

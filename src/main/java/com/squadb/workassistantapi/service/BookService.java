@@ -26,7 +26,7 @@ public class BookService {
     }
 
     @Transactional
-    public Long register2(final BookRegisterDto bookDto, final Long registrantId) {
+    public Long register(final BookRegisterDto bookDto, final Long registrantId) {
         checkIsbnDuplication(bookDto.getIsbn());
         final Member registrant = memberRepository.findById(registrantId).orElseThrow(() -> new IllegalArgumentException("책 등록자가 없습니다. " + registrantId));
         final Book saveBook = bookRepository.save(bookDto.toEntity(registrant));

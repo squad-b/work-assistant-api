@@ -37,7 +37,7 @@ public class BookApiController {
     public ResponseEntity<BookRegisterResponseDto> registerBook(@RequestBody BookRegisterDto registerRequestDto,
                                                                 @CurrentLoginMember LoginMember loginMember) {
         registerRequestDto.checkValidation();
-        Long bookId = bookService.register2(registerRequestDto, loginMember.getId());
+        Long bookId = bookService.register(registerRequestDto, loginMember.getId());
         return new ResponseEntity<>(BookRegisterResponseDto.success(bookId), HttpStatus.OK);
     }
 
