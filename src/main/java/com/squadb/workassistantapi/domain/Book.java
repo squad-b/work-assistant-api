@@ -41,7 +41,7 @@ public class Book {
 
     @Getter
     @Embedded
-    public StockQuantity stockQuantity;
+    private StockQuantity stockQuantity;
 
     @Getter
     @Column
