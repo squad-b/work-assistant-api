@@ -33,7 +33,7 @@ public class BookDetailResponseDto {
         bookDetailResponseDto.author = book.getAuthor();
         bookDetailResponseDto.publisher = book.getPublisher();
         bookDetailResponseDto.imageUrl = book.getImageUrl();
-        bookDetailResponseDto.stockQuantity = book.getStockQuantity();
+        bookDetailResponseDto.stockQuantity = book.getStockQuantity().getValue();
         bookDetailResponseDto.description = book.getDescription();
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");

@@ -33,4 +33,15 @@ class StockQuantityTest {
 
         assertThat(four.plus(one)).isEqualTo(StockQuantity.valueOf(5));
     }
+
+    @DisplayName("재고 수끼리 수량 비교를 할 수 있다.")
+    @Test
+    void comparableStockQuantityTest() {
+        StockQuantity four = StockQuantity.valueOf(4);
+        StockQuantity one = StockQuantity.valueOf(1);
+
+        assertThat(four.compareTo(one)).isEqualTo(1);
+        assertThat(one.compareTo(four)).isEqualTo(-1);
+        assertThat(one.compareTo(StockQuantity.valueOf(1))).isEqualTo(0);
+    }
 }

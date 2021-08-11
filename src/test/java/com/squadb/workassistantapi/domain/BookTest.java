@@ -20,7 +20,7 @@ class BookTest {
         assertThatThrownBy(() -> Book.builder()
                 .isbn(isbn)
                 .title("Spring")
-                .stockQuantity(1)
+                .stockQuantity(StockQuantity.valueOf(1))
                 .registrationDate(LocalDateTime.now())
                 .registrant(일반회원)
                 .build());
@@ -36,7 +36,7 @@ class BookTest {
         final Book book = Book.builder()
                 .isbn(isbn)
                 .title("Spring")
-                .stockQuantity(1)
+                .stockQuantity(StockQuantity.valueOf(1))
                 .registrant(관리자)
                 .registrationDate(registrantDateTime)
                 .build();
@@ -44,7 +44,7 @@ class BookTest {
         // then
         assertThat(book.getIsbn()).isEqualTo(isbn);
         assertThat(book.getTitle()).isEqualTo("Spring");
-        assertThat(book.getStockQuantity()).isEqualTo(1);
+        assertThat(book.getStockQuantity().getValue()).isEqualTo(1);
         assertThat(book.getRegistrationDate()).isEqualTo(registrantDateTime);
     }
 }

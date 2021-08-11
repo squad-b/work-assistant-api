@@ -86,7 +86,7 @@ class RentalServiceTest {
     @Test
     public void returnBookSuccessTest() {
         // given
-        final int stockQuantityBeforeReturn = testBook.getStockQuantity();
+        final StockQuantity stockQuantityBeforeReturn = testBook.getStockQuantity();
         final Rental mockRental = createRental(testBook);
 
         // when
@@ -145,7 +145,7 @@ class RentalServiceTest {
         LoginMember loginMember = new LoginMember(testMember.getId(), testMember.getType());
         List<Rental> rentalList = new ArrayList<>();
         List<Book> bookList = new ArrayList<>();
-        Map<Long, Integer> stockQuantityBeforeReturn = new HashMap<>();
+        Map<Long, StockQuantity> stockQuantityBeforeReturn = new HashMap<>();
         for (int i=0; i<3; ++i) {
             Book book = createBook(testMember);
             bookList.add(book);
@@ -156,7 +156,7 @@ class RentalServiceTest {
         List<Long> rentalIdList = rentalList.stream().mapToLong(Rental::getId).boxed().collect(Collectors.toList());
         assertThatNoException().isThrownBy(() -> rentalService.returnBooks(rentalIdList, loginMember));
         rentalList.forEach(rental -> assertThat(rental.isReturned()).isTrue());
-        bookList.forEach(book -> assertThat(book.getStockQuantity() == stockQuantityBeforeReturn.get(book.getId()) + 1).isTrue());
+        bookList.forEach(book -> assertThat(book.getStockQuantity()).isEqualTo(stockQuantityBeforeReturn.get(book.getId()).plus(StockQuantity.valueOf(1))));
     }
 
     private Rental createRental(Book testBook) {
@@ -174,7 +174,7 @@ class RentalServiceTest {
                 .imageUrl("book.img.url")
                 .category(BookCategory.DEVELOP)
                 .publisher("출판사")
-                .stockQuantity(1)
+                .stockQuantity(StockQuantity.valueOf(1))
                 .publishingDate(LocalDateTime.now())
                 .registrant(member)
                 .registrationDate(LocalDateTime.now())

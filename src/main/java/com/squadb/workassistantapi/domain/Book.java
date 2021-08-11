@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+import static com.squadb.workassistantapi.domain.StockQuantity.ONE;
 import static java.util.Objects.isNull;
 
 @Entity
@@ -39,8 +40,8 @@ public class Book {
     private String author;
 
     @Getter
-    @Column(nullable = false)
-    public int stockQuantity;
+    @Embedded
+    public StockQuantity stockQuantity;
 
     @Getter
     @Column
@@ -72,19 +73,19 @@ public class Book {
 
     public void removeStock() {
         if (isOutOfStock()) { throw new OutOfStockException(String.format("Out of stock, Id:[%d]", id)); }
-        stockQuantity -= 1;
+        stockQuantity = stockQuantity.minus(ONE);
     }
 
     public void increaseStock() {
-        stockQuantity++;
+        stockQuantity = stockQuantity.plus(ONE);
     }
 
     public boolean isOutOfStock() {
-        return stockQuantity <= 0;
+        return stockQuantity.isZero();
     }
 
     @Builder
-    public Book(Isbn isbn, String title, String description, String author, int stockQuantity, String imageUrl,
+    public Book(Isbn isbn, String title, String description, String author, StockQuantity stockQuantity, String imageUrl,
                 LocalDateTime publishingDate, String publisher, BookCategory category, Member registrant,
                 LocalDateTime registrationDate) {
         validateNotNull(isbn, title, stockQuantity, registrant, registrationDate);
@@ -106,9 +107,9 @@ public class Book {
         if (!registrant.isAdmin()) { throw new NoAuthorizationException("관리자만 책을 등록할 수 있습니다."); }
     }
 
-    private void validateNotNull(Isbn isbn, String title, int stockQuantity,
+    private void validateNotNull(Isbn isbn, String title, StockQuantity stockQuantity,
                                  Member registrant, LocalDateTime registrationDate) {
-        if (isNull(isbn) || isNull(title) || stockQuantity <= 0 || isNull(registrant) || isNull(registrationDate)) {
+        if (isNull(isbn) || isNull(title) || isNull(stockQuantity) || isNull(registrant) || isNull(registrationDate)) {
             throw new IllegalArgumentException("책 필수 정보가 없습니다.");
         }
     }

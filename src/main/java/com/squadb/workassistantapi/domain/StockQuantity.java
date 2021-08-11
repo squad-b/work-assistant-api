@@ -1,6 +1,7 @@
 package com.squadb.workassistantapi.domain;
 
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
@@ -9,8 +10,12 @@ import java.util.Objects;
 
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class StockQuantity {
+public class StockQuantity implements Comparable<StockQuantity> {
+    static StockQuantity ONE = StockQuantity.valueOf(1);
 
+    public static final int MIN_VALUE_OF_STOCK_QUANTITY = 0;
+
+    @Getter
     @Column(nullable = false, name = "stock_quantity")
     private int value;
 
@@ -20,7 +25,7 @@ public class StockQuantity {
     }
 
     private void validateNonNegative(int value) {
-        if (value < 0) {
+        if (value < MIN_VALUE_OF_STOCK_QUANTITY) {
             throw new IllegalArgumentException("재고 수는 0 이상이어야 합니다.");
         }
     }
@@ -37,6 +42,10 @@ public class StockQuantity {
         return StockQuantity.valueOf(this.value + other.value);
     }
 
+    boolean isZero() {
+        return this.value == MIN_VALUE_OF_STOCK_QUANTITY;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -48,5 +57,10 @@ public class StockQuantity {
     @Override
     public int hashCode() {
         return Objects.hash(value);
+    }
+
+    @Override
+    public int compareTo(StockQuantity other) {
+        return Integer.compare(this.value, other.value);
     }
 }

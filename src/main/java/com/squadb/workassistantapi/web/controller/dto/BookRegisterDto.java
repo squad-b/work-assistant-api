@@ -1,10 +1,7 @@
 package com.squadb.workassistantapi.web.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.squadb.workassistantapi.domain.Book;
-import com.squadb.workassistantapi.domain.BookCategory;
-import com.squadb.workassistantapi.domain.Isbn;
-import com.squadb.workassistantapi.domain.Member;
+import com.squadb.workassistantapi.domain.*;
 import com.squadb.workassistantapi.web.exception.InvalidRequestBodyException;
 import lombok.Getter;
 import lombok.Setter;
@@ -37,7 +34,7 @@ public class BookRegisterDto {
                 .title(title)
                 .description(description)
                 .author(author)
-                .stockQuantity(stockQuantity)
+                .stockQuantity(StockQuantity.valueOf(stockQuantity))
                 .imageUrl(imageUrl)
                 .publishingDate(publishingDate)
                 .publisher(publisher)

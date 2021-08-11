@@ -17,7 +17,7 @@ public class BookListResponseDto {
     private String title;
     private String imageUrl;
     private BookCategory category;
-    private long stockQuantity;
+    private int stockQuantity;
 
     private static BookListResponseDto of(Book book) {
         BookListResponseDto bookListResponseDto = new BookListResponseDto();
@@ -25,7 +25,7 @@ public class BookListResponseDto {
         bookListResponseDto.title = book.getTitle();
         bookListResponseDto.imageUrl = book.getImageUrl();
         bookListResponseDto.category = book.getCategory();
-        bookListResponseDto.stockQuantity = book.getStockQuantity();
+        bookListResponseDto.stockQuantity = book.getStockQuantity().getValue();
         return bookListResponseDto;
     }
 
