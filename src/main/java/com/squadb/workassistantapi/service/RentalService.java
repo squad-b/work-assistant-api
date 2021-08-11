@@ -1,10 +1,6 @@
 package com.squadb.workassistantapi.service;
 
-import com.squadb.workassistantapi.domain.Book;
-import com.squadb.workassistantapi.domain.Member;
-import com.squadb.workassistantapi.domain.Rental;
-import com.squadb.workassistantapi.domain.RentalStatus;
-import com.squadb.workassistantapi.repository.RentalRepository;
+import com.squadb.workassistantapi.domain.*;
 import com.squadb.workassistantapi.web.controller.dto.LoginMember;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

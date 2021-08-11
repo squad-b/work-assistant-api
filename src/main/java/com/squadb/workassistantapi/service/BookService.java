@@ -1,9 +1,9 @@
 package com.squadb.workassistantapi.service;
 
 import com.squadb.workassistantapi.domain.Book;
+import com.squadb.workassistantapi.domain.BookRepository;
 import com.squadb.workassistantapi.domain.Member;
-import com.squadb.workassistantapi.repository.BookRepository;
-import com.squadb.workassistantapi.repository.MemberRepository;
+import com.squadb.workassistantapi.domain.MemberRepository;
 import com.squadb.workassistantapi.service.exception.KeyDuplicationException;
 import com.squadb.workassistantapi.web.controller.dto.BookRegisterDto;
 import lombok.RequiredArgsConstructor;

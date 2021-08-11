@@ -1,6 +1,5 @@
-package com.squadb.workassistantapi.repository;
+package com.squadb.workassistantapi.domain;
 
-import com.squadb.workassistantapi.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
