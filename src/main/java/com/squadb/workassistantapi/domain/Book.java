@@ -10,47 +10,60 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Getter
+import static java.util.Objects.isNull;
+
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Book {
+
+    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Getter
     @Embedded
     private Isbn isbn;
 
+    @Getter
     @Column(nullable = false)
     private String title;
 
+    @Getter
     @Lob
     @Column
     private String description;
 
+    @Getter
     @Column
     private String author;
 
+    @Getter
     @Column(nullable = false)
     public int stockQuantity;
 
+    @Getter
     @Column
     private String imageUrl;
 
+    @Getter
     @Column
     private LocalDateTime publishingDate;
 
+    @Getter
     @Column(nullable = false)
     private LocalDateTime registrationDate;
 
+    @Getter
     @Column
     private String publisher;
 
+    @Getter
     @Enumerated(EnumType.STRING)
     @Column
     private BookCategory category;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "registrant_id", nullable = false)
     private Member registrant;
 
@@ -72,8 +85,10 @@ public class Book {
 
     @Builder
     public Book(Isbn isbn, String title, String description, String author, int stockQuantity, String imageUrl,
-                LocalDateTime publishingDate, String publisher, BookCategory category, Member registrant) {
-        if (!registrant.isAdmin()) { throw new NoAuthorizationException("관리자만 책을 등록할 수 있습니다."); }
+                LocalDateTime publishingDate, String publisher, BookCategory category, Member registrant,
+                LocalDateTime registrationDate) {
+        validateNotNull(isbn, title, stockQuantity, registrant, registrationDate);
+        validateAdminRegistrant(registrant);
         this.isbn = isbn;
         this.title = title;
         this.description = description;
@@ -81,9 +96,20 @@ public class Book {
         this.stockQuantity = stockQuantity;
         this.imageUrl = imageUrl;
         this.publishingDate = publishingDate;
-        this.registrationDate = LocalDateTime.now();
+        this.registrationDate = registrationDate;
         this.publisher = publisher;
         this.category = category;
         this.registrant = registrant;
+    }
+
+    private void validateAdminRegistrant(Member registrant) {
+        if (!registrant.isAdmin()) { throw new NoAuthorizationException("관리자만 책을 등록할 수 있습니다."); }
+    }
+
+    private void validateNotNull(Isbn isbn, String title, int stockQuantity,
+                                 Member registrant, LocalDateTime registrationDate) {
+        if (isNull(isbn) || isNull(title) || stockQuantity <= 0 || isNull(registrant) || isNull(registrationDate)) {
+            throw new IllegalArgumentException("책 필수 정보가 없습니다.");
+        }
     }
 }

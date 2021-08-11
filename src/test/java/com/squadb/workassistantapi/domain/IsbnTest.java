@@ -11,6 +11,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class IsbnTest {
 
+    static final Isbn isbn = Isbn.valueOf("1234567890123");
+
     @DisplayName("isbn 을 만들기 위해서 문자열 값이 필수이다.")
     @Test
     void isbnNullValueTest() {

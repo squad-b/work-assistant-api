@@ -43,6 +43,7 @@ public class BookRegisterDto {
                 .publisher(publisher)
                 .category(category)
                 .registrant(registrant)
+                .registrationDate(LocalDateTime.now())
                 .build();
     }
 

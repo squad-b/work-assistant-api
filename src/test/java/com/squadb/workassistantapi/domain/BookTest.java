@@ -1,21 +1,50 @@
 package com.squadb.workassistantapi.domain;
 
-import com.squadb.workassistantapi.domain.exceptions.NoAuthorizationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import java.time.LocalDateTime;
+
+import static com.squadb.workassistantapi.domain.IsbnTest.isbn;
+import static com.squadb.workassistantapi.domain.MemberTest.관리자;
+import static com.squadb.workassistantapi.domain.MemberTest.일반회원;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class BookTest {
 
     @DisplayName("책의 등록자는 관리자만 가능하다")
     @Test
-    public void createBookNormalMemberTest() {
-        //given
-        Member member = Member.createMember("admin@miridih.com", "피플팀", "1234", MemberType.NORMAL);
-
+    void createBookNormalMemberTest() {
         //when then
-        assertThrows(NoAuthorizationException.class, () -> Book.builder().registrant(member).build());
+        assertThatThrownBy(() -> Book.builder()
+                .isbn(isbn)
+                .title("Spring")
+                .stockQuantity(1)
+                .registrationDate(LocalDateTime.now())
+                .registrant(일반회원)
+                .build());
     }
 
+    @DisplayName("책의 isbn, 제목, 재고, 등록일, 등록자는 필수정보이다.")
+    @Test
+    void createBookWithEssentialInformationTest() {
+        // given
+        final LocalDateTime registrantDateTime = LocalDateTime.now();
+
+        // when
+        final Book book = Book.builder()
+                .isbn(isbn)
+                .title("Spring")
+                .stockQuantity(1)
+                .registrant(관리자)
+                .registrationDate(registrantDateTime)
+                .build();
+
+        // then
+        assertThat(book.getIsbn()).isEqualTo(isbn);
+        assertThat(book.getTitle()).isEqualTo("Spring");
+        assertThat(book.getStockQuantity()).isEqualTo(1);
+        assertThat(book.getRegistrationDate()).isEqualTo(registrantDateTime);
+    }
 }
