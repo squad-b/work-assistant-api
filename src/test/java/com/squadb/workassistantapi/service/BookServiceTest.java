@@ -1,6 +1,7 @@
 package com.squadb.workassistantapi.service;
 
 import com.squadb.workassistantapi.domain.Book;
+import com.squadb.workassistantapi.domain.Isbn;
 import com.squadb.workassistantapi.domain.Member;
 import com.squadb.workassistantapi.domain.MemberType;
 import com.squadb.workassistantapi.service.exception.KeyDuplicationException;
@@ -37,7 +38,7 @@ class BookServiceTest {
 
         //then
         Book findBook = bookService.findById(registerBookId);
-        assertThat(isbn).isEqualTo(findBook.getIsbn());
+        assertThat(Isbn.valueOf(isbn)).isEqualTo(findBook.getIsbn());
     }
 
     @DisplayName("책 등록시 isbn 이 중복되면 예외가 발생한다.")

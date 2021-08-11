@@ -18,8 +18,8 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false, length = 13)
-    private String isbn;
+    @Embedded
+    private Isbn isbn;
 
     @Column(nullable = false)
     private String title;
@@ -71,7 +71,7 @@ public class Book {
     }
 
     @Builder
-    public Book(String isbn, String title, String description, String author, int stockQuantity, String imageUrl,
+    public Book(Isbn isbn, String title, String description, String author, int stockQuantity, String imageUrl,
                 LocalDateTime publishingDate, String publisher, BookCategory category, Member registrant) {
         if (!registrant.isAdmin()) { throw new NoAuthorizationException("관리자만 책을 등록할 수 있습니다."); }
         this.isbn = isbn;

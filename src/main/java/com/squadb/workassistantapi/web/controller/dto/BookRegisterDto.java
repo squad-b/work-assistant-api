@@ -3,6 +3,7 @@ package com.squadb.workassistantapi.web.controller.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.squadb.workassistantapi.domain.Book;
 import com.squadb.workassistantapi.domain.BookCategory;
+import com.squadb.workassistantapi.domain.Isbn;
 import com.squadb.workassistantapi.domain.Member;
 import com.squadb.workassistantapi.web.exception.InvalidRequestBodyException;
 import lombok.Getter;
@@ -32,7 +33,7 @@ public class BookRegisterDto {
 
     public Book toEntity(Member registrant) {
         return Book.builder()
-                .isbn(isbn)
+                .isbn(Isbn.valueOf(isbn))
                 .title(title)
                 .description(description)
                 .author(author)

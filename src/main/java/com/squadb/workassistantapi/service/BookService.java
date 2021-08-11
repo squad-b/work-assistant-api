@@ -1,9 +1,6 @@
 package com.squadb.workassistantapi.service;
 
-import com.squadb.workassistantapi.domain.Book;
-import com.squadb.workassistantapi.domain.BookRepository;
-import com.squadb.workassistantapi.domain.Member;
-import com.squadb.workassistantapi.domain.MemberRepository;
+import com.squadb.workassistantapi.domain.*;
 import com.squadb.workassistantapi.service.exception.KeyDuplicationException;
 import com.squadb.workassistantapi.web.controller.dto.BookRegisterDto;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +34,7 @@ public class BookService {
     }
 
     private void checkIsbnDuplication(final String isbn) {
-        if (bookRepository.findByIsbn(isbn).isPresent()) {
+        if (bookRepository.findByIsbn(Isbn.valueOf(isbn)).isPresent()) {
             throw new KeyDuplicationException("key duplication book : [" + isbn + "]");
         }
     }

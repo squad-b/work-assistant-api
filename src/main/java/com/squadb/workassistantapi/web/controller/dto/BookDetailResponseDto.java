@@ -1,7 +1,7 @@
 package com.squadb.workassistantapi.web.controller.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude.*;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.squadb.workassistantapi.domain.Book;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -28,7 +28,7 @@ public class BookDetailResponseDto {
     public static BookDetailResponseDto of(Book book) {
         BookDetailResponseDto bookDetailResponseDto = new BookDetailResponseDto();
         bookDetailResponseDto.id = book.getId();
-        bookDetailResponseDto.isbn = book.getIsbn();
+        bookDetailResponseDto.isbn = book.getIsbn().getValue();
         bookDetailResponseDto.title = book.getTitle();
         bookDetailResponseDto.author = book.getAuthor();
         bookDetailResponseDto.publisher = book.getPublisher();

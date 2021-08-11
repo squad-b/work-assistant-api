@@ -11,7 +11,7 @@ import java.util.Objects;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Isbn {
 
-    @Column(unique = true, nullable = false, length = 13)
+    @Column(unique = true, nullable = false, length = 13, name = "isbn")
     private String value;
 
     private Isbn(String value) {
@@ -30,6 +30,10 @@ public class Isbn {
         if (value.length() != 10 && value.length() != 13) {
             throw new IllegalArgumentException("isbn 의 길이는 10 or 13 이어야합니다.");
         }
+    }
+
+    public String getValue() {
+        return value;
     }
 
     public static Isbn valueOf(String isbnValue) {

@@ -165,7 +165,7 @@ class RentalServiceTest {
 
     private Book createBook(Member member) {
         Book book = Book.builder()
-                .isbn(String.format("%.13f", Math.random()).substring(2))
+                .isbn(Isbn.valueOf(String.format("%.13f", Math.random()).substring(2)))
                 .title("제목")
                 .author("작가")
                 .description("설명")
