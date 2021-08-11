@@ -13,7 +13,7 @@ import java.util.Objects;
 public class StockQuantity implements Comparable<StockQuantity> {
     static StockQuantity ONE = StockQuantity.valueOf(1);
 
-    public static final int MIN_VALUE_OF_STOCK_QUANTITY = 0;
+    private static final int MIN_VALUE_OF_STOCK_QUANTITY = 0;
 
     @Getter
     @Column(nullable = false, name = "stock_quantity")
@@ -47,10 +47,10 @@ public class StockQuantity implements Comparable<StockQuantity> {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        StockQuantity that = (StockQuantity) o;
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (other == null || getClass() != other.getClass()) return false;
+        StockQuantity that = (StockQuantity) other;
         return value == that.value;
     }
 
