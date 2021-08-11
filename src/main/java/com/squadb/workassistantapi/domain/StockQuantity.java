@@ -64,3 +64,4 @@ public class StockQuantity implements Comparable<StockQuantity> {
         return Integer.compare(this.value, other.value);
     }
 }
+

@@ -54,4 +54,5 @@ class BookServiceTest {
         entityManager.flush();
         return member;
     }
+
 }

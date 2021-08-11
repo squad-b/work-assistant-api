@@ -47,4 +47,5 @@ class BookTest {
         assertThat(book.getStockQuantity().getValue()).isEqualTo(1);
         assertThat(book.getRegistrationDate()).isEqualTo(registrantDateTime);
     }
+    
 }
