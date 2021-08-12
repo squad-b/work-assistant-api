@@ -16,22 +16,20 @@ class StockQuantityTest {
                 .hasMessage("재고 수는 0 이상이어야 합니다.");
     }
 
-    @DisplayName("재고 수끼리 뺄셈을 할 수 있다.")
+    @DisplayName("재고 수를 하나 감소 시킬 수 있다.")
     @Test
     void stockQuantityMinusTest() {
         StockQuantity four = StockQuantity.valueOf(4);
-        StockQuantity one = StockQuantity.valueOf(1);
 
-        assertThat(four.minus(one)).isEqualTo(StockQuantity.valueOf(3));
+        assertThat(four.minusOne()).isEqualTo(StockQuantity.valueOf(3));
     }
 
-    @DisplayName("재고 수끼리 덧셈을 할 수 있다.")
+    @DisplayName("재고 수끼리 하나 증가 시킬 수 있다.")
     @Test
     void stockQuantityPlusTest() {
         StockQuantity four = StockQuantity.valueOf(4);
-        StockQuantity one = StockQuantity.valueOf(1);
 
-        assertThat(four.plus(one)).isEqualTo(StockQuantity.valueOf(5));
+        assertThat(four.plusOne()).isEqualTo(StockQuantity.valueOf(5));
     }
 
     @DisplayName("재고 수끼리 수량 비교를 할 수 있다.")

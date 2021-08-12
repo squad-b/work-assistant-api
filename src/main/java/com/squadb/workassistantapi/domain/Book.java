@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-import static com.squadb.workassistantapi.domain.StockQuantity.ONE;
 import static java.util.Objects.isNull;
 
 @Entity
@@ -71,13 +70,13 @@ public class Book {
     @Version
     private Long version;
 
-    public void removeStock() {
+    public void decreaseStock() {
         if (isOutOfStock()) { throw new OutOfStockException(String.format("Out of stock, Id:[%d]", id)); }
-        stockQuantity = stockQuantity.minus(ONE);
+        stockQuantity = stockQuantity.minusOne();
     }
 
     public void increaseStock() {
-        stockQuantity = stockQuantity.plus(ONE);
+        stockQuantity = stockQuantity.plusOne();
     }
 
     public boolean isOutOfStock() {

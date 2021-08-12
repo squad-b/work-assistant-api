@@ -11,8 +11,6 @@ import java.util.Objects;
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class StockQuantity implements Comparable<StockQuantity> {
-    static StockQuantity ONE = StockQuantity.valueOf(1);
-
     private static final int MIN_VALUE_OF_STOCK_QUANTITY = 0;
 
     @Getter
@@ -34,12 +32,12 @@ public class StockQuantity implements Comparable<StockQuantity> {
         return new StockQuantity(value);
     }
 
-    public StockQuantity minus(StockQuantity other) {
-        return StockQuantity.valueOf(this.value - other.value);
+    public StockQuantity minusOne() {
+        return StockQuantity.valueOf(this.value - 1);
     }
 
-    public StockQuantity plus(StockQuantity other) {
-        return StockQuantity.valueOf(this.value + other.value);
+    public StockQuantity plusOne() {
+        return StockQuantity.valueOf(this.value + 1);
     }
 
     boolean isZero() {

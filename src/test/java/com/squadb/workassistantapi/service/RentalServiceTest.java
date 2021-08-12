@@ -63,7 +63,7 @@ class RentalServiceTest {
     @Test
     public void outOfStockTest() {
         // given
-        testBook.removeStock();
+        testBook.decreaseStock();
         clearPersistenceContext();
 
         // then
@@ -156,7 +156,7 @@ class RentalServiceTest {
         List<Long> rentalIdList = rentalList.stream().mapToLong(Rental::getId).boxed().collect(Collectors.toList());
         assertThatNoException().isThrownBy(() -> rentalService.returnBooks(rentalIdList, loginMember));
         rentalList.forEach(rental -> assertThat(rental.isReturned()).isTrue());
-        bookList.forEach(book -> assertThat(book.getStockQuantity()).isEqualTo(stockQuantityBeforeReturn.get(book.getId()).plus(StockQuantity.valueOf(1))));
+        bookList.forEach(book -> assertThat(book.getStockQuantity()).isEqualTo(stockQuantityBeforeReturn.get(book.getId()).plusOne()));
     }
 
     private Rental createRental(Book testBook) {
