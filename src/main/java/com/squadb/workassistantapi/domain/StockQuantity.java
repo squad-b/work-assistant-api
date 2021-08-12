@@ -11,7 +11,8 @@ import java.util.Objects;
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class StockQuantity implements Comparable<StockQuantity> {
-    private static final int MIN_VALUE_OF_STOCK_QUANTITY = 0;
+
+    private static final int MIN_VALUE = 0;
 
     @Getter
     @Column(nullable = false, name = "stock_quantity")
@@ -23,7 +24,7 @@ public class StockQuantity implements Comparable<StockQuantity> {
     }
 
     private void validateNonNegative(int value) {
-        if (value < MIN_VALUE_OF_STOCK_QUANTITY) {
+        if (value < MIN_VALUE) {
             throw new IllegalArgumentException("재고 수는 0 이상이어야 합니다.");
         }
     }
@@ -41,7 +42,7 @@ public class StockQuantity implements Comparable<StockQuantity> {
     }
 
     boolean isZero() {
-        return this.value == MIN_VALUE_OF_STOCK_QUANTITY;
+        return this.value == MIN_VALUE;
     }
 
     @Override

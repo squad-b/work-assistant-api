@@ -112,4 +112,12 @@ public class Book {
             throw new IllegalArgumentException("책 필수 정보가 없습니다.");
         }
     }
+
+    public String getIsbnValue() {
+        return isbn.getValue();
+    }
+
+    public int getStockQuantityValue() {
+        return stockQuantity.getValue();
+    }
 }

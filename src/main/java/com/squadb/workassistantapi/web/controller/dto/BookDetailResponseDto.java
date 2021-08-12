@@ -28,12 +28,12 @@ public class BookDetailResponseDto {
     public static BookDetailResponseDto of(Book book) {
         BookDetailResponseDto bookDetailResponseDto = new BookDetailResponseDto();
         bookDetailResponseDto.id = book.getId();
-        bookDetailResponseDto.isbn = book.getIsbn().getValue();
+        bookDetailResponseDto.isbn = book.getIsbnValue();
         bookDetailResponseDto.title = book.getTitle();
         bookDetailResponseDto.author = book.getAuthor();
         bookDetailResponseDto.publisher = book.getPublisher();
         bookDetailResponseDto.imageUrl = book.getImageUrl();
-        bookDetailResponseDto.stockQuantity = book.getStockQuantity().getValue();
+        bookDetailResponseDto.stockQuantity = book.getStockQuantityValue();
         bookDetailResponseDto.description = book.getDescription();
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
