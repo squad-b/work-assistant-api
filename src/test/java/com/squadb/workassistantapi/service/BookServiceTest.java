@@ -28,7 +28,7 @@ class BookServiceTest {
     public void isbnDuplicationTest() {
         //given
         final Member 등록자 = 멤버가_등록되어_있다();
-        final String isbn = "1234567890123";
+        final String isbn = "0512520689";
         책이_등록_되어_있다(isbn, 등록자.getId());
 
         //when then

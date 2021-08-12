@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class IsbnTest {
 
-    static final Isbn isbn = Isbn.valueOf("1234567890123");
+    static final Isbn isbn = Isbn.valueOf("9780596520687");
 
     @DisplayName("isbn 을 만들기 위해서 문자열 값이 필수이다.")
     @Test
@@ -22,21 +22,21 @@ class IsbnTest {
 
     }
 
-    @DisplayName("isbn 의 문자열은 10자 또는 13자 이다.")
+    @DisplayName("isbn 의 문자열은 Isbn 형식이어야 한다.")
     @ParameterizedTest
     @ValueSource(strings = {"123456789", "12345678901", "123456789012", "12345678901234"})
     void lengthOfIsbnTest(String notValidIsbnValue) {
         assertThatThrownBy(() -> Isbn.valueOf(notValidIsbnValue))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("isbn 의 길이는 10 or 13 이어야합니다.");
+                .hasMessageContaining("isbn 형식이 아닙니다.");
 
     }
 
     @DisplayName("Isbn 값이 같으면 같은 Isbn 이다.")
     @Test
     void equalTest() {
-        Isbn one = Isbn.valueOf("1234567890123");
-        Isbn other = Isbn.valueOf("1234567890123");
+        Isbn one = Isbn.valueOf("0512520689");
+        Isbn other = Isbn.valueOf("0512520689");
 
         assertThat(one).isEqualTo(other);
     }

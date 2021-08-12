@@ -6,11 +6,20 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.Transient;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Embeddable
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Isbn {
+    // https://howtodoinjava.com/java/regex/java-regex-validate-international-standard-book-number-isbns/ 참고함
+    @Transient
+    private final Pattern isbnPattern = Pattern.compile(
+            "^(?:ISBN(?:-1[03])?:? )?(?=[0-9X]{10}$|(?=(?:[0-9]+[- ]){3})" +
+                    "[- 0-9X]{13}$|97[89][0-9]{10}$|(?=(?:[0-9]+[- ]){4})" +
+                    "[- 0-9]{17}$)(?:97[89][- ]?)?[0-9]{1,5}[- ]?[0-9]+[- ]?[0-9]+[- ]?[0-9X]$");
 
     @Getter
     @Column(unique = true, nullable = false, length = 13, name = "isbn")
@@ -18,7 +27,7 @@ public class Isbn {
 
     private Isbn(String value) {
         validateNotNull(value);
-        validateIsbnLength(value);
+        validateIsbnPattern(value);
         this.value = value;
     }
 
@@ -28,9 +37,10 @@ public class Isbn {
         }
     }
 
-    private void validateIsbnLength(String value) {
-        if (value.length() != 10 && value.length() != 13) {
-            throw new IllegalArgumentException("isbn 의 길이는 10 or 13 이어야합니다.");
+    private void validateIsbnPattern(String value) {
+        Matcher matcher = isbnPattern.matcher(value);
+        if (!matcher.matches()) {
+            throw new IllegalArgumentException("isbn 형식이 아닙니다. [" + value + "]");
         }
     }
 

@@ -9,8 +9,8 @@ import com.squadb.workassistantapi.web.agent.dto.BookSearchRequestDto;
 import com.squadb.workassistantapi.web.agent.dto.BookSearchResponseDto;
 import com.squadb.workassistantapi.web.config.auth.CurrentLoginMember;
 import com.squadb.workassistantapi.web.controller.dto.*;
-import com.squadb.workassistantapi.web.exception.InvalidRequestBodyException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Objects;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 public class BookApiController {
@@ -53,18 +54,21 @@ public class BookApiController {
         return new ResponseEntity<>(BookDetailResponseDto.of(book), HttpStatus.OK);
     }
 
-    @ExceptionHandler(InvalidRequestBodyException.class)
-    public ResponseEntity<BookRegisterResponseDto> handlerInvalidRequestBodyException() {
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<BookRegisterResponseDto> handlerInvalidRequestBodyException(IllegalArgumentException e) {
+        log.error("잘못된 파라미터 입니다.", e);
         return new ResponseEntity<>(BookRegisterResponseDto.fail("INVALID_BODY"), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(KeyDuplicationException.class)
-    public ResponseEntity<BookRegisterResponseDto> handleKeyDuplicationException() {
+    public ResponseEntity<BookRegisterResponseDto> handleKeyDuplicationException(KeyDuplicationException e) {
+        log.error("식별자가 중복됐습니다.", e);
         return new ResponseEntity<>(BookRegisterResponseDto.fail("KEY_DUPLICATION"), HttpStatus.OK);
     }
 
     @ExceptionHandler(NoAuthorizationException.class)
-    public ResponseEntity<BookRegisterResponseDto> handleNoAuthorizationException() {
+    public ResponseEntity<BookRegisterResponseDto> handleNoAuthorizationException(NoAuthorizationException e) {
+        log.error("권한이 없습니다.", e);
         return new ResponseEntity<>(BookRegisterResponseDto.fail("NO_AUTHORIZATION"), HttpStatus.FORBIDDEN);
     }
 }

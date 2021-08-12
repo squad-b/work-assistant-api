@@ -2,7 +2,6 @@ package com.squadb.workassistantapi.web.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.squadb.workassistantapi.domain.*;
-import com.squadb.workassistantapi.web.exception.InvalidRequestBodyException;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -45,14 +44,10 @@ public class BookRegisterDto {
     }
 
     public void checkValidation() {
-        if (!isValid()) { throw new InvalidRequestBodyException(String.format("Invalid Parameters! [%s]", toString())); }
+        if (!isValid()) { throw new IllegalArgumentException(String.format("Invalid Parameters! [%s]", this)); }
     }
 
     private boolean isValid() {
-        final long isbn13Length = 13;
-        final long isbn10Length = 10;
-        return StringUtils.hasText(isbn) && (isbn.length() == isbn13Length || isbn.length() == isbn10Length)
-                && StringUtils.hasText(title)
-                && stockQuantity > 0;
+        return StringUtils.hasText(title);
     }
 }
