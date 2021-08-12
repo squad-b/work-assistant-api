@@ -1,17 +1,14 @@
 package com.squadb.workassistantapi.service;
 
-import java.util.List;
-
+import com.squadb.workassistantapi.domain.*;
+import com.squadb.workassistantapi.service.exception.KeyDuplicationException;
+import com.squadb.workassistantapi.web.controller.dto.BookRegisterDto;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.squadb.workassistantapi.domain.Book;
-import com.squadb.workassistantapi.domain.Member;
-import com.squadb.workassistantapi.repository.BookRepository;
-import com.squadb.workassistantapi.service.exception.KeyDuplicationException;
-
-import lombok.RequiredArgsConstructor;
+import java.util.List;
 
 
 @RequiredArgsConstructor
@@ -20,7 +17,7 @@ public class BookService {
 
     private final BookRepository bookRepository;
 
-    private final MemberService memberService;
+    private final MemberRepository memberRepository;
 
     @Transactional(readOnly = true)
     public Book findById(final Long bookId) {
@@ -29,16 +26,15 @@ public class BookService {
     }
 
     @Transactional
-    public Long register(final Book book, final Long registrantId) {
-        checkIsbnDuplication(book.getIsbn());
-        final Member member = memberService.findById(registrantId);
-        book.setRegistrant(member);
-        final Book saveBook = bookRepository.save(book);
+    public Long register(final BookRegisterDto bookDto, final Long registrantId) {
+        checkIsbnDuplication(bookDto.getIsbn());
+        final Member registrant = memberRepository.findById(registrantId).orElseThrow(() -> new IllegalArgumentException("책 등록자가 없습니다. " + registrantId));
+        final Book saveBook = bookRepository.save(bookDto.toEntity(registrant));
         return saveBook.getId();
     }
 
     private void checkIsbnDuplication(final String isbn) {
-        if (bookRepository.findByIsbn(isbn).isPresent()) {
+        if (bookRepository.findByIsbn(Isbn.valueOf(isbn)).isPresent()) {
             throw new KeyDuplicationException("key duplication book : [" + isbn + "]");
         }
     }

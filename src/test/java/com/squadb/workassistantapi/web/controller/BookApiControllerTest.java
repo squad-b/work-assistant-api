@@ -1,13 +1,12 @@
 package com.squadb.workassistantapi.web.controller;
 
-import static org.hamcrest.Matchers.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.BDDMockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.squadb.workassistantapi.domain.MemberType;
+import com.squadb.workassistantapi.domain.exceptions.NoAuthorizationException;
+import com.squadb.workassistantapi.service.BookService;
+import com.squadb.workassistantapi.web.agent.BookSearchAgent;
+import com.squadb.workassistantapi.web.controller.dto.BookRegisterDto;
+import com.squadb.workassistantapi.web.controller.dto.LoginMember;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,14 +18,14 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.squadb.workassistantapi.domain.Book;
-import com.squadb.workassistantapi.domain.MemberType;
-import com.squadb.workassistantapi.domain.exceptions.NoAuthorizationException;
-import com.squadb.workassistantapi.service.BookService;
-import com.squadb.workassistantapi.web.agent.BookSearchAgent;
-import com.squadb.workassistantapi.web.controller.dto.BookRegisterRequestDto;
-import com.squadb.workassistantapi.web.controller.dto.LoginMember;
+import static org.hamcrest.Matchers.containsString;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = BookApiController.class)
 class BookApiControllerTest {
@@ -47,12 +46,12 @@ class BookApiControllerTest {
     @Test
     public void bookRegisterApiInvalidParameterTest() throws Exception {
         //given
-        BookRegisterRequestDto bookRegisterRequestDto = new BookRegisterRequestDto();
+        BookRegisterDto bookRegisterDto = new BookRegisterDto();
 
         //when
         ResultActions perform = mockMvc.perform(post("/books")
                 .session(mockHttpSession)
-                .content(objectMapper.writeValueAsString(bookRegisterRequestDto))
+                .content(objectMapper.writeValueAsString(bookRegisterDto))
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -65,18 +64,18 @@ class BookApiControllerTest {
     @Test
     public void bookRegisterApiSuccessTest() throws Exception {
         //given
-        BookRegisterRequestDto bookRegisterRequestDto = new BookRegisterRequestDto();
-        bookRegisterRequestDto.setIsbn("1234567890123");
-        bookRegisterRequestDto.setTitle("테스트제목");
-        bookRegisterRequestDto.setStockQuantity(2);
+        BookRegisterDto bookRegisterDto = new BookRegisterDto();
+        bookRegisterDto.setIsbn("1234567890123");
+        bookRegisterDto.setTitle("테스트제목");
+        bookRegisterDto.setStockQuantity(2);
 
         final long registerBookId = 1L;
-        given(bookService.register(any(Book.class), anyLong())).willReturn(registerBookId);
+        given(bookService.register(any(BookRegisterDto.class), anyLong())).willReturn(registerBookId);
 
         //when
         ResultActions perform = mockMvc.perform(post("/books")
                 .session(mockHttpSession)
-                .content(objectMapper.writeValueAsString(bookRegisterRequestDto))
+                .content(objectMapper.writeValueAsString(bookRegisterDto))
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then
@@ -90,17 +89,17 @@ class BookApiControllerTest {
     @Test
     public void bookRegisterApiNotAuthorizationTest() throws Exception {
         //given
-        BookRegisterRequestDto bookRegisterRequestDto = new BookRegisterRequestDto();
-        bookRegisterRequestDto.setIsbn("1234567890123");
-        bookRegisterRequestDto.setTitle("테스트제목");
-        bookRegisterRequestDto.setStockQuantity(2);
+        BookRegisterDto bookRegisterDto = new BookRegisterDto();
+        bookRegisterDto.setIsbn("1234567890123");
+        bookRegisterDto.setTitle("테스트제목");
+        bookRegisterDto.setStockQuantity(2);
 
-        given(bookService.register(any(Book.class), anyLong())).willThrow(NoAuthorizationException.class);
+        given(bookService.register(any(BookRegisterDto.class), anyLong())).willThrow(NoAuthorizationException.class);
 
         //when
         ResultActions perform = mockMvc.perform(post("/books")
                 .session(mockHttpSession)
-                .content(objectMapper.writeValueAsString(bookRegisterRequestDto))
+                .content(objectMapper.writeValueAsString(bookRegisterDto))
                 .contentType(MediaType.APPLICATION_JSON));
 
         //then

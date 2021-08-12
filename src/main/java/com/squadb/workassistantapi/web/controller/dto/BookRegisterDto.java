@@ -1,9 +1,7 @@
 package com.squadb.workassistantapi.web.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.squadb.workassistantapi.domain.Book;
-import com.squadb.workassistantapi.domain.BookCategory;
-import com.squadb.workassistantapi.web.exception.InvalidRequestBodyException;
+import com.squadb.workassistantapi.domain.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -14,7 +12,7 @@ import java.time.LocalDateTime;
 @ToString
 @Getter
 @Setter
-public class BookRegisterRequestDto {
+public class BookRegisterDto {
 
     private String isbn;
     private String title;
@@ -29,26 +27,27 @@ public class BookRegisterRequestDto {
     private String imageUrl;
     private int stockQuantity;
 
-    public Book toEntity() {
-        if (!isValid()) { throw new InvalidRequestBodyException(String.format("Invalid Parameters! [%s]", toString())); }
+    public Book toEntity(Member registrant) {
         return Book.builder()
-                .isbn(isbn)
+                .isbn(Isbn.valueOf(isbn))
                 .title(title)
                 .description(description)
                 .author(author)
-                .stockQuantity(stockQuantity)
+                .stockQuantity(StockQuantity.valueOf(stockQuantity))
                 .imageUrl(imageUrl)
                 .publishingDate(publishingDate)
                 .publisher(publisher)
                 .category(category)
+                .registrant(registrant)
+                .registrationDate(LocalDateTime.now())
                 .build();
     }
 
+    public void checkValidation() {
+        if (!isValid()) { throw new IllegalArgumentException(String.format("Invalid Parameters! [%s]", this)); }
+    }
+
     private boolean isValid() {
-        final long isbn13Length = 13;
-        final long isbn10Length = 10;
-        return StringUtils.hasText(isbn) && (isbn.length() == isbn13Length || isbn.length() == isbn10Length)
-                && StringUtils.hasText(title)
-                && stockQuantity > 0;
+        return StringUtils.hasText(title);
     }
 }

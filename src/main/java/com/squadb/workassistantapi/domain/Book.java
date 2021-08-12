@@ -1,91 +1,94 @@
 package com.squadb.workassistantapi.domain;
 
-import java.time.LocalDateTime;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.Version;
-
 import com.squadb.workassistantapi.domain.exceptions.NoAuthorizationException;
 import com.squadb.workassistantapi.domain.exceptions.OutOfStockException;
-
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Getter
+import javax.persistence.*;
+import java.time.LocalDateTime;
+
+import static java.util.Objects.isNull;
+
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Book {
+
+    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false, length = 13)
-    private String isbn;
+    @Getter
+    @Embedded
+    private Isbn isbn;
 
+    @Getter
     @Column(nullable = false)
     private String title;
 
+    @Getter
     @Lob
     @Column
     private String description;
 
+    @Getter
     @Column
     private String author;
 
-    @Column(nullable = false)
-    public int stockQuantity;
+    @Getter
+    @Embedded
+    private StockQuantity stockQuantity;
 
+    @Getter
     @Column
     private String imageUrl;
 
+    @Getter
     @Column
     private LocalDateTime publishingDate;
 
+    @Getter
     @Column(nullable = false)
     private LocalDateTime registrationDate;
 
+    @Getter
     @Column
     private String publisher;
 
+    @Getter
     @Enumerated(EnumType.STRING)
     @Column
     private BookCategory category;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "registrant_id", nullable = false)
     private Member registrant;
 
     @Version
     private Long version;
 
-    public void removeStock() {
+    public void decreaseStock() {
         if (isOutOfStock()) { throw new OutOfStockException(String.format("Out of stock, Id:[%d]", id)); }
-        stockQuantity -= 1;
+        stockQuantity = stockQuantity.minusOne();
     }
 
     public void increaseStock() {
-        stockQuantity++;
+        stockQuantity = stockQuantity.plusOne();
     }
 
     public boolean isOutOfStock() {
-        return stockQuantity <= 0;
+        return stockQuantity.isZero();
     }
 
     @Builder
-    public Book(String isbn, String title, String description, String author, int stockQuantity, String imageUrl, LocalDateTime publishingDate, String publisher, BookCategory category) {
+    public Book(Isbn isbn, String title, String description, String author, StockQuantity stockQuantity, String imageUrl,
+                LocalDateTime publishingDate, String publisher, BookCategory category, Member registrant,
+                LocalDateTime registrationDate) {
+        validateNotNull(isbn, title, stockQuantity, registrant, registrationDate);
+        validateAdminRegistrant(registrant);
         this.isbn = isbn;
         this.title = title;
         this.description = description;
@@ -93,13 +96,28 @@ public class Book {
         this.stockQuantity = stockQuantity;
         this.imageUrl = imageUrl;
         this.publishingDate = publishingDate;
-        this.registrationDate = LocalDateTime.now();
+        this.registrationDate = registrationDate;
         this.publisher = publisher;
         this.category = category;
+        this.registrant = registrant;
     }
 
-    public void setRegistrant(Member member) {
-        if (!member.isAdmin()) { throw new NoAuthorizationException("관리자만 책을 등록할 수 있습니다."); }
-        this.registrant = member;
+    private void validateAdminRegistrant(Member registrant) {
+        if (!registrant.isAdmin()) { throw new NoAuthorizationException("관리자만 책을 등록할 수 있습니다."); }
+    }
+
+    private void validateNotNull(Isbn isbn, String title, StockQuantity stockQuantity,
+                                 Member registrant, LocalDateTime registrationDate) {
+        if (isNull(isbn) || isNull(title) || isNull(stockQuantity) || isNull(registrant) || isNull(registrationDate)) {
+            throw new IllegalArgumentException("책 필수 정보가 없습니다.");
+        }
+    }
+
+    public String getIsbnValue() {
+        return isbn.getValue();
+    }
+
+    public int getStockQuantityValue() {
+        return stockQuantity.getValue();
     }
 }

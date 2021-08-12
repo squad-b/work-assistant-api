@@ -10,6 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 
+@ActiveProfiles("test")
 @SpringBootTest
 @Transactional
 class RentalServiceTest {
@@ -35,7 +37,7 @@ class RentalServiceTest {
     @BeforeEach
     public void setup() {
         testMember = createMember();
-        testBook = createBook(testMember);
+        testBook = createBook(testMember, Isbn.valueOf("9791157596225"));
     }
 
     @DisplayName("기본 책 대여 테스트")
@@ -61,7 +63,7 @@ class RentalServiceTest {
     @Test
     public void outOfStockTest() {
         // given
-        testBook.removeStock();
+        testBook.decreaseStock();
         clearPersistenceContext();
 
         // then
@@ -84,7 +86,7 @@ class RentalServiceTest {
     @Test
     public void returnBookSuccessTest() {
         // given
-        final int stockQuantityBeforeReturn = testBook.getStockQuantity();
+        final StockQuantity stockQuantityBeforeReturn = testBook.getStockQuantity();
         final Rental mockRental = createRental(testBook);
 
         // when
@@ -111,10 +113,10 @@ class RentalServiceTest {
     @Test
     public void memberBookRentalTest() {
         // given
-        Rental mockRental = createRental(createBook(testMember));
+        Rental mockRental = createRental(createBook(testMember, Isbn.valueOf("9780596520687")));
         rentalService.updateRental(mockRental.getId(), testMember.getId(), RentalStatus.ON_RENTAL);
 
-        Rental mockReturnedRental = createRental(createBook(testMember));
+        Rental mockReturnedRental = createRental(createBook(testMember, Isbn.valueOf("9780596520688")));
         rentalService.updateRental(mockReturnedRental.getId(), testMember.getId(), RentalStatus.RETURN);
 
         // when
@@ -143,9 +145,10 @@ class RentalServiceTest {
         LoginMember loginMember = new LoginMember(testMember.getId(), testMember.getType());
         List<Rental> rentalList = new ArrayList<>();
         List<Book> bookList = new ArrayList<>();
-        Map<Long, Integer> stockQuantityBeforeReturn = new HashMap<>();
+        Map<Long, StockQuantity> stockQuantityBeforeReturn = new HashMap<>();
+        List<Isbn> isbns = List.of(Isbn.valueOf("9780596520687"), Isbn.valueOf("9780596520587"), Isbn.valueOf("9780596520487"));
         for (int i=0; i<3; ++i) {
-            Book book = createBook(testMember);
+            Book book = createBook(testMember, isbns.get(i));
             bookList.add(book);
             Rental rental = createRental(book);
             rentalList.add(rental);
@@ -154,7 +157,7 @@ class RentalServiceTest {
         List<Long> rentalIdList = rentalList.stream().mapToLong(Rental::getId).boxed().collect(Collectors.toList());
         assertThatNoException().isThrownBy(() -> rentalService.returnBooks(rentalIdList, loginMember));
         rentalList.forEach(rental -> assertThat(rental.isReturned()).isTrue());
-        bookList.forEach(book -> assertThat(book.getStockQuantity() == stockQuantityBeforeReturn.get(book.getId()) + 1).isTrue());
+        bookList.forEach(book -> assertThat(book.getStockQuantity()).isEqualTo(stockQuantityBeforeReturn.get(book.getId()).plusOne()));
     }
 
     private Rental createRental(Book testBook) {
@@ -163,19 +166,20 @@ class RentalServiceTest {
         return mockRental;
     }
 
-    private Book createBook(Member member) {
+    private Book createBook(Member member, Isbn isbn) {
         Book book = Book.builder()
-                .isbn(String.format("%.13f", Math.random()).substring(2))
+                .isbn(isbn)
                 .title("제목")
                 .author("작가")
                 .description("설명")
                 .imageUrl("book.img.url")
                 .category(BookCategory.DEVELOP)
                 .publisher("출판사")
-                .stockQuantity(1)
+                .stockQuantity(StockQuantity.valueOf(1))
                 .publishingDate(LocalDateTime.now())
+                .registrant(member)
+                .registrationDate(LocalDateTime.now())
                 .build();
-        book.setRegistrant(member);
         entityManager.persist(book);
         return book;
     }

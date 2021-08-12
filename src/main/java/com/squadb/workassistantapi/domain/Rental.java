@@ -1,27 +1,16 @@
 package com.squadb.workassistantapi.domain;
 
-import static com.squadb.workassistantapi.domain.RentalStatus.*;
-
-import java.time.LocalDateTime;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-
 import com.squadb.workassistantapi.domain.exceptions.NoAuthorizationException;
 import com.squadb.workassistantapi.web.controller.dto.LoginMember;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import java.time.LocalDateTime;
+
+import static com.squadb.workassistantapi.domain.RentalStatus.ON_RENTAL;
+import static com.squadb.workassistantapi.domain.RentalStatus.RETURN;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -59,7 +48,7 @@ public class Rental {
     private RentalStatus status;
 
     public static Rental createRental(Book book, Member member, boolean isLongTerm) {
-        book.removeStock();
+        book.decreaseStock();
 
         Rental rental = new Rental();
         rental.status = ON_RENTAL;
