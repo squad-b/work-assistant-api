@@ -63,13 +63,6 @@ public class Book {
     @Column
     private BookCategory category;
 
-    // TODO: [2021/08/14 양동혁] 기존에 책들 status 값 설정 후에 nullable false로 바꾸자
-    @Getter
-    @Enumerated(EnumType.STRING)
-    @Column
-    private BookStatus status;
-
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "registrant_id", nullable = false)
     private Member registrant;
@@ -84,6 +77,10 @@ public class Book {
 
     public void increaseStock() {
         stockQuantity = stockQuantity.plusOne();
+    }
+
+    public boolean canRental() {
+        return !isOutOfStock();
     }
 
     public boolean isOutOfStock() {
@@ -107,7 +104,6 @@ public class Book {
         this.publisher = publisher;
         this.category = category;
         this.registrant = registrant;
-        this.status = BookStatus.RESERVABLE;
     }
 
     private void validateAdminRegistrant(Member registrant) {
@@ -127,9 +123,5 @@ public class Book {
 
     public int getStockQuantityValue() {
         return stockQuantity.getValue();
-    }
-
-    public boolean canReserve() {
-        return status.canReserve();
     }
 }

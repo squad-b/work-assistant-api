@@ -1,5 +1,6 @@
 package com.squadb.workassistantapi.domain;
 
+import com.squadb.workassistantapi.domain.exceptions.ReservationErrorCode;
 import com.squadb.workassistantapi.domain.exceptions.ReservationException;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -10,7 +11,6 @@ import java.time.LocalDateTime;
 
 import static java.util.Objects.isNull;
 
-// TODO: [2021/08/14 양동혁] 대출가능한 도서에 예약 못하도록 막기
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -46,14 +46,18 @@ public class Reservation {
 
     private static void validateCreateReservation(Member member, Book book) {
         validateNotNull(member, book);
-        if (!book.canReserve()) {
-            throw new ReservationException("이미 예약중인 책입니다.");
+        if (book.canRental()) {
+            throw new ReservationException(ReservationErrorCode.NOT_RESERVABLE, "대여가능한 책은 예약할 수 없습니다.");
         }
     }
 
     private static void validateNotNull(Member member, Book book) {
         if (isNull(member) || isNull(book)) {
-            throw new ReservationException("예약 필수 정보가 없습니다.");
+            throw new ReservationException(ReservationErrorCode.REQUIRED_RESERVATION);
         }
+    }
+
+    public boolean isReservedBy(Member targetMember) {
+        return this.member == targetMember;
     }
 }
