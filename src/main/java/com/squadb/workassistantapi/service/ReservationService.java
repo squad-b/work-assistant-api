@@ -10,13 +10,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+// TODO: [2021/08/15 양동혁] CURD 구현
 @Service
 @Transactional
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class ReservationService {
 
     private final MemberService memberService;
-
     private final BookService bookService;
 
     private final ReservationRepository reservationRepository;
@@ -59,7 +59,8 @@ public class ReservationService {
     private Reservation findReservationWithMemberById(Long reservationId) {
         Optional<Reservation> optionalReservation = reservationRepository.findReservationWithMemberById(reservationId);
         if (optionalReservation.isEmpty()) {
-            throw new ReservationException(ReservationErrorCode.NOT_FOUND);
+            String errorMessage = String.format("No Reservation:[%d]", reservationId);
+            throw new ReservationException(ReservationErrorCode.NOT_FOUND, errorMessage);
         }
         return optionalReservation.get();
     }

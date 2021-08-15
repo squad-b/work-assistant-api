@@ -77,4 +77,25 @@ class ReservationTest {
         ReservationErrorCode resultErrorCode = resultException.getErrorCode();
         assertThat(resultErrorCode).isEqualTo(ReservationErrorCode.ILLEGAL_STATUS);
     }
+
+    @Test
+    @DisplayName("다른회원의 예약은 취소할 수 없다.")
+    public void cancel_notAuthorizedReservation_ExceptionThrown() throws Exception {
+        //given
+        Book book = BookFactory.createBookOutOfStockRegisteredBy(MemberTest.관리자);
+        Member memberA = MemberTest.createMember(MemberType.NORMAL);
+        Member memberB = MemberTest.createMember(MemberType.NORMAL);
+
+        /* memberA가 예약을 한 상태 */
+        Reservation reservation = Reservation.createReservation(memberA, book);
+
+        //when
+        /* memberA의 예약을 memberB가 취소 요청 */
+        Executable executable = () -> reservation.cancelBy(memberB);
+        ReservationException resultException = assertThrows(ReservationException.class, executable);
+
+        //then
+        ReservationErrorCode resultErrorCode = resultException.getErrorCode();
+        assertThat(resultErrorCode).isEqualTo(ReservationErrorCode.NOT_AUTHORIZED);
+    }
 }
