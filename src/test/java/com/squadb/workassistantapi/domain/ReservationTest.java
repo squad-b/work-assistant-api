@@ -2,12 +2,12 @@ package com.squadb.workassistantapi.domain;
 
 import com.squadb.workassistantapi.domain.exceptions.ReservationErrorCode;
 import com.squadb.workassistantapi.domain.exceptions.ReservationException;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ReservationTest {
 
@@ -34,7 +34,7 @@ class ReservationTest {
 
         //when
         Executable executable = () -> Reservation.createReservation(member, book);
-        ReservationException resultException = Assertions.assertThrows(ReservationException.class, executable);
+        ReservationException resultException = assertThrows(ReservationException.class, executable);
 
         //then
         ReservationErrorCode resultErrorCode = resultException.getErrorCode();
@@ -50,10 +50,31 @@ class ReservationTest {
 
         //when
         Executable executable = () -> Reservation.createReservation(member, book);
-        ReservationException resultException = Assertions.assertThrows(ReservationException.class, executable);
+        ReservationException resultException = assertThrows(ReservationException.class, executable);
 
         //then
         ReservationErrorCode resultErrorCode = resultException.getErrorCode();
         assertThat(resultErrorCode).isEqualTo(ReservationErrorCode.REQUIRED_RESERVATION);
+    }
+
+    @Test
+    @DisplayName("대기 중인 예약만 취소할 수 있다.")
+    public void cancel_NotWaitingReservation_ExceptionThrown() throws Exception {
+        //given
+        Member member = MemberTest.관리자;
+        Book book = BookFactory.createBookOutOfStockRegisteredBy(member);
+        Reservation reservation = Reservation.createReservation(member, book);
+
+        /* 예약 취소 */
+        reservation.cancelBy(member);
+
+        //when
+        /* 취소한 예약을 다시 취소 요청 */
+        Executable executable = () -> reservation.cancelBy(member);
+        ReservationException resultException = assertThrows(ReservationException.class, executable);
+
+        //then
+        ReservationErrorCode resultErrorCode = resultException.getErrorCode();
+        assertThat(resultErrorCode).isEqualTo(ReservationErrorCode.ILLEGAL_STATUS);
     }
 }

@@ -49,4 +49,18 @@ public class ReservationService {
     private Optional<Reservation> findWaitingReservationWithMemberByBookId(Long bookId) {
         return reservationRepository.findReservationWithMemberByBookIdAndStatus(bookId, ReservationStatus.WAITING);
     }
+
+    public void cancel(Long reservationId, Long memberId) {
+        Member member = memberService.findById(memberId);
+        Reservation reservation = findReservationWithMemberById(reservationId);
+        reservation.cancelBy(member);
+    }
+
+    private Reservation findReservationWithMemberById(Long reservationId) {
+        Optional<Reservation> optionalReservation = reservationRepository.findReservationWithMemberById(reservationId);
+        if (optionalReservation.isEmpty()) {
+            throw new ReservationException(ReservationErrorCode.NOT_FOUND);
+        }
+        return optionalReservation.get();
+    }
 }

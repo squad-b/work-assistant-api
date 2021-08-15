@@ -84,6 +84,7 @@ class ReservationServiceTest {
                 .when(reservationRepository)
                 .findReservationWithMemberByBookIdAndStatus(any(), any(ReservationStatus.class));
 
+        // TODO: [2021/08/15 양동혁] refact: memberId, bookId
         //when
         Executable executable = () -> reservationService.reserve(MEMBER_ID, BOOK_ID);
         ReservationException resultException = assertThrows(ReservationException.class, executable);
@@ -91,5 +92,34 @@ class ReservationServiceTest {
         //then
         ReservationErrorCode resultErrorCode = resultException.getErrorCode();
         assertThat(resultErrorCode).isEqualTo(ReservationErrorCode.ALREADY_MYSELF_RESERVED);
+    }
+
+    // TODO: [2021/08/15 양동혁] refact: 도메인 계층 테스트로 옮기자 
+    @Test
+    @DisplayName("다른회원의 예약은 취소할 수 없다.")
+    public void cancel_notAuthorizedReservation_ExceptionThrown() throws Exception {
+        //given
+        Book book = BookFactory.createBookOutOfStockRegisteredBy(MemberTest.관리자);
+        Member memberA = MemberTest.createMember(MemberType.NORMAL);
+        Member memberB = MemberTest.createMember(MemberType.NORMAL);
+
+        doReturn(memberB)
+                .when(memberService)
+                .findById(any());
+
+        /* memberA가 예약을 한 상태 */
+        Reservation reservation = Reservation.createReservation(memberA, book);
+        doReturn(Optional.of(reservation))
+                .when(reservationRepository)
+                .findReservationWithMemberById(any());
+
+        //when
+        /* memberA의 예약을 memberB가 취소 요청 */
+        Executable executable = () -> reservationService.cancel(reservation.getId(), memberB.getId());
+        ReservationException resultException = assertThrows(ReservationException.class, executable);
+
+        //then
+        ReservationErrorCode resultErrorCode = resultException.getErrorCode();
+        assertThat(resultErrorCode).isEqualTo(ReservationErrorCode.NOT_AUTHORIZED);
     }
 }

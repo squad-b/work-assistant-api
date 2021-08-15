@@ -22,6 +22,7 @@ public class Reservation {
 
     @JoinColumn(name = "member_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    // TODO: [2021/08/15 양동혁] naming: member -> reserver
     private Member member;
 
     @JoinColumn(name = "book_id", nullable = false)
@@ -51,13 +52,38 @@ public class Reservation {
         }
     }
 
-    private static void validateNotNull(Member member, Book book) {
-        if (isNull(member) || isNull(book)) {
+    private static void validateNotNull(Object... params) {
+        for (Object param : params) {
+            validateNotNull(param);
+        }
+    }
+
+    private static void validateNotNull(Object param) {
+        if (isNull(param)) {
             throw new ReservationException(ReservationErrorCode.REQUIRED_RESERVATION);
+        }
+    }
+
+    public void cancelBy(Member member) {
+        validateCancelBy(member);
+        status = ReservationStatus.CANCELED;
+    }
+
+    private void validateCancelBy(Member member) {
+        validateNotNull(member);
+        if (!isReservedBy(member)) {
+            throw new ReservationException(ReservationErrorCode.NOT_AUTHORIZED);
+        }
+        if (!isStatusWaiting()) {
+            throw new ReservationException(ReservationErrorCode.ILLEGAL_STATUS, "대기 중인 예약만 취소할 수 있습니다.");
         }
     }
 
     public boolean isReservedBy(Member targetMember) {
         return this.member == targetMember;
+    }
+
+    private boolean isStatusWaiting() {
+        return status == ReservationStatus.WAITING;
     }
 }
