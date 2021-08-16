@@ -1,19 +1,12 @@
 package com.squadb.workassistantapi.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
 import com.squadb.workassistantapi.util.HashUtil;
 import com.squadb.workassistantapi.web.exception.LoginFailedException;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 
 @Getter
 @Entity
@@ -58,9 +51,5 @@ public class Member {
 
     public void changePassword(String newPassword) {
         this.passwordHash = HashUtil.hashPassword(newPassword);
-    }
-
-    public boolean isNotEqualId(Long memberId) {
-        return !this.id.equals(memberId);
     }
 }

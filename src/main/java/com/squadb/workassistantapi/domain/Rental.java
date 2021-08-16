@@ -84,15 +84,6 @@ public class Rental {
         return book.getTitle();
     }
 
-    public void updateRental(Long memberId, RentalStatus updateStatus) {
-        if (member.isNotEqualId(memberId)) { throw new NoAuthorizationException(String.format("반납 권한이 없습니다. rentalId: %d, memberId: %d", id, memberId)); }
-        if (updateStatus == RETURN) {
-            status = RETURN;
-            book.increaseStock();
-            returnDate = LocalDateTime.now();
-        }
-    }
-
     public void returnBy(LoginMember loginMember) {
         if (!loginMember.isAdmin() && loginMember.is(member)) {
             throw new NoAuthorizationException("반납할 권한이 없습니다.");
