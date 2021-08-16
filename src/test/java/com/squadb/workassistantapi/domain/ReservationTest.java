@@ -6,6 +6,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
+import java.time.LocalDateTime;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -97,5 +99,35 @@ class ReservationTest {
         //then
         ReservationErrorCode resultErrorCode = resultException.getErrorCode();
         assertThat(resultErrorCode).isEqualTo(ReservationErrorCode.NOT_AUTHORIZED);
+    }
+
+    @Test
+    @DisplayName("만료날짜를 지난 예약은 취소된다.")
+    public void revoke_expiredReservation() throws Exception {
+        //given
+        Book book = BookFactory.createBookOutOfStockRegisteredBy(MemberTest.관리자);
+        Member member = MemberTest.createMember(MemberType.NORMAL);
+
+        //when
+        Reservation reservation = Reservation.createReservation(member, book);
+        boolean isRevoked = reservation.revokeReservationExpiringOn(LocalDateTime.now().plusDays(3));
+
+        //then
+        assertThat(isRevoked).isTrue();
+    }
+
+    @Test
+    @DisplayName("만료날짜를 지나지 않은 예약은 취소되지 않는다.")
+    public void revoke_notExpiredReservation() throws Exception {
+        //given
+        Book book = BookFactory.createBookOutOfStockRegisteredBy(MemberTest.관리자);
+        Member member = MemberTest.createMember(MemberType.NORMAL);
+
+        //when
+        Reservation reservation = Reservation.createReservation(member, book);
+        boolean isRevoked = reservation.revokeReservationExpiringOn(LocalDateTime.now().plusDays(2));
+
+        //then
+        assertThat(isRevoked).isFalse();
     }
 }

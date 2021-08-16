@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 // TODO: [2021/08/15 양동혁] CURD 구현
@@ -63,5 +64,15 @@ public class ReservationService {
             throw new ReservationException(ReservationErrorCode.NOT_FOUND, errorMessage);
         }
         return optionalReservation.get();
+    }
+
+    /**
+     * @return 취소된 예약 개수
+     */
+    public long revokedExpiredReservation() {
+        return reservationRepository.findRentableReservation()
+                .stream()
+                .filter(reservation -> reservation.revokeReservationExpiringOn(LocalDateTime.now()))
+                .count();
     }
 }

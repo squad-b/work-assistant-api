@@ -35,6 +35,8 @@ public class Reservation {
     @Column(nullable = false)
     private LocalDateTime reservationDate;
 
+    private static final int RETENTION_PERIOD_OF_RENTAL = 3;
+
     public static Reservation createReservation(Member member, Book book) {
         validateCreateReservation(member, book);
         Reservation reservation = new Reservation();
@@ -45,6 +47,7 @@ public class Reservation {
         return reservation;
     }
 
+    // TODO: [2021/08/16 양동혁] naming: 검증메소드
     private static void validateCreateReservation(Member member, Book book) {
         validateNotNull(member, book);
         if (book.canRental()) {
@@ -85,5 +88,29 @@ public class Reservation {
 
     private boolean isStatusWaiting() {
         return status == ReservationStatus.WAITING;
+    }
+
+    public boolean revokeReservationExpiringOn(LocalDateTime targetDate) {
+        validateNotNull(targetDate);
+        if (isExpiringOn(targetDate)) {
+            status = ReservationStatus.REVOKED;
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isExpiringOn(LocalDateTime targetDate) {
+        LocalDateTime expiryDate = getExpiryDate();
+        return expiryDate.isBefore(targetDate);
+    }
+
+    /**
+     * 대여가능날짜를 포함해 대야유보기간이 지난다면 예약이 만료된다.
+     * ex) 대어유보기간이 3일이고 대출가능 시간이 1일 15시라면 만료일은 4일 00시 이다.
+     */
+    private LocalDateTime getExpiryDate() {
+        return reservationDate.plusDays(RETENTION_PERIOD_OF_RENTAL)
+                .toLocalDate()
+                .atStartOfDay();
     }
 }
