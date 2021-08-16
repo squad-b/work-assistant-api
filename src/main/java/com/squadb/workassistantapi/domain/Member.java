@@ -49,7 +49,17 @@ public class Member {
         }
     }
 
+    public void checkEqualPassword(String plainPassword, PasswordEncoder passwordEncoder) {
+        if (!passwordEncoder.match(passwordHash, plainPassword)) {
+            throw LoginFailedException.wrongPassword();
+        }
+    }
+
     public void changePassword(String newPassword) {
         this.passwordHash = HashUtil.hashPassword(newPassword);
+    }
+
+    public void changePassword(String newPlainPassword, PasswordEncoder passwordEncoder) {
+        this.passwordHash = passwordEncoder.encode(newPlainPassword);
     }
 }

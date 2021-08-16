@@ -20,9 +20,9 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public LoginMember login(String email, String password) {
+    public LoginMember login(String email, String plainPassword) {
         final Member findMember = memberRepository.findByEmail(email).orElseThrow(LoginFailedException::noSuchMember);
-        findMember.checkEqualPassword(password);
+        findMember.checkEqualPassword(plainPassword);
         return new LoginMember(findMember.getId(), findMember.getType());
     }
 
