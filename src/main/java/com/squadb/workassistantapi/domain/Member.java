@@ -1,6 +1,5 @@
 package com.squadb.workassistantapi.domain;
 
-import com.squadb.workassistantapi.util.HashUtil;
 import com.squadb.workassistantapi.web.exception.LoginFailedException;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -50,20 +49,10 @@ public class Member {
         return type.isAdmin();
     }
 
-    public void checkEqualPassword(String passwordInput) {
-        if (!HashUtil.equalPassword(passwordInput, passwordHash)) {
-            throw LoginFailedException.wrongPassword();
-        }
-    }
-
     public void checkEqualPassword(String plainPassword, PasswordEncryptor passwordEncryptor) {
         if (!passwordEncryptor.match(passwordHash, plainPassword)) {
             throw LoginFailedException.wrongPassword();
         }
-    }
-
-    public void changePassword(String newPassword) {
-        this.passwordHash = HashUtil.hashPassword(newPassword);
     }
 
     public void changePassword(String newPlainPassword, PasswordEncryptor passwordEncryptor) {
