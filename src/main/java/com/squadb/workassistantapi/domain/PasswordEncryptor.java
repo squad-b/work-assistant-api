@@ -1,7 +1,7 @@
 package com.squadb.workassistantapi.domain;
 
-public interface PasswordEncoder {
-    String encode(String plain);
+public interface PasswordEncryptor {
+    String encrypt(String plain);
 
     boolean match(String password, String plain);
 }

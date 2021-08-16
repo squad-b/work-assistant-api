@@ -18,9 +18,9 @@ class MemberTest {
     @Test
     void checkEqualPasswordTest() {
         // given
-        PasswordEncoder wrongPasswordEncoder = new PasswordEncoder() {
+        PasswordEncryptor wrongPasswordEncryptor = new PasswordEncryptor() {
             @Override
-            public String encode(String plain) {
+            public String encrypt(String plain) {
                 return null;
             }
 
@@ -31,7 +31,7 @@ class MemberTest {
         };
 
         // when //then
-        assertThatThrownBy(() -> 일반회원.checkEqualPassword("wrong password", wrongPasswordEncoder))
+        assertThatThrownBy(() -> 일반회원.checkEqualPassword("wrong password", wrongPasswordEncryptor))
                 .isInstanceOf(LoginFailedException.class);
     }
 
@@ -39,9 +39,9 @@ class MemberTest {
     @Test
     void changePasswordTest() {
         // given
-        PasswordEncoder noEncodePasswordEncoder = new PasswordEncoder() {
+        PasswordEncryptor noEncrypt = new PasswordEncryptor() {
             @Override
-            public String encode(String plain) {
+            public String encrypt(String plain) {
                 return plain;
             }
 
@@ -53,7 +53,7 @@ class MemberTest {
         Member 유인근 = Member.createMember("ayden@miridih.com", "유인근", "1234", NORMAL);
 
         // when
-        유인근.changePassword("5678", noEncodePasswordEncoder);
+        유인근.changePassword("5678", noEncrypt);
 
         // then
         assertThat(유인근.getPasswordHash()).isEqualTo("5678");
