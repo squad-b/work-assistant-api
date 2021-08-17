@@ -1,6 +1,9 @@
 package com.squadb.workassistantapi.service;
 
-import com.squadb.workassistantapi.domain.*;
+import com.squadb.workassistantapi.domain.Book;
+import com.squadb.workassistantapi.domain.Member;
+import com.squadb.workassistantapi.domain.Reservation;
+import com.squadb.workassistantapi.domain.ReservationRepository;
 import com.squadb.workassistantapi.domain.exceptions.ReservationErrorCode;
 import com.squadb.workassistantapi.domain.exceptions.ReservationException;
 import lombok.AccessLevel;
@@ -33,7 +36,7 @@ public class ReservationService {
     }
 
     private void validateCanReserve(Member member, Book book) {
-        Optional<Reservation> optionalReservation = findWaitingReservationWithMemberByBookId(book.getId());
+        Optional<Reservation> optionalReservation = reservationRepository.findWaitingReservationWithMemberByBookId(book.getId());
         //검증성공 로직
         if (optionalReservation.isEmpty()) {
             return;
@@ -45,10 +48,6 @@ public class ReservationService {
             throw new ReservationException(ReservationErrorCode.ALREADY_MYSELF_RESERVED);
         }
         throw new ReservationException(ReservationErrorCode.ALREADY_RESERVED);
-    }
-
-    private Optional<Reservation> findWaitingReservationWithMemberByBookId(Long bookId) {
-        return reservationRepository.findReservationWithMemberByBookIdAndStatus(bookId, ReservationStatus.WAITING);
     }
 
     public void cancel(Long reservationId, Long memberId) {
@@ -69,7 +68,7 @@ public class ReservationService {
     /**
      * @return 취소된 예약 개수
      */
-    public long revokedExpiredReservation() {
+    public long revokeExpiredReservation() {
         return reservationRepository.findRentableReservation()
                 .stream()
                 .filter(reservation -> reservation.revokeReservationExpiringOn(LocalDateTime.now()))

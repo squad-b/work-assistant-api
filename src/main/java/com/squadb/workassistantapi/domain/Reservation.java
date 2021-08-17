@@ -74,11 +74,15 @@ public class Reservation {
 
     private void validateCancelBy(Member member) {
         validateNotNull(member);
-        if (!isReservedBy(member)) {
-            throw new ReservationException(ReservationErrorCode.NOT_AUTHORIZED);
-        }
+        validateReservedBy(member);
         if (!isStatusWaiting()) {
             throw new ReservationException(ReservationErrorCode.ILLEGAL_STATUS, "대기 중인 예약만 취소할 수 있습니다.");
+        }
+    }
+
+    private void validateReservedBy(Member member) {
+        if (!isReservedBy(member)) {
+            throw new ReservationException(ReservationErrorCode.NOT_AUTHORIZED);
         }
     }
 
@@ -112,5 +116,10 @@ public class Reservation {
         return reservationDate.plusDays(RETENTION_PERIOD_OF_RENTAL)
                 .toLocalDate()
                 .atStartOfDay();
+    }
+
+    public void finishedBy(Member member) {
+        validateReservedBy(member);
+        status = ReservationStatus.FINISHED;
     }
 }

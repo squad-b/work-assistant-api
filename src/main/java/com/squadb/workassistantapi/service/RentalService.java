@@ -1,6 +1,8 @@
 package com.squadb.workassistantapi.service;
 
 import com.squadb.workassistantapi.domain.*;
+import com.squadb.workassistantapi.domain.exceptions.NotRentableException;
+import com.squadb.workassistantapi.domain.exceptions.ReservationException;
 import com.squadb.workassistantapi.web.controller.dto.LoginMember;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.time.LocalDateTime.now;
 
@@ -18,6 +21,7 @@ public class RentalService {
     private final MemberService memberService;
     private final BookService bookService;
     private final RentalRepository rentalRepository;
+    private final ReservationRepository reservationRepository;
 
     @Transactional(readOnly = true)
     public Rental findById(final Long rentalId) {
@@ -30,7 +34,18 @@ public class RentalService {
         final Member member = memberService.findById(memberId);
         final Rental rental = Rental.createRental(book, member, isLongTerm, now());
         final Rental saveRental = rentalRepository.save(rental);
+        finishReservation(member, book);
         return saveRental.getId();
+    }
+
+    private void finishReservation(Member member, Book book) {
+        Optional<Reservation> optionalReservation =
+                reservationRepository.findWaitingReservationWithMemberByBookId(book.getId());
+        try {
+            optionalReservation.ifPresent(reservation -> reservation.finishedBy(member));
+        } catch (ReservationException e) {
+            throw new NotRentableException("예약회원이 있는 책은 대여할 수 없습니다.");
+        }
     }
 
     @Transactional(readOnly = true)

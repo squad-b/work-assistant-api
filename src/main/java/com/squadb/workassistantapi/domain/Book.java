@@ -79,6 +79,7 @@ public class Book {
         stockQuantity = stockQuantity.plusOne();
     }
 
+    // TODO: [2021/08/17 양동혁] outOfstock를 바로 사용하는게 더 좋은가?
     public boolean canRental() {
         return !isOutOfStock();
     }

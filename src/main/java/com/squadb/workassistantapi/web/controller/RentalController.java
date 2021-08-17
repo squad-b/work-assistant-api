@@ -2,6 +2,7 @@ package com.squadb.workassistantapi.web.controller;
 
 import com.squadb.workassistantapi.domain.Rental;
 import com.squadb.workassistantapi.domain.exceptions.NoAuthorizationException;
+import com.squadb.workassistantapi.domain.exceptions.NotRentableException;
 import com.squadb.workassistantapi.domain.exceptions.OutOfStockException;
 import com.squadb.workassistantapi.service.RentalService;
 import com.squadb.workassistantapi.web.config.auth.CurrentLoginMember;
@@ -55,5 +56,10 @@ public class RentalController {
     @ExceptionHandler(NoAuthorizationException.class)
     public ResponseEntity<RentalResponseDto> handleNoAuthorization() {
         return new ResponseEntity<>(RentalResponseDto.fail("UNAUTHORIZED"), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(NotRentableException.class)
+    public ResponseEntity<RentalResponseDto> handleIllegalStateException(NotRentableException e) {
+        return new ResponseEntity<>(RentalResponseDto.fail(e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 }

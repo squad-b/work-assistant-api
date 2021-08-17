@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.doReturn;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
 class ReservationServiceTest {
@@ -37,6 +38,8 @@ class ReservationServiceTest {
     @Test
     @DisplayName("예약자가 있는 책은 예약할 수 없다.")
     public void reserve_alreadyReservedBook_ExceptionThrown() throws Exception {
+        Member mock = mock(Member.class);
+
         //given
         Book book = BookFactory.createBookOutOfStockRegisteredBy(MemberTest.관리자);
         Member memberA = MemberTest.createMember(MemberType.NORMAL);
@@ -49,7 +52,7 @@ class ReservationServiceTest {
         Reservation reservation = Reservation.createReservation(memberA, book);
         doReturn(Optional.of(reservation))
                 .when(reservationRepository)
-                .findReservationWithMemberByBookIdAndStatus(any(), any(ReservationStatus.class));
+                .findWaitingReservationWithMemberByBookId(any());
 
         //when
         /* 이미 예약된 책을 memberB가 예약 요청 */
@@ -73,7 +76,7 @@ class ReservationServiceTest {
         given(bookService.findById(any())).willReturn(book);
         doReturn(Optional.of(reservation))
                 .when(reservationRepository)
-                .findReservationWithMemberByBookIdAndStatus(any(), any(ReservationStatus.class));
+                .findWaitingReservationWithMemberByBookId(any());
 
         //when
         /* 동일한 회원이 같은 책을 여러번 에약 요청 */
