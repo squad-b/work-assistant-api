@@ -18,7 +18,6 @@ This is service that allows you to easily register and borrow books.
 * JPA
 * Redis
 * Daum Kakao API(search book API)
-* Jenkins
 
 ## License
 
