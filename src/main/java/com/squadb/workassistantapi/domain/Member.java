@@ -1,19 +1,11 @@
 package com.squadb.workassistantapi.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
-import com.squadb.workassistantapi.util.HashUtil;
 import com.squadb.workassistantapi.web.exception.LoginFailedException;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 
 @Getter
 @Entity
@@ -37,30 +29,33 @@ public class Member {
     @Column(nullable = false)
     private MemberType type;
 
+    private Member(String email, String name, String passwordHash, MemberType type) {
+        this.email = email;
+        this.name = name;
+        this.passwordHash = passwordHash;
+        this.type = type;
+    }
+
     public static Member createMember(String email, String name, String passwordHash, MemberType memberType) {
-        Member member = new Member();
-        member.email = email;
-        member.name = name;
-        member.passwordHash = passwordHash;
-        member.type = memberType;
-        return member;
+        return new Member(email, name, passwordHash, memberType);
+    }
+
+    public static Member createMember(String email, String name, String plainPassword, PasswordEncryptor passwordEncryptor, MemberType memberType) {
+        final String passwordHash = passwordEncryptor.encrypt(plainPassword);
+        return new Member(email, name, passwordHash, memberType);
     }
 
     public boolean isAdmin() {
         return type.isAdmin();
     }
 
-    public void checkEqualPassword(String passwordInput) {
-        if (!HashUtil.equalPassword(passwordInput, passwordHash)) {
+    public void checkEqualPassword(String plainPassword, PasswordEncryptor passwordEncryptor) {
+        if (!passwordEncryptor.match(passwordHash, plainPassword)) {
             throw LoginFailedException.wrongPassword();
         }
     }
 
-    public void changePassword(String newPassword) {
-        this.passwordHash = HashUtil.hashPassword(newPassword);
-    }
-
-    public boolean isNotEqualId(Long memberId) {
-        return !this.id.equals(memberId);
+    public void changePassword(String newPlainPassword, PasswordEncryptor passwordEncryptor) {
+        this.passwordHash = passwordEncryptor.encrypt(newPlainPassword);
     }
 }

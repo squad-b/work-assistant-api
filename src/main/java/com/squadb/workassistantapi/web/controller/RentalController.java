@@ -37,14 +37,6 @@ public class RentalController {
         return ResponseEntity.ok(RentalResponseDto.of(bookRentalList));
     }
 
-    @PutMapping(value = "/rentals/{rentalId}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RentalResponseDto> returnBook(@PathVariable Long rentalId,
-                                                        @CurrentLoginMember LoginMember loginMember,
-                                                        @RequestBody RentalRequestDto rentalRequestDto) {
-        final long returnedRentalId = rentalService.updateRental(rentalId, loginMember.getId(), rentalRequestDto.getStatus());
-        return ResponseEntity.ok(RentalResponseDto.success(returnedRentalId));
-    }
-
     @PostMapping(value = "/return/rentals", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RentalResponseDto> returnBooks(@CurrentLoginMember LoginMember loginMember, @RequestBody RentalRequestDto rentalRequestDto) {
         try {

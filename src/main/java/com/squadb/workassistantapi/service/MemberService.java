@@ -2,6 +2,7 @@ package com.squadb.workassistantapi.service;
 
 import com.squadb.workassistantapi.domain.Member;
 import com.squadb.workassistantapi.domain.MemberRepository;
+import com.squadb.workassistantapi.domain.PasswordEncryptor;
 import com.squadb.workassistantapi.web.controller.dto.LoginMember;
 import com.squadb.workassistantapi.web.exception.LoginFailedException;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final PasswordEncryptor passwordEncryptor;
 
     @Transactional(readOnly = true)
     public Member findById(final Long memberId) {
@@ -20,15 +22,15 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public LoginMember login(String email, String password) {
+    public LoginMember login(String email, String plainPassword) {
         final Member findMember = memberRepository.findByEmail(email).orElseThrow(LoginFailedException::noSuchMember);
-        findMember.checkEqualPassword(password);
+        findMember.checkEqualPassword(plainPassword, passwordEncryptor);
         return new LoginMember(findMember.getId(), findMember.getType());
     }
 
     @Transactional
     public void updateMember(Long memberId, String newPassword) {
         final Member member = memberRepository.findById(memberId).orElseThrow();
-        member.changePassword(newPassword);
+        member.changePassword(newPassword, passwordEncryptor);
     }
 }

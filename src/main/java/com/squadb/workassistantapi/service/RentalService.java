@@ -44,13 +44,6 @@ public class RentalService {
     }
 
     @Transactional
-    public long updateRental(Long rentalId, Long memberId, RentalStatus status) {
-        final Rental rental = rentalRepository.findById(rentalId).orElseThrow();
-        rental.updateRental(memberId, status);
-        return rental.getId();
-    }
-
-    @Transactional
     public void returnBooks(List<Long> rentalIdList, LoginMember loginMember) {
         final List<Rental> rentalList = rentalRepository.findAllById(rentalIdList);
         if (rentalList.isEmpty()) {
