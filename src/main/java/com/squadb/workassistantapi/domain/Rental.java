@@ -47,17 +47,18 @@ public class Rental {
     @Column(nullable = false)
     private RentalStatus status;
 
-    public static Rental createRental(Book book, Member member, boolean isLongTerm) {
+    private Rental(RentalStatus status, LocalDateTime startDate, LocalDateTime endDate, Member member, Book book) {
+        this.status = status;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.member = member;
+        this.book = book;
+    }
+
+    public static Rental createRental(Book book, Member member, boolean isLongTerm, LocalDateTime rentalStartDate) {
         book.decreaseStock();
-
-        Rental rental = new Rental();
-        rental.status = ON_RENTAL;
-        rental.startDate = LocalDateTime.now();
-        rental.endDate = isLongTerm ? null : rental.startDate.plusDays(NORMAL_RENTAL_DAYS);
-        rental.member = member;
-        rental.book = book;
-
-        return rental;
+        final LocalDateTime endDate = isLongTerm ? null : rentalStartDate.plusDays(NORMAL_RENTAL_DAYS);
+        return new Rental(ON_RENTAL, rentalStartDate,endDate, member, book);
     }
 
     public Long getMemberId() {
