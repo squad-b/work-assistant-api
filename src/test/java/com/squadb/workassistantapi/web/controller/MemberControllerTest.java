@@ -1,9 +1,9 @@
 package com.squadb.workassistantapi.web.controller;
 
-import static org.hamcrest.Matchers.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
+import com.squadb.workassistantapi.domain.MemberType;
+import com.squadb.workassistantapi.service.MemberService;
+import com.squadb.workassistantapi.service.RentalService;
+import com.squadb.workassistantapi.web.controller.dto.LoginMember;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,10 +13,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.squadb.workassistantapi.domain.MemberType;
-import com.squadb.workassistantapi.service.MemberService;
-import com.squadb.workassistantapi.service.RentalService;
-import com.squadb.workassistantapi.web.controller.dto.LoginMember;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = MemberController.class)
 class MemberControllerTest {
@@ -36,7 +37,7 @@ class MemberControllerTest {
     public void authorizedTest() throws Exception {
         // given
         LoginMember loginMember = new LoginMember(1L, MemberType.NORMAL);
-        mockSession.setAttribute("LOGIN_MEMBER", loginMember);
+        mockSession.setAttribute(MemberController.LOGIN_ATTRIBUTE_NAME, loginMember);
 
         // when //then
         mockMvc.perform(get("/auth").session(mockSession))

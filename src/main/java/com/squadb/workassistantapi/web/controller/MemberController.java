@@ -1,34 +1,20 @@
 package com.squadb.workassistantapi.web.controller;
 
-import java.util.List;
-
-import javax.servlet.http.HttpSession;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.squadb.workassistantapi.domain.Member;
 import com.squadb.workassistantapi.domain.Rental;
 import com.squadb.workassistantapi.service.MemberService;
 import com.squadb.workassistantapi.service.RentalService;
 import com.squadb.workassistantapi.web.config.auth.CurrentLoginMember;
-import com.squadb.workassistantapi.web.controller.dto.AuthResponseDto;
-import com.squadb.workassistantapi.web.controller.dto.LoginMember;
-import com.squadb.workassistantapi.web.controller.dto.LoginRequestDto;
-import com.squadb.workassistantapi.web.controller.dto.MemberProfileResponseDto;
-import com.squadb.workassistantapi.web.controller.dto.RentalRequestDto;
-import com.squadb.workassistantapi.web.controller.dto.RentalResponseDto;
-import com.squadb.workassistantapi.web.controller.dto.UpdateMemberRequestDto;
+import com.squadb.workassistantapi.web.controller.dto.*;
 import com.squadb.workassistantapi.web.exception.LoginFailedException;
 import com.squadb.workassistantapi.web.interceptor.CheckPermission;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -36,6 +22,8 @@ public class MemberController {
 
     private final MemberService memberService;
     private final RentalService rentalService;
+
+    public static final String LOGIN_ATTRIBUTE_NAME = "LOGIN_MEMBER";
 
     @GetMapping("/auth")
     public ResponseEntity<AuthResponseDto> isLogin(@CurrentLoginMember LoginMember loginMember) {
@@ -47,7 +35,7 @@ public class MemberController {
     public ResponseEntity<AuthResponseDto> login(@RequestBody LoginRequestDto request, HttpSession session) {
         try {
             LoginMember loginMember = memberService.login(request.getEmail(), request.getPassword());
-            session.setAttribute("LOGIN_MEMBER", loginMember);
+            session.setAttribute(LOGIN_ATTRIBUTE_NAME, loginMember);
             return ResponseEntity.ok(AuthResponseDto.success(loginMember));
         } catch (LoginFailedException e) {
             return ResponseEntity.ok(AuthResponseDto.fail(e.getResult()));

@@ -25,7 +25,7 @@ public class ReservationService {
 
     private final ReservationRepository reservationRepository;
 
-    public Long reserve(Long memberId, Long bookId) {
+    public Long reserve(Long bookId, Long memberId) {
         Member member = memberService.findById(memberId);
         Book book = bookService.findById(bookId);
         validateCanReserve(member, book);
@@ -50,10 +50,11 @@ public class ReservationService {
         throw new ReservationException(ReservationErrorCode.ALREADY_RESERVED);
     }
 
-    public void cancel(Long reservationId, Long memberId) {
+    public Long cancel(Long reservationId, Long memberId) {
         Member member = memberService.findById(memberId);
         Reservation reservation = findReservationWithMemberById(reservationId);
         reservation.cancelBy(member);
+        return reservation.getId();
     }
 
     private Reservation findReservationWithMemberById(Long reservationId) {

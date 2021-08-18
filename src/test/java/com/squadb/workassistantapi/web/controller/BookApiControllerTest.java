@@ -39,7 +39,7 @@ class BookApiControllerTest {
     @BeforeEach
     public void setup() {
         mockHttpSession = new MockHttpSession();
-        mockHttpSession.setAttribute("LOGIN_MEMBER", new LoginMember(1L, MemberType.NORMAL));
+        mockHttpSession.setAttribute(MemberController.LOGIN_ATTRIBUTE_NAME, new LoginMember(1L, MemberType.NORMAL));
     }
 
     @DisplayName("책 등록 파라미터가 유효하지 않으면 INVALID_BODY 란 메시지와 함께 status code 400을 리턴한다.")

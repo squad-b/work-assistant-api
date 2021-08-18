@@ -1,21 +1,19 @@
 package com.squadb.workassistantapi.web.interceptor;
 
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
+import com.squadb.workassistantapi.web.controller.MemberController;
+import com.squadb.workassistantapi.web.controller.dto.LoginMember;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.HandlerMapping;
 
-import com.squadb.workassistantapi.web.controller.dto.LoginMember;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -37,7 +35,7 @@ public class CheckPermissionInterceptor implements HandlerInterceptor {
             final Map<?, ?> pathAttributes = (Map<?, ?>) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
             if (pathAttributes != null && pathAttributes.containsKey("memberId")) {
                 final long pathMemberId = Long.parseLong((String)pathAttributes.get("memberId"));
-                final LoginMember loginMember = (LoginMember) session.getAttribute("LOGIN_MEMBER");
+                final LoginMember loginMember = (LoginMember) session.getAttribute(MemberController.LOGIN_ATTRIBUTE_NAME);
                 return loginMember.isAdmin() || pathMemberId == loginMember.getId();
             }
         } catch (Exception e) {
