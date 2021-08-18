@@ -103,7 +103,7 @@ class RentalServiceTest {
     }
 
     private Rental createRental(Book testBook) {
-        final Rental mockRental = Rental.createRental(testBook, testMember, false);
+        final Rental mockRental = Rental.createRental(testBook, testMember, false, LocalDateTime.now());
         entityManager.persist(mockRental);
         return mockRental;
     }

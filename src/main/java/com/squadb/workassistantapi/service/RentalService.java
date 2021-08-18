@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static java.time.LocalDateTime.now;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -26,7 +28,7 @@ public class RentalService {
     public Long rentBook(final Long bookId, final Long memberId, final boolean isLongTerm) {
         final Book book = bookService.findById(bookId);
         final Member member = memberService.findById(memberId);
-        final Rental rental = Rental.createRental(book, member, isLongTerm);
+        final Rental rental = Rental.createRental(book, member, isLongTerm, now());
         final Rental saveRental = rentalRepository.save(rental);
         return saveRental.getId();
     }
