@@ -49,5 +49,5 @@ script/output/mismath_title_list.txt
 script/output/no_search_result_title_list.txt
 
 #dev property
-application-dev.yaml
+application-local.yaml
 

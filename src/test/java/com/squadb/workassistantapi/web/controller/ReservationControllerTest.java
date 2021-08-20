@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squadb.workassistantapi.domain.*;
 import com.squadb.workassistantapi.web.controller.dto.LoginMember;
 import com.squadb.workassistantapi.web.controller.dto.ReservationRequestDto;
-import com.squadb.workassistantapi.web.controller.dto.ReservationResponseDto;
+import com.squadb.workassistantapi.web.controller.dto.ReservationResponseTestDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -133,8 +133,8 @@ class ReservationControllerTest {
     }
 
     private Reservation findReservationByResponse(String jsonResponse) throws JsonProcessingException {
-        ReservationResponseDto reservationResponseDto = objectMapper.readValue(jsonResponse, ReservationResponseDto.class);
-        Long reservationId = reservationResponseDto.getReservationId();
+        ReservationResponseTestDto reservationResponseTestDto = objectMapper.readValue(jsonResponse, ReservationResponseTestDto.class);
+        Long reservationId = reservationResponseTestDto.getReservationId();
         return reservationRepository.findById(reservationId).get();
     }
 

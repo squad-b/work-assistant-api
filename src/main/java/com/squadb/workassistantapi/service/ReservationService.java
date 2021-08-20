@@ -6,15 +6,18 @@ import com.squadb.workassistantapi.domain.Reservation;
 import com.squadb.workassistantapi.domain.ReservationRepository;
 import com.squadb.workassistantapi.domain.exceptions.ReservationErrorCode;
 import com.squadb.workassistantapi.domain.exceptions.ReservationException;
+import com.squadb.workassistantapi.web.controller.dto.ReservationSearchDto;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
-// TODO: [2021/08/15 양동혁] CURD 구현
 @Service
 @Transactional
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
@@ -24,6 +27,10 @@ public class ReservationService {
     private final BookService bookService;
 
     private final ReservationRepository reservationRepository;
+
+    public List<Reservation> findAllWaitingReservationByMemberId(Long memberId) {
+        return reservationRepository.findAllWaitingReservationByMemberId(memberId);
+    }
 
     public Long reserve(Long bookId, Long memberId) {
         Member member = memberService.findById(memberId);
@@ -64,6 +71,10 @@ public class ReservationService {
             throw new ReservationException(ReservationErrorCode.NOT_FOUND, errorMessage);
         }
         return optionalReservation.get();
+    }
+
+    public Page<Reservation> findAllReservation(ReservationSearchDto reservationSearchDto, Pageable pageable) {
+        return reservationRepository.findAllReservation(reservationSearchDto, pageable);
     }
 
     /**

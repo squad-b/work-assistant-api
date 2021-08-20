@@ -8,13 +8,18 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface ReservationRepository extends JpaRepository<Reservation, Long> {
+public interface ReservationRepository extends JpaRepository<Reservation, Long>, ReservationRepositorySupport{
 
-    // TODO: [2021/08/16 양동혁] Querydsl로 중복쿼리 제거하자
+    @Query("SELECT r FROM Reservation r " +
+            "JOIN FETCH r.book " +
+            "WHERE r.member.id = :memberId " +
+            "AND r.status = com.squadb.workassistantapi.domain.ReservationStatus.WAITING")
+    List<Reservation> findAllWaitingReservationByMemberId(@Param("memberId") Long memberId);
+
     @Query("SELECT r FROM Reservation r " +
             "JOIN FETCH r.member " +
-            "WHERE r.status = com.squadb.workassistantapi.domain.ReservationStatus.WAITING " +
-            "AND r.book.id = :bookId")
+            "WHERE r.book.id = :bookId " +
+            "AND r.status = com.squadb.workassistantapi.domain.ReservationStatus.WAITING")
     Optional<Reservation> findWaitingReservationWithMemberByBookId(@Param("bookId") Long bookId);
 
     @EntityGraph(attributePaths = {"member"})
@@ -28,4 +33,5 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             "WHERE r.status = com.squadb.workassistantapi.domain.ReservationStatus.WAITING " +
             "AND b.stockQuantity.value > 1")
     List<Reservation> findRentableReservation();
+
 }
