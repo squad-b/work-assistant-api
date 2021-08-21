@@ -25,6 +25,12 @@ public class MemberController {
     private final MemberService memberService;
     private final RentalService rentalService;
 
+    @PostMapping("/members")
+    public ResponseEntity<MemberResponseDto> createMember(@RequestBody MemberRequestDto memberRequestDto) {
+        Long memberId = memberService.create(memberRequestDto);
+        return ResponseEntity.ok(new MemberResponseDto(memberId));
+    }
+
     @GetMapping("/auth")
     public ResponseEntity<AuthResponseDto> isLogin(@CurrentLoginMember LoginMember loginMember) {
         if (loginMember == null) { return ResponseEntity.ok(AuthResponseDto.fail("UNAUTHORIZED")); }
