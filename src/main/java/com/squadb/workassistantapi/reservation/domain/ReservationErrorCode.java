@@ -1,4 +1,4 @@
-package com.squadb.workassistantapi.domain.exceptions;
+package com.squadb.workassistantapi.reservation.domain;
 
 import lombok.AccessLevel;
 import lombok.Getter;

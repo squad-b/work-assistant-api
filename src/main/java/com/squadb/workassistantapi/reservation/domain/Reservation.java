@@ -1,7 +1,7 @@
-package com.squadb.workassistantapi.domain;
+package com.squadb.workassistantapi.reservation.domain;
 
-import com.squadb.workassistantapi.domain.exceptions.ReservationErrorCode;
-import com.squadb.workassistantapi.domain.exceptions.ReservationException;
+import com.squadb.workassistantapi.domain.Book;
+import com.squadb.workassistantapi.domain.Member;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

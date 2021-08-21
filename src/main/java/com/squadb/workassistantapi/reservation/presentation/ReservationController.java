@@ -1,11 +1,12 @@
-package com.squadb.workassistantapi.web.controller;
+package com.squadb.workassistantapi.reservation.presentation;
 
 import com.fasterxml.jackson.databind.exc.ValueInstantiationException;
-import com.squadb.workassistantapi.domain.Reservation;
-import com.squadb.workassistantapi.domain.exceptions.ReservationException;
-import com.squadb.workassistantapi.service.ReservationService;
+import com.squadb.workassistantapi.reservation.application.ReservationService;
+import com.squadb.workassistantapi.reservation.domain.Reservation;
+import com.squadb.workassistantapi.reservation.domain.ReservationException;
+import com.squadb.workassistantapi.reservation.dto.*;
 import com.squadb.workassistantapi.web.config.auth.CurrentLoginMember;
-import com.squadb.workassistantapi.web.controller.dto.*;
+import com.squadb.workassistantapi.web.controller.dto.LoginMember;
 import com.squadb.workassistantapi.web.interceptor.CheckPermission;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -62,14 +63,14 @@ public class ReservationController {
 
     @PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     public CommonResponseDto<ReservationIdResponseDto> reserve(@RequestBody ReservationRequestDto reservationRequestDto,
-                                                            @CurrentLoginMember LoginMember loginMember) {
+                                                               @CurrentLoginMember LoginMember loginMember) {
         Long reservationId = reservationService.reserve(reservationRequestDto.getBookId(), loginMember.getId());
         return CommonResponseDto.ok(new ReservationIdResponseDto(reservationId));
     }
 
     @DeleteMapping(path = "/{reservationId}", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     public CommonResponseDto<ReservationIdResponseDto> cancel(@PathVariable(value = "reservationId") long reservationId,
-                                                           @CurrentLoginMember LoginMember loginMember) {
+                                                              @CurrentLoginMember LoginMember loginMember) {
         reservationService.cancel(reservationId, loginMember.getId());
         return CommonResponseDto.ok(new ReservationIdResponseDto(reservationId));
     }

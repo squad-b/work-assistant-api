@@ -1,10 +1,15 @@
-package com.squadb.workassistantapi.web.controller;
+package com.squadb.workassistantapi.reservation.presentation;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squadb.workassistantapi.domain.*;
+import com.squadb.workassistantapi.reservation.domain.Reservation;
+import com.squadb.workassistantapi.reservation.domain.ReservationRepository;
+import com.squadb.workassistantapi.reservation.domain.ReservationStatus;
+import com.squadb.workassistantapi.reservation.domain.ReservationValidator;
+import com.squadb.workassistantapi.reservation.dto.ReservationRequestDto;
+import com.squadb.workassistantapi.web.controller.MemberController;
 import com.squadb.workassistantapi.web.controller.dto.LoginMember;
-import com.squadb.workassistantapi.web.controller.dto.ReservationRequestDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

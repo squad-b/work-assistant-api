@@ -1,6 +1,6 @@
 package com.squadb.workassistantapi.web.controller.batch;
 
-import com.squadb.workassistantapi.service.ReservationService;
+import com.squadb.workassistantapi.reservation.application.ReservationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;

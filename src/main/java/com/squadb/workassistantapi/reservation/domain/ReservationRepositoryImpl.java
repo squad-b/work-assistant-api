@@ -1,10 +1,11 @@
-package com.squadb.workassistantapi.domain;
+package com.squadb.workassistantapi.reservation.domain;
 
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.squadb.workassistantapi.web.controller.dto.ReservationSearchAllDto;
-import com.squadb.workassistantapi.web.controller.dto.ReservationSearchDto;
+import com.squadb.workassistantapi.domain.QReservation;
+import com.squadb.workassistantapi.reservation.dto.ReservationSearchAllDto;
+import com.squadb.workassistantapi.reservation.dto.ReservationSearchDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;

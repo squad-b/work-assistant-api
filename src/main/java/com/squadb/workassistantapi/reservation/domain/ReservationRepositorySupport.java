@@ -1,7 +1,7 @@
-package com.squadb.workassistantapi.domain;
+package com.squadb.workassistantapi.reservation.domain;
 
-import com.squadb.workassistantapi.web.controller.dto.ReservationSearchAllDto;
-import com.squadb.workassistantapi.web.controller.dto.ReservationSearchDto;
+import com.squadb.workassistantapi.reservation.dto.ReservationSearchAllDto;
+import com.squadb.workassistantapi.reservation.dto.ReservationSearchDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

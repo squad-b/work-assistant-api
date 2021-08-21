@@ -2,8 +2,12 @@ package com.squadb.workassistantapi.service;
 
 import com.squadb.workassistantapi.domain.*;
 import com.squadb.workassistantapi.domain.exceptions.NotRentableException;
+import com.squadb.workassistantapi.reservation.domain.Reservation;
+import com.squadb.workassistantapi.reservation.domain.ReservationRepository;
+import com.squadb.workassistantapi.reservation.domain.ReservationStatus;
+import com.squadb.workassistantapi.reservation.domain.ReservationValidator;
+import com.squadb.workassistantapi.reservation.dto.ReservationSearchDto;
 import com.squadb.workassistantapi.web.controller.dto.LoginMember;
-import com.squadb.workassistantapi.web.controller.dto.ReservationSearchDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

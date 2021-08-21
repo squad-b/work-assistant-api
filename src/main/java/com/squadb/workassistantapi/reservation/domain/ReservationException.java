@@ -1,4 +1,4 @@
-package com.squadb.workassistantapi.domain.exceptions;
+package com.squadb.workassistantapi.reservation.domain;
 
 public class ReservationException extends RuntimeException {
 

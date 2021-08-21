@@ -1,9 +1,11 @@
-package com.squadb.workassistantapi.service;
+package com.squadb.workassistantapi.reservation.application;
 
-import com.squadb.workassistantapi.domain.*;
-import com.squadb.workassistantapi.domain.exceptions.ReservationErrorCode;
-import com.squadb.workassistantapi.domain.exceptions.ReservationException;
-import com.squadb.workassistantapi.web.controller.dto.ReservationSearchAllDto;
+import com.squadb.workassistantapi.domain.Book;
+import com.squadb.workassistantapi.domain.BookRepository;
+import com.squadb.workassistantapi.domain.Member;
+import com.squadb.workassistantapi.domain.MemberRepository;
+import com.squadb.workassistantapi.reservation.domain.*;
+import com.squadb.workassistantapi.reservation.dto.ReservationSearchAllDto;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

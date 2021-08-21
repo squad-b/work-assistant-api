@@ -1,11 +1,11 @@
-package com.squadb.workassistantapi.service;
+package com.squadb.workassistantapi.reservation.application;
 
 import com.squadb.workassistantapi.domain.Book;
 import com.squadb.workassistantapi.domain.Member;
-import com.squadb.workassistantapi.domain.Reservation;
-import com.squadb.workassistantapi.domain.ReservationRepository;
-import com.squadb.workassistantapi.domain.exceptions.ReservationErrorCode;
-import com.squadb.workassistantapi.domain.exceptions.ReservationException;
+import com.squadb.workassistantapi.reservation.domain.Reservation;
+import com.squadb.workassistantapi.reservation.domain.ReservationErrorCode;
+import com.squadb.workassistantapi.reservation.domain.ReservationException;
+import com.squadb.workassistantapi.reservation.domain.ReservationRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

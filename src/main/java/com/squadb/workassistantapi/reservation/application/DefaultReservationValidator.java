@@ -1,8 +1,8 @@
-package com.squadb.workassistantapi.service;
+package com.squadb.workassistantapi.reservation.application;
 
-import com.squadb.workassistantapi.domain.*;
-import com.squadb.workassistantapi.domain.exceptions.ReservationErrorCode;
-import com.squadb.workassistantapi.domain.exceptions.ReservationException;
+import com.squadb.workassistantapi.domain.Book;
+import com.squadb.workassistantapi.domain.Member;
+import com.squadb.workassistantapi.reservation.domain.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

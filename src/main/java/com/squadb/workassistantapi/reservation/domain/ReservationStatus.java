@@ -1,4 +1,4 @@
-package com.squadb.workassistantapi.domain;
+package com.squadb.workassistantapi.reservation.domain;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.NoArgsConstructor;
