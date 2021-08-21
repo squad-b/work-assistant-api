@@ -4,11 +4,13 @@ import com.squadb.workassistantapi.domain.BookCategory;
 import com.squadb.workassistantapi.domain.Reservation;
 import com.squadb.workassistantapi.domain.ReservationStatus;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
 import static lombok.AccessLevel.PRIVATE;
 
+@Getter
 @AllArgsConstructor(access = PRIVATE)
 public class ReservationResponseDto {
 

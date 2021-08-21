@@ -1,14 +1,13 @@
 package com.squadb.workassistantapi.web.controller.dto;
 
 import com.squadb.workassistantapi.domain.ReservationStatus;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor
-public class ReservationSearchDto {
+public class ReservationSearchAllDto {
 
-    private Long memberId;
-    private Long bookId;
+    private Long reservationId;
+    private String memberName;
+    private String bookTitle;
     private ReservationStatus reservationStatus;
 }

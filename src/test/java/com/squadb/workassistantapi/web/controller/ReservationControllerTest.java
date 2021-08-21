@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squadb.workassistantapi.domain.*;
 import com.squadb.workassistantapi.web.controller.dto.LoginMember;
 import com.squadb.workassistantapi.web.controller.dto.ReservationRequestDto;
-import com.squadb.workassistantapi.web.controller.dto.ReservationResponseTestDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,9 +16,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.time.LocalDateTime;
+import java.util.List;
 
 import static com.squadb.workassistantapi.domain.MemberType.ADMIN;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -63,17 +65,16 @@ class ReservationControllerTest {
         String request = toJson(reservationRequestDto);
 
         //when
-        String response = mockMvc.perform(post(BASE_URL)
+        mockMvc.perform(post(BASE_URL)
                 .session(mockSession)
                 .contentType(APPLICATION_JSON)
                 .content(request))
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
+                .andExpect(status().isOk());
 
         //then
-        Reservation reservation = findReservationByResponse(response);
+        List<Reservation> reservationList = reservationRepository.findAll();
+        assertThat(reservationList.size()).isEqualTo(1);
+        Reservation reservation = reservationList.get(0);
         assertThat(reservation).isNotNull();
         assertThat(reservation.getMember()).isEqualTo(member);
         assertThat(reservation.getBook()).isEqualTo(book);
@@ -91,16 +92,13 @@ class ReservationControllerTest {
 
         //when
         String cancelReservationUrl = BASE_URL + reservation.getId();
-        String response = mockMvc.perform(delete(cancelReservationUrl)
+        mockMvc.perform(delete(cancelReservationUrl)
                 .session(mockSession)
                 .contentType(APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
+                .andExpect(status().isOk());
 
         //then
-        Reservation canceledReservation = findReservationByResponse(response);
+        Reservation canceledReservation = reservationRepository.findById(reservation.getId()).get();
         assertThat(canceledReservation).isNotNull();
         assertThat(canceledReservation.getMember()).isEqualTo(member);
         assertThat(canceledReservation.getBook()).isEqualTo(book);
@@ -121,24 +119,29 @@ class ReservationControllerTest {
     private Book createPersistedBook() {
         Member member = Member.createMember("admin@miridih.com", "관리자", "1234", ADMIN);
         em.persist(member);
-        Book book = BookFactory.createBookOutOfStockRegisteredBy(member);
+        Book book = createBookOutOfStockRegisteredBy(member);
         em.persist(book);
         return book;
     }
 
     private Reservation createPersistedReservationOf(Member member, Book book) {
-        Reservation reservation = Reservation.createReservation(member, book);
+        Reservation reservation = Reservation.createReservation(member, book, mock(ReservationValidator.class));
         em.persist(reservation);
         return reservation;
     }
 
-    private Reservation findReservationByResponse(String jsonResponse) throws JsonProcessingException {
-        ReservationResponseTestDto reservationResponseTestDto = objectMapper.readValue(jsonResponse, ReservationResponseTestDto.class);
-        Long reservationId = reservationResponseTestDto.getReservationId();
-        return reservationRepository.findById(reservationId).get();
-    }
-
     private String toJson(Object object) throws JsonProcessingException {
         return objectMapper.writeValueAsString(object);
+    }
+
+    public static Book createBookOutOfStockRegisteredBy(Member member) {
+        int stockQuantity = 0;
+        return Book.builder()
+                .isbn(Isbn.valueOf("9780596520687"))
+                .title("Spring")
+                .stockQuantity(StockQuantity.valueOf(stockQuantity))
+                .registrationDate(LocalDateTime.now())
+                .registrant(member)
+                .build();
     }
 }

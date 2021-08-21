@@ -3,6 +3,7 @@ package com.squadb.workassistantapi.domain;
 import com.squadb.workassistantapi.domain.exceptions.ReservationErrorCode;
 import com.squadb.workassistantapi.domain.exceptions.ReservationException;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -22,7 +23,6 @@ public class Reservation {
 
     @JoinColumn(name = "member_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-    // TODO: [2021/08/15 양동혁] naming: member -> reserver
     private Member member;
 
     @JoinColumn(name = "book_id", nullable = false)
@@ -35,49 +35,46 @@ public class Reservation {
     @Column(nullable = false)
     private LocalDateTime reservationDate;
 
+    //대여유보기간
     private static final int RETENTION_PERIOD_OF_RENTAL = 3;
 
-    public static Reservation createReservation(Member member, Book book) {
-        validateCreateReservation(member, book);
-        Reservation reservation = new Reservation();
-        reservation.member = member;
-        reservation.book = book;
-        reservation.status = ReservationStatus.WAITING;
-        reservation.reservationDate = LocalDateTime.now();
-        return reservation;
+    //1인당 최대 예약 가능 개수
+    public static final int MAX_COUNT_PER_MEMBER = 3;
+
+    //한 종의 책에 대해 최대 예약 가능 개수
+    public static final int MAX_COUNT_PER_BOOK = 5;
+
+    @Builder
+    private Reservation(Member member, Book book, ReservationStatus status, LocalDateTime reservationDate) {
+        this.member = member;
+        this.book = book;
+        this.status = status;
+        this.reservationDate = reservationDate;
     }
 
-    // TODO: [2021/08/16 양동혁] naming: 검증메소드
-    private static void validateCreateReservation(Member member, Book book) {
+    public static Reservation createReservation(Member member, Book book, ReservationValidator reservationValidator) {
         validateNotNull(member, book);
-        if (book.canRental()) {
+        validateBookOutOfStock(book);
+        reservationValidator.canReserve(member, book);
+        return Reservation.builder()
+                .member(member)
+                .book(book)
+                .status(ReservationStatus.WAITING)
+                .reservationDate(LocalDateTime.now())
+                .build();
+    }
+
+    private static void validateBookOutOfStock(Book book) {
+        if (!book.isOutOfStock()) {
             throw new ReservationException(ReservationErrorCode.NOT_RESERVABLE, "대여가능한 책은 예약할 수 없습니다.");
         }
     }
 
-    private static void validateNotNull(Object... params) {
-        for (Object param : params) {
-            validateNotNull(param);
-        }
-    }
-
-    private static void validateNotNull(Object param) {
-        if (isNull(param)) {
-            throw new ReservationException(ReservationErrorCode.REQUIRED_RESERVATION);
-        }
-    }
-
     public void cancelBy(Member member) {
-        validateCancelBy(member);
-        status = ReservationStatus.CANCELED;
-    }
-
-    private void validateCancelBy(Member member) {
         validateNotNull(member);
         validateReservedBy(member);
-        if (!isStatusWaiting()) {
-            throw new ReservationException(ReservationErrorCode.ILLEGAL_STATUS, "대기 중인 예약만 취소할 수 있습니다.");
-        }
+        validateIsStatusWaiting();
+        status = ReservationStatus.CANCELED;
     }
 
     private void validateReservedBy(Member member) {
@@ -90,8 +87,14 @@ public class Reservation {
         return this.member == targetMember;
     }
 
-    private boolean isStatusWaiting() {
-        return status == ReservationStatus.WAITING;
+    public boolean canRentable() {
+        return !book.isOutOfStock();
+    }
+
+    private void validateIsStatusWaiting() {
+        if (status != ReservationStatus.WAITING) {
+            throw new ReservationException(ReservationErrorCode.ILLEGAL_STATUS);
+        }
     }
 
     public boolean revokeReservationExpiringOn(LocalDateTime targetDate) {
@@ -109,7 +112,7 @@ public class Reservation {
     }
 
     /**
-     * 대여가능날짜를 포함해 대야유보기간이 지난다면 예약이 만료된다.
+     * 대여가능날짜를 포함해 대여유보기간이 지난다면 예약이 만료된다.
      * ex) 대어유보기간이 3일이고 대출가능 시간이 1일 15시라면 만료일은 4일 00시 이다.
      */
     private LocalDateTime getExpiryDate() {
@@ -119,7 +122,21 @@ public class Reservation {
     }
 
     public void finishedBy(Member member) {
+        validateNotNull(member);
         validateReservedBy(member);
         status = ReservationStatus.FINISHED;
+    }
+
+
+    private static void validateNotNull(Object... params) {
+        for (Object param : params) {
+            validateNotNull(param);
+        }
+    }
+
+    private static void validateNotNull(Object param) {
+        if (isNull(param)) {
+            throw new ReservationException(ReservationErrorCode.REQUIRED_RESERVATION);
+        }
     }
 }

@@ -1,10 +1,10 @@
 package com.squadb.workassistantapi.web.controller.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-public class ReservationResponseTestDto {
-
+@AllArgsConstructor
+public class ReservationIdResponseDto {
     private Long reservationId;
-    private String message;
 }

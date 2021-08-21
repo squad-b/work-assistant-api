@@ -1,12 +1,9 @@
 package com.squadb.workassistantapi.service;
 
-import com.squadb.workassistantapi.domain.Book;
-import com.squadb.workassistantapi.domain.Member;
-import com.squadb.workassistantapi.domain.Reservation;
-import com.squadb.workassistantapi.domain.ReservationRepository;
+import com.squadb.workassistantapi.domain.*;
 import com.squadb.workassistantapi.domain.exceptions.ReservationErrorCode;
 import com.squadb.workassistantapi.domain.exceptions.ReservationException;
-import com.squadb.workassistantapi.web.controller.dto.ReservationSearchDto;
+import com.squadb.workassistantapi.web.controller.dto.ReservationSearchAllDto;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,74 +13,71 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public class ReservationService {
 
-    private final MemberService memberService;
-    private final BookService bookService;
+    private final ReservationValidator reservationValidator;
 
+    private final MemberRepository memberRepository;
     private final ReservationRepository reservationRepository;
+    private final BookRepository bookRepository;
 
-    public List<Reservation> findAllWaitingReservationByMemberId(Long memberId) {
-        return reservationRepository.findAllWaitingReservationByMemberId(memberId);
+    public Page<Reservation> findMyReservation(Long memberId, Pageable pageable) {
+        return findAllWaitingReservationByMemberId(memberId, pageable);
+    }
+
+    private Page<Reservation> findAllWaitingReservationByMemberId(Long memberId, Pageable pageable) {
+        return reservationRepository.findAllByMemberIdAndStatus(memberId, ReservationStatus.WAITING,pageable);
     }
 
     public Long reserve(Long bookId, Long memberId) {
-        Member member = memberService.findById(memberId);
-        Book book = bookService.findById(bookId);
-        validateCanReserve(member, book);
-
-        Reservation reservation = Reservation.createReservation(member, book);
-        reservationRepository.save(reservation);
-        return reservation.getId();
+        Book book = findBookById(bookId);
+        Member member = findMemberById(memberId);
+        Reservation reservation = Reservation.createReservation(member, book, reservationValidator);
+        return reservationRepository.save(reservation).getId();
     }
 
-    private void validateCanReserve(Member member, Book book) {
-        Optional<Reservation> optionalReservation = reservationRepository.findWaitingReservationWithMemberByBookId(book.getId());
-        //검증성공 로직
-        if (optionalReservation.isEmpty()) {
-            return;
-        }
+    private Book findBookById(Long bookId) {
+        return bookRepository.findById(bookId)
+                .orElseThrow(() -> new ReservationException(ReservationErrorCode.REQUIRED_RESERVATION));
+    }
 
-        //검증실패 로직
-        Reservation reservation = optionalReservation.get();
-        if (reservation.isReservedBy(member)) {
-            throw new ReservationException(ReservationErrorCode.ALREADY_MYSELF_RESERVED);
-        }
-        throw new ReservationException(ReservationErrorCode.ALREADY_RESERVED);
+    private Member findMemberById(Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new ReservationException(ReservationErrorCode.REQUIRED_RESERVATION));
     }
 
     public Long cancel(Long reservationId, Long memberId) {
-        Member member = memberService.findById(memberId);
-        Reservation reservation = findReservationWithMemberById(reservationId);
+        Member member = findMemberById(memberId);
+        Reservation reservation = findReservationById(reservationId);
         reservation.cancelBy(member);
         return reservation.getId();
     }
 
-    private Reservation findReservationWithMemberById(Long reservationId) {
-        Optional<Reservation> optionalReservation = reservationRepository.findReservationWithMemberById(reservationId);
-        if (optionalReservation.isEmpty()) {
-            String errorMessage = String.format("No Reservation:[%d]", reservationId);
-            throw new ReservationException(ReservationErrorCode.NOT_FOUND, errorMessage);
-        }
-        return optionalReservation.get();
+    private Reservation findReservationById(Long reservationId) {
+        return reservationRepository.findReservationWithMemberById(reservationId)
+                .orElseThrow(() -> new ReservationException(ReservationErrorCode.NOT_FOUND));
     }
 
-    public Page<Reservation> findAllReservation(ReservationSearchDto reservationSearchDto, Pageable pageable) {
-        return reservationRepository.findAllReservation(reservationSearchDto, pageable);
+    public Page<Reservation> findAllReservation(ReservationSearchAllDto reservationSearchAllDto, Pageable pageable) {
+        return reservationRepository.findAllBySearchAll(reservationSearchAllDto, pageable);
     }
 
     /**
-     * @return 취소된 예약 개수
+     * 대여할 수 있지만 만료기간이 지날 때 까지 대여를 하지 않은 예약들을 취소시킨다.
+     * @return 예약 만료기간이 지나서 취소된 예약 개수
      */
     public long revokeExpiredReservation() {
-        return reservationRepository.findRentableReservation()
-                .stream()
+        return findWaitingReservationByBookId().stream()
+                .filter(Reservation::canRentable)
                 .filter(reservation -> reservation.revokeReservationExpiringOn(LocalDateTime.now()))
                 .count();
+    }
+
+    private List<Reservation> findWaitingReservationByBookId() {
+        return reservationRepository.findAllWithBookByStatus(ReservationStatus.WAITING);
     }
 }

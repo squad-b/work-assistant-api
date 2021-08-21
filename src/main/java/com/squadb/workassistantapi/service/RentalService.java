@@ -2,8 +2,8 @@ package com.squadb.workassistantapi.service;
 
 import com.squadb.workassistantapi.domain.*;
 import com.squadb.workassistantapi.domain.exceptions.NotRentableException;
-import com.squadb.workassistantapi.domain.exceptions.ReservationException;
 import com.squadb.workassistantapi.web.controller.dto.LoginMember;
+import com.squadb.workassistantapi.web.controller.dto.ReservationSearchDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -22,6 +22,7 @@ public class RentalService {
     private final BookService bookService;
     private final RentalRepository rentalRepository;
     private final ReservationRepository reservationRepository;
+    private final ReservationValidator reservationValidator;
 
     @Transactional(readOnly = true)
     public Rental findById(final Long rentalId) {
@@ -32,20 +33,37 @@ public class RentalService {
     public Long rentBook(final Long bookId, final Long memberId, final boolean isLongTerm) {
         final Book book = bookService.findById(bookId);
         final Member member = memberService.findById(memberId);
+        validateNotExistsOtherMemberReservation(book, member);
+
         final Rental rental = Rental.createRental(book, member, isLongTerm, now());
         final Rental saveRental = rentalRepository.save(rental);
         finishReservation(member, book);
         return saveRental.getId();
     }
 
+    private void validateNotExistsOtherMemberReservation(Book book, Member member) {
+        try {
+            reservationValidator.notExistsOtherMemberReservation(book, member);
+        } catch (IllegalArgumentException e) {
+            throw new NotRentableException("권한이 없습니다.");
+        }
+    }
+
     private void finishReservation(Member member, Book book) {
-        Optional<Reservation> optionalReservation =
-                reservationRepository.findWaitingReservationWithMemberByBookId(book.getId());
+        Optional<Reservation> optionalReservation = findWaitingReservationByMemberIdAndBookId(member, book);
         try {
             optionalReservation.ifPresent(reservation -> reservation.finishedBy(member));
-        } catch (ReservationException e) {
-            throw new NotRentableException("예약회원이 있는 책은 대여할 수 없습니다.");
+        } catch (IllegalArgumentException e) {
+            throw new NotRentableException("권한이 없습니다.");
         }
+    }
+
+    private Optional<Reservation> findWaitingReservationByMemberIdAndBookId(Member member, Book book) {
+        Long memberId = member.getId();
+        Long bookId = book.getId();
+        ReservationStatus status = ReservationStatus.WAITING;
+        ReservationSearchDto reservationSearchDto = new ReservationSearchDto(memberId, bookId, status);
+        return reservationRepository.findReservationWithMemberBySearch(reservationSearchDto);
     }
 
     @Transactional(readOnly = true)

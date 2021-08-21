@@ -22,10 +22,12 @@ class BookServiceTest {
 
     @Autowired private BookService bookService;
     @Autowired private EntityManager entityManager;
+    @Autowired private PasswordEncryptorImpl passwordEncryptor;
 
     @DisplayName("책 등록시 isbn 이 중복되면 예외가 발생한다.")
     @Test
     public void isbnDuplicationTest() {
+        System.out.println(passwordEncryptor.encrypt("test1234"));
         //given
         final Member 등록자 = 멤버가_등록되어_있다();
         final String isbn = "0512520689";
