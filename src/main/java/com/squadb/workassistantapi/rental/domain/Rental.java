@@ -59,7 +59,7 @@ public class Rental {
     public static Rental createRental(Book book, Member member, boolean isLongTerm, LocalDateTime rentalStartDate) {
         book.decreaseStock();
         final LocalDateTime endDate = isLongTerm ? null : rentalStartDate.plusDays(NORMAL_RENTAL_DAYS);
-        return new Rental(ON_RENTAL, rentalStartDate,endDate, member, book);
+        return new Rental(ON_RENTAL, rentalStartDate, endDate, member, book);
     }
 
     public Long getMemberId() {

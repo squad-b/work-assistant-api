@@ -27,7 +27,7 @@ public class RentalController {
                                                       @CurrentLoginMember LoginMember loginMember,
                                                       @RequestBody(required = false) RentalRequestDto rentalRequestDto) {
         rentalRequestDto = rentalRequestDto == null ? new RentalRequestDto() : rentalRequestDto;
-        final long rentalId = rentalService.rentBook(bookId, loginMember.getId(), rentalRequestDto.isLongTerm());
+        final Long rentalId = rentalService.rentBook(bookId, loginMember.getId(), rentalRequestDto.isLongTerm());
         return ResponseEntity.ok(RentalResponseDto.success(rentalId));
     }
 
@@ -49,7 +49,7 @@ public class RentalController {
 
     @ExceptionHandler(OutOfStockException.class)
     public ResponseEntity<RentalResponseDto> handleOutOfStock() {
-        return ResponseEntity.ok(RentalResponseDto.fail("OUT_OF_STOCK"));
+        return new ResponseEntity<>(RentalResponseDto.fail("OUT_OF_STOCK"), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(NoAuthorizationException.class)

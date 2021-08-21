@@ -6,6 +6,7 @@ import com.squadb.workassistantapi.rental.domain.Rental;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -14,8 +15,9 @@ import java.util.stream.Collectors;
 @Getter
 @JsonInclude(Include.NON_NULL)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
+@ToString
 public class RentalResponseDto {
-    private long id;
+    private Long id;
     private String result;
     private String borrowerName;
     private String bookTitle;
@@ -29,7 +31,7 @@ public class RentalResponseDto {
         return rentalResponseDto;
     }
 
-    public static RentalResponseDto success(long rentalId) {
+    public static RentalResponseDto success(Long rentalId) {
         RentalResponseDto rentalResponseDto = success();
         rentalResponseDto.id = rentalId;
         return rentalResponseDto;
@@ -37,7 +39,7 @@ public class RentalResponseDto {
 
     public static RentalResponseDto fail(String message) {
         RentalResponseDto rentalResponseDto = new RentalResponseDto();
-        rentalResponseDto.id = -1;
+        rentalResponseDto.id = -1L;
         rentalResponseDto.result = message;
         return rentalResponseDto;
     }
@@ -56,6 +58,6 @@ public class RentalResponseDto {
     }
 
     public static List<RentalResponseDto> of(List<Rental> bookRentalList) {
-        return bookRentalList.stream().map(bookRental -> RentalResponseDto.of(bookRental)).collect(Collectors.toList());
+        return bookRentalList.stream().map(RentalResponseDto::of).collect(Collectors.toList());
     }
 }

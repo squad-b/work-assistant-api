@@ -74,7 +74,7 @@ class RentalControllerTest {
 
         //then
         perform.andDo(print())
-                .andExpect(status().isOk())
+                .andExpect(status().isBadRequest())
                 .andExpect(content().string(containsString("OUT_OF_STOCK")));
     }
 

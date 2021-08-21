@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.squadb.workassistantapi.rental.domain.Rental.createRental;
 import static java.time.LocalDateTime.now;
 
 @Slf4j
@@ -34,8 +35,7 @@ public class RentalService {
     public Long rentBook(final Long bookId, final Long memberId, final boolean isLongTerm) {
         final Book book = bookService.findById(bookId);
         final Member member = memberService.findById(memberId);
-        final Rental rental = Rental.createRental(book, member, isLongTerm, now());
-        final Rental saveRental = rentalRepository.save(rental);
+        final Rental saveRental = rentalRepository.save(createRental(book, member, isLongTerm, now()));
         return saveRental.getId();
     }
 
