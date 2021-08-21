@@ -1,7 +1,7 @@
 package com.squadb.workassistantapi.book.infrastructure;
 
-import com.squadb.workassistantapi.book.infrastructure.dto.BookSearchRequestDto;
-import com.squadb.workassistantapi.book.infrastructure.dto.BookSearchResponseDto;
+import com.squadb.workassistantapi.book.dto.BookSearchRequestDto;
+import com.squadb.workassistantapi.book.dto.BookSearchResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;

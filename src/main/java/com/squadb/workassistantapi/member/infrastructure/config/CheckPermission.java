@@ -1,4 +1,4 @@
-package com.squadb.workassistantapi.member.presentation;
+package com.squadb.workassistantapi.member.infrastructure.config;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

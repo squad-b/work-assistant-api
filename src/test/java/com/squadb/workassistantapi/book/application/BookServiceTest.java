@@ -1,6 +1,6 @@
 package com.squadb.workassistantapi.book.application;
 
-import com.squadb.workassistantapi.book.presentation.dto.BookRegisterDto;
+import com.squadb.workassistantapi.book.dto.BookRegisterDto;
 import com.squadb.workassistantapi.member.domain.Member;
 import com.squadb.workassistantapi.member.domain.MemberType;
 import org.junit.jupiter.api.DisplayName;
@@ -32,7 +32,7 @@ class BookServiceTest {
 
         //when then
         assertThatThrownBy(() -> 책을_등록한다(isbn, 등록자.getId()))
-                .isInstanceOf(KeyDuplicationException.class);
+                .isInstanceOf(IsbnDuplicationException.class);
     }
 
     private void 책이_등록_되어_있다(String isbn, Long memberId) {

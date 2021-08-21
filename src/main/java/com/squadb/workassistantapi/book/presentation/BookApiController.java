@@ -1,15 +1,10 @@
 package com.squadb.workassistantapi.book.presentation;
 
 import com.squadb.workassistantapi.book.application.BookService;
-import com.squadb.workassistantapi.book.application.KeyDuplicationException;
+import com.squadb.workassistantapi.book.application.IsbnDuplicationException;
 import com.squadb.workassistantapi.book.domain.Book;
+import com.squadb.workassistantapi.book.dto.*;
 import com.squadb.workassistantapi.book.infrastructure.BookSearchAgent;
-import com.squadb.workassistantapi.book.infrastructure.dto.BookSearchRequestDto;
-import com.squadb.workassistantapi.book.infrastructure.dto.BookSearchResponseDto;
-import com.squadb.workassistantapi.book.presentation.dto.BookDetailResponseDto;
-import com.squadb.workassistantapi.book.presentation.dto.BookListResponseDto;
-import com.squadb.workassistantapi.book.presentation.dto.BookRegisterDto;
-import com.squadb.workassistantapi.book.presentation.dto.BookRegisterResponseDto;
 import com.squadb.workassistantapi.member.dto.LoginMember;
 import com.squadb.workassistantapi.member.infrastructure.config.CurrentLoginMember;
 import com.squadb.workassistantapi.rental.domain.NoAuthorizationException;
@@ -64,8 +59,8 @@ public class BookApiController {
         return new ResponseEntity<>(BookRegisterResponseDto.fail("INVALID_BODY"), HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(KeyDuplicationException.class)
-    public ResponseEntity<BookRegisterResponseDto> handleKeyDuplicationException(KeyDuplicationException e) {
+    @ExceptionHandler(IsbnDuplicationException.class)
+    public ResponseEntity<BookRegisterResponseDto> handleKeyDuplicationException(IsbnDuplicationException e) {
         log.error("식별자가 중복됐습니다.", e);
         return new ResponseEntity<>(BookRegisterResponseDto.fail("KEY_DUPLICATION"), HttpStatus.OK);
     }

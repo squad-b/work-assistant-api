@@ -2,8 +2,8 @@ package com.squadb.workassistantapi.book.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squadb.workassistantapi.book.application.BookService;
+import com.squadb.workassistantapi.book.dto.BookRegisterDto;
 import com.squadb.workassistantapi.book.infrastructure.BookSearchAgent;
-import com.squadb.workassistantapi.book.presentation.dto.BookRegisterDto;
 import com.squadb.workassistantapi.member.domain.MemberType;
 import com.squadb.workassistantapi.member.dto.LoginMember;
 import com.squadb.workassistantapi.rental.domain.NoAuthorizationException;

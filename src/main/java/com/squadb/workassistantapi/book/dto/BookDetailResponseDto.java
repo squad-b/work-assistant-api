@@ -1,4 +1,4 @@
-package com.squadb.workassistantapi.book.presentation.dto;
+package com.squadb.workassistantapi.book.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;

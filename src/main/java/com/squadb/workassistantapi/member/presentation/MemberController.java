@@ -4,6 +4,7 @@ import com.squadb.workassistantapi.member.application.MemberService;
 import com.squadb.workassistantapi.member.domain.LoginFailedException;
 import com.squadb.workassistantapi.member.domain.Member;
 import com.squadb.workassistantapi.member.dto.*;
+import com.squadb.workassistantapi.member.infrastructure.config.CheckPermission;
 import com.squadb.workassistantapi.member.infrastructure.config.CurrentLoginMember;
 import com.squadb.workassistantapi.rental.application.RentalService;
 import com.squadb.workassistantapi.rental.domain.Rental;

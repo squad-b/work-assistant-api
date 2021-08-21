@@ -1,4 +1,4 @@
-package com.squadb.workassistantapi.book.presentation.dto;
+package com.squadb.workassistantapi.book.dto;
 
 import com.squadb.workassistantapi.book.domain.Book;
 import com.squadb.workassistantapi.book.domain.BookCategory;

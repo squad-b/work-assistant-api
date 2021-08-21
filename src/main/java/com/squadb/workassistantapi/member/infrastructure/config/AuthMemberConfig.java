@@ -1,6 +1,5 @@
 package com.squadb.workassistantapi.member.infrastructure.config;
 
-import com.squadb.workassistantapi.member.presentation.CheckPermissionInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;

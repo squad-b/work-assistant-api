@@ -1,4 +1,4 @@
-package com.squadb.workassistantapi.member.presentation;
+package com.squadb.workassistantapi.member.infrastructure.config;
 
 import com.squadb.workassistantapi.member.dto.LoginMember;
 import lombok.RequiredArgsConstructor;

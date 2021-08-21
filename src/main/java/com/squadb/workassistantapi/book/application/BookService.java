@@ -3,7 +3,7 @@ package com.squadb.workassistantapi.book.application;
 import com.squadb.workassistantapi.book.domain.Book;
 import com.squadb.workassistantapi.book.domain.BookRepository;
 import com.squadb.workassistantapi.book.domain.Isbn;
-import com.squadb.workassistantapi.book.presentation.dto.BookRegisterDto;
+import com.squadb.workassistantapi.book.dto.BookRegisterDto;
 import com.squadb.workassistantapi.member.domain.Member;
 import com.squadb.workassistantapi.member.domain.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,9 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 public class BookService {
-
     private final BookRepository bookRepository;
-
     private final MemberRepository memberRepository;
 
     @Transactional(readOnly = true)
@@ -38,7 +36,7 @@ public class BookService {
 
     private void checkIsbnDuplication(final String isbn) {
         if (bookRepository.findByIsbn(Isbn.valueOf(isbn)).isPresent()) {
-            throw new KeyDuplicationException("key duplication book : [" + isbn + "]");
+            throw new IsbnDuplicationException("key duplication book : [" + isbn + "]");
         }
     }
 
