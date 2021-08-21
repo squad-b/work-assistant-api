@@ -1,4 +1,4 @@
-package com.squadb.workassistantapi.web.agent.dto;
+package com.squadb.workassistantapi.book.infrastructure.dto;
 
 import lombok.Getter;
 import lombok.Setter;

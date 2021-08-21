@@ -1,4 +1,4 @@
-package com.squadb.workassistantapi.domain;
+package com.squadb.workassistantapi.book.domain;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

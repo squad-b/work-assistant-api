@@ -1,4 +1,4 @@
-package com.squadb.workassistantapi.domain;
+package com.squadb.workassistantapi.book.domain;
 
 import lombok.AccessLevel;
 import lombok.Getter;

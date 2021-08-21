@@ -1,7 +1,11 @@
-package com.squadb.workassistantapi.web.controller.dto;
+package com.squadb.workassistantapi.book.presentation.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.squadb.workassistantapi.domain.*;
+import com.squadb.workassistantapi.book.domain.Book;
+import com.squadb.workassistantapi.book.domain.BookCategory;
+import com.squadb.workassistantapi.book.domain.Isbn;
+import com.squadb.workassistantapi.book.domain.StockQuantity;
+import com.squadb.workassistantapi.domain.Member;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

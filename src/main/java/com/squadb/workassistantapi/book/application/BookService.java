@@ -1,8 +1,12 @@
-package com.squadb.workassistantapi.service;
+package com.squadb.workassistantapi.book.application;
 
-import com.squadb.workassistantapi.domain.*;
+import com.squadb.workassistantapi.book.domain.Book;
+import com.squadb.workassistantapi.book.domain.BookRepository;
+import com.squadb.workassistantapi.book.domain.Isbn;
+import com.squadb.workassistantapi.book.presentation.dto.BookRegisterDto;
+import com.squadb.workassistantapi.domain.Member;
+import com.squadb.workassistantapi.domain.MemberRepository;
 import com.squadb.workassistantapi.service.exception.KeyDuplicationException;
-import com.squadb.workassistantapi.web.controller.dto.BookRegisterDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;

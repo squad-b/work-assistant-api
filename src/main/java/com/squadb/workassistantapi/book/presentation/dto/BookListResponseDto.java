@@ -1,7 +1,7 @@
-package com.squadb.workassistantapi.web.controller.dto;
+package com.squadb.workassistantapi.book.presentation.dto;
 
-import com.squadb.workassistantapi.domain.Book;
-import com.squadb.workassistantapi.domain.BookCategory;
+import com.squadb.workassistantapi.book.domain.Book;
+import com.squadb.workassistantapi.book.domain.BookCategory;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

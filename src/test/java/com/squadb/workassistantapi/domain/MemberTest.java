@@ -10,9 +10,9 @@ import static com.squadb.workassistantapi.domain.MemberType.NORMAL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class MemberTest {
-    static final Member 관리자 = createMember("admin@miridih.com", "관리자", "1234", ADMIN);
-    static final Member 일반회원 = createMember("normal@miridih.com", "김일반", "1234", NORMAL);
+public class MemberTest {
+    public static final Member 관리자 = createMember("admin@miridih.com", "관리자", "1234", ADMIN);
+    public static final Member 일반회원 = createMember("normal@miridih.com", "김일반", "1234", NORMAL);
 
     @DisplayName("회원은 비밀번호를 검사할 수 있다.")
     @Test

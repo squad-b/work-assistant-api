@@ -1,14 +1,18 @@
-package com.squadb.workassistantapi.web.controller;
+package com.squadb.workassistantapi.book.presentation;
 
-import com.squadb.workassistantapi.domain.Book;
+import com.squadb.workassistantapi.book.application.BookService;
+import com.squadb.workassistantapi.book.domain.Book;
+import com.squadb.workassistantapi.book.infrastructure.BookSearchAgent;
+import com.squadb.workassistantapi.book.infrastructure.dto.BookSearchRequestDto;
+import com.squadb.workassistantapi.book.infrastructure.dto.BookSearchResponseDto;
+import com.squadb.workassistantapi.book.presentation.dto.BookDetailResponseDto;
+import com.squadb.workassistantapi.book.presentation.dto.BookListResponseDto;
+import com.squadb.workassistantapi.book.presentation.dto.BookRegisterDto;
+import com.squadb.workassistantapi.book.presentation.dto.BookRegisterResponseDto;
 import com.squadb.workassistantapi.domain.exceptions.NoAuthorizationException;
-import com.squadb.workassistantapi.service.BookService;
 import com.squadb.workassistantapi.service.exception.KeyDuplicationException;
-import com.squadb.workassistantapi.web.agent.BookSearchAgent;
-import com.squadb.workassistantapi.web.agent.dto.BookSearchRequestDto;
-import com.squadb.workassistantapi.web.agent.dto.BookSearchResponseDto;
 import com.squadb.workassistantapi.web.config.auth.CurrentLoginMember;
-import com.squadb.workassistantapi.web.controller.dto.*;
+import com.squadb.workassistantapi.web.controller.dto.LoginMember;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;

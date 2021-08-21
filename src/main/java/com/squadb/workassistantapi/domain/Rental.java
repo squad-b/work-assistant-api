@@ -1,5 +1,6 @@
 package com.squadb.workassistantapi.domain;
 
+import com.squadb.workassistantapi.book.domain.Book;
 import com.squadb.workassistantapi.domain.exceptions.NoAuthorizationException;
 import com.squadb.workassistantapi.web.controller.dto.LoginMember;
 import lombok.AccessLevel;

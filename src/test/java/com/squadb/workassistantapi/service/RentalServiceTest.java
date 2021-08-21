@@ -1,6 +1,12 @@
 package com.squadb.workassistantapi.service;
 
-import com.squadb.workassistantapi.domain.*;
+import com.squadb.workassistantapi.book.domain.Book;
+import com.squadb.workassistantapi.book.domain.BookCategory;
+import com.squadb.workassistantapi.book.domain.Isbn;
+import com.squadb.workassistantapi.book.domain.StockQuantity;
+import com.squadb.workassistantapi.domain.Member;
+import com.squadb.workassistantapi.domain.MemberType;
+import com.squadb.workassistantapi.domain.Rental;
 import com.squadb.workassistantapi.domain.exceptions.OutOfStockException;
 import com.squadb.workassistantapi.web.controller.dto.LoginMember;
 import org.junit.jupiter.api.Assertions;

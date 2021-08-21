@@ -1,5 +1,6 @@
-package com.squadb.workassistantapi.domain;
+package com.squadb.workassistantapi.book.domain;
 
+import com.squadb.workassistantapi.domain.Member;
 import com.squadb.workassistantapi.domain.exceptions.NoAuthorizationException;
 import com.squadb.workassistantapi.domain.exceptions.OutOfStockException;
 import lombok.AccessLevel;

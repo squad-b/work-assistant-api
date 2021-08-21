@@ -1,4 +1,4 @@
-package com.squadb.workassistantapi.domain;
+package com.squadb.workassistantapi.book.domain;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,9 +9,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 
-class IsbnTest {
+public class IsbnTest {
 
-    static final Isbn isbn = Isbn.valueOf("9780596520687");
+    public static final Isbn isbn = Isbn.valueOf("9780596520687");
 
     @DisplayName("isbn 을 만들기 위해서 문자열 값이 필수이다.")
     @Test

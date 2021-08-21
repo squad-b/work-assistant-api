@@ -1,4 +1,4 @@
-package com.squadb.workassistantapi.web.controller.dto;
+package com.squadb.workassistantapi.book.presentation.dto;
 
 import lombok.AccessLevel;
 import lombok.Getter;

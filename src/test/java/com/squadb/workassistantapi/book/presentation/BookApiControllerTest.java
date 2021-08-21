@@ -1,11 +1,11 @@
-package com.squadb.workassistantapi.web.controller;
+package com.squadb.workassistantapi.book.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.squadb.workassistantapi.book.application.BookService;
+import com.squadb.workassistantapi.book.infrastructure.BookSearchAgent;
+import com.squadb.workassistantapi.book.presentation.dto.BookRegisterDto;
 import com.squadb.workassistantapi.domain.MemberType;
 import com.squadb.workassistantapi.domain.exceptions.NoAuthorizationException;
-import com.squadb.workassistantapi.service.BookService;
-import com.squadb.workassistantapi.web.agent.BookSearchAgent;
-import com.squadb.workassistantapi.web.controller.dto.BookRegisterDto;
 import com.squadb.workassistantapi.web.controller.dto.LoginMember;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

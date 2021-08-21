@@ -1,4 +1,4 @@
-package com.squadb.workassistantapi.web.agent;
+package com.squadb.workassistantapi.book.infrastructure;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

@@ -1,8 +1,8 @@
-package com.squadb.workassistantapi.web.controller.dto;
+package com.squadb.workassistantapi.book.presentation.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.squadb.workassistantapi.domain.Book;
+import com.squadb.workassistantapi.book.domain.Book;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
