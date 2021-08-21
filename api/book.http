@@ -1,0 +1,13 @@
+POST localhost:8080/books
+Content-Type: application/json
+
+{
+  "isbn": "9780596520687",
+  "title":"test",
+  "description": "test",
+  "author":"test",
+  "publisher": "test",
+  "category":"DEVELOP",
+  "imageUrl": "",
+  "stockQuantity":1
+}

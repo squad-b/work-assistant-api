@@ -2,6 +2,6 @@ POST localhost:8080/login
 Content-Type: application/json
 
 {
-  "email": "mhoh@miridi.com",
-  "password" : "test1234"
+  "email": "admin",
+  "password" : "admin"
 }
