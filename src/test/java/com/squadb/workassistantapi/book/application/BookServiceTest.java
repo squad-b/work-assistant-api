@@ -1,9 +1,8 @@
 package com.squadb.workassistantapi.book.application;
 
 import com.squadb.workassistantapi.book.presentation.dto.BookRegisterDto;
-import com.squadb.workassistantapi.domain.Member;
-import com.squadb.workassistantapi.domain.MemberType;
-import com.squadb.workassistantapi.service.exception.KeyDuplicationException;
+import com.squadb.workassistantapi.member.domain.Member;
+import com.squadb.workassistantapi.member.domain.MemberType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

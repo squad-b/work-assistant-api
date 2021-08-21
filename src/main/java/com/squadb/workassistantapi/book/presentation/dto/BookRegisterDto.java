@@ -5,7 +5,7 @@ import com.squadb.workassistantapi.book.domain.Book;
 import com.squadb.workassistantapi.book.domain.BookCategory;
 import com.squadb.workassistantapi.book.domain.Isbn;
 import com.squadb.workassistantapi.book.domain.StockQuantity;
-import com.squadb.workassistantapi.domain.Member;
+import com.squadb.workassistantapi.member.domain.Member;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

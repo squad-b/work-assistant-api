@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 
 import static com.squadb.workassistantapi.book.domain.IsbnTest.isbn;
-import static com.squadb.workassistantapi.domain.MemberTest.관리자;
-import static com.squadb.workassistantapi.domain.MemberTest.일반회원;
+import static com.squadb.workassistantapi.member.domain.MemberTest.관리자;
+import static com.squadb.workassistantapi.member.domain.MemberTest.일반회원;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
