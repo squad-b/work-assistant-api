@@ -1,5 +1,6 @@
 package com.squadb.workassistantapi.member.infrastructure.config;
 
+import com.squadb.workassistantapi.member.presentation.MemberController;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -24,6 +25,6 @@ public class CurrentLoginMemberArgumentResolver implements HandlerMethodArgument
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-        return httpSession.getAttribute("LOGIN_MEMBER");
+        return httpSession.getAttribute(MemberController.LOGIN_ATTRIBUTE_NAME);
     }
 }

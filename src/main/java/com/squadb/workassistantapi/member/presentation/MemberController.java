@@ -25,6 +25,8 @@ public class MemberController {
     private final MemberService memberService;
     private final RentalService rentalService;
 
+    public static final String LOGIN_ATTRIBUTE_NAME = "LOGIN_MEMBER";
+
     @GetMapping("/auth")
     public ResponseEntity<AuthResponseDto> isLogin(@CurrentLoginMember LoginMember loginMember) {
         if (loginMember == null) { return ResponseEntity.ok(AuthResponseDto.fail("UNAUTHORIZED")); }
@@ -35,7 +37,7 @@ public class MemberController {
     public ResponseEntity<AuthResponseDto> login(@RequestBody LoginRequestDto request, HttpSession session) {
         try {
             LoginMember loginMember = memberService.login(request.getEmail(), request.getPassword());
-            session.setAttribute("LOGIN_MEMBER", loginMember);
+            session.setAttribute(LOGIN_ATTRIBUTE_NAME, loginMember);
             return ResponseEntity.ok(AuthResponseDto.success(loginMember));
         } catch (LoginFailedException e) {
             return ResponseEntity.ok(AuthResponseDto.fail(e.getResult()));

@@ -37,7 +37,7 @@ class MemberControllerTest {
     public void authorizedTest() throws Exception {
         // given
         LoginMember loginMember = new LoginMember(1L, MemberType.NORMAL);
-        mockSession.setAttribute("LOGIN_MEMBER", loginMember);
+        mockSession.setAttribute(MemberController.LOGIN_ATTRIBUTE_NAME, loginMember);
 
         // when //then
         mockMvc.perform(get("/auth").session(mockSession))
