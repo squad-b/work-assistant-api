@@ -1,4 +1,4 @@
-package com.squadb.workassistantapi.web.controller.batch;
+package com.squadb.workassistantapi.reservation.presentation;
 
 import com.squadb.workassistantapi.reservation.application.ReservationService;
 import lombok.RequiredArgsConstructor;

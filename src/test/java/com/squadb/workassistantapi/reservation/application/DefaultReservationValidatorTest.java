@@ -1,7 +1,7 @@
 package com.squadb.workassistantapi.reservation.application;
 
-import com.squadb.workassistantapi.domain.Book;
-import com.squadb.workassistantapi.domain.Member;
+import com.squadb.workassistantapi.book.domain.Book;
+import com.squadb.workassistantapi.member.domain.Member;
 import com.squadb.workassistantapi.reservation.domain.Reservation;
 import com.squadb.workassistantapi.reservation.domain.ReservationErrorCode;
 import com.squadb.workassistantapi.reservation.domain.ReservationException;

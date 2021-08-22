@@ -1,5 +1,6 @@
 package com.squadb.workassistantapi.member.infrastructure.config;
 
+import com.squadb.workassistantapi.member.presentation.MemberController;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;

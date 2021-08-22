@@ -1,5 +1,6 @@
 package com.squadb.workassistantapi.rental.presentation;
 
+import com.squadb.workassistantapi.book.domain.NotRentableException;
 import com.squadb.workassistantapi.book.domain.OutOfStockException;
 import com.squadb.workassistantapi.member.dto.LoginMember;
 import com.squadb.workassistantapi.member.infrastructure.config.CurrentLoginMember;

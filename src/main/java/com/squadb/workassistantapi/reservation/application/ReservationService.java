@@ -1,9 +1,9 @@
 package com.squadb.workassistantapi.reservation.application;
 
-import com.squadb.workassistantapi.domain.Book;
-import com.squadb.workassistantapi.domain.BookRepository;
-import com.squadb.workassistantapi.domain.Member;
-import com.squadb.workassistantapi.domain.MemberRepository;
+import com.squadb.workassistantapi.book.domain.Book;
+import com.squadb.workassistantapi.book.domain.BookRepository;
+import com.squadb.workassistantapi.member.domain.Member;
+import com.squadb.workassistantapi.member.domain.MemberRepository;
 import com.squadb.workassistantapi.reservation.domain.*;
 import com.squadb.workassistantapi.reservation.dto.ReservationSearchAllDto;
 import lombok.AccessLevel;

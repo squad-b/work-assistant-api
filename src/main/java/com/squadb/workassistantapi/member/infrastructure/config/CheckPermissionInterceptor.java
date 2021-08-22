@@ -1,6 +1,7 @@
 package com.squadb.workassistantapi.member.infrastructure.config;
 
 import com.squadb.workassistantapi.member.dto.LoginMember;
+import com.squadb.workassistantapi.member.presentation.MemberController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

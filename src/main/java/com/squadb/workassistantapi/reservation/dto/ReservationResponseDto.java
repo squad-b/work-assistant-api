@@ -1,6 +1,6 @@
 package com.squadb.workassistantapi.reservation.dto;
 
-import com.squadb.workassistantapi.domain.BookCategory;
+import com.squadb.workassistantapi.book.domain.BookCategory;
 import com.squadb.workassistantapi.reservation.domain.Reservation;
 import com.squadb.workassistantapi.reservation.domain.ReservationStatus;
 import lombok.AllArgsConstructor;

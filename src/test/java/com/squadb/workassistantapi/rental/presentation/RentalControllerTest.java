@@ -5,6 +5,7 @@ import com.squadb.workassistantapi.book.domain.OutOfStockException;
 import com.squadb.workassistantapi.member.application.MemberService;
 import com.squadb.workassistantapi.member.domain.MemberType;
 import com.squadb.workassistantapi.member.dto.LoginMember;
+import com.squadb.workassistantapi.member.presentation.MemberController;
 import com.squadb.workassistantapi.rental.application.RentalService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

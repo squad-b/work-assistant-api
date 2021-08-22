@@ -1,7 +1,8 @@
 package com.squadb.workassistantapi.reservation.domain;
 
-import com.squadb.workassistantapi.domain.Book;
-import com.squadb.workassistantapi.domain.Member;
+
+import com.squadb.workassistantapi.book.domain.Book;
+import com.squadb.workassistantapi.member.domain.Member;
 
 public interface ReservationValidator {
 

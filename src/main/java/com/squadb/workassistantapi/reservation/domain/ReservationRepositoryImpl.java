@@ -3,7 +3,6 @@ package com.squadb.workassistantapi.reservation.domain;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.squadb.workassistantapi.domain.QReservation;
 import com.squadb.workassistantapi.reservation.dto.ReservationSearchAllDto;
 import com.squadb.workassistantapi.reservation.dto.ReservationSearchDto;
 import lombok.RequiredArgsConstructor;
@@ -14,9 +13,9 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
 
-import static com.squadb.workassistantapi.domain.QBook.book;
-import static com.squadb.workassistantapi.domain.QMember.member;
-import static com.squadb.workassistantapi.domain.QReservation.reservation;
+import static com.squadb.workassistantapi.book.domain.QBook.book;
+import static com.squadb.workassistantapi.member.domain.QMember.member;
+import static com.squadb.workassistantapi.reservation.domain.QReservation.reservation;
 
 @RequiredArgsConstructor
 public class ReservationRepositoryImpl implements ReservationRepositorySupport {
