@@ -48,6 +48,6 @@ script/output/match_title_list.txt
 script/output/mismath_title_list.txt
 script/output/no_search_result_title_list.txt
 
-#dev property
+#local property
 application-local.yaml
 

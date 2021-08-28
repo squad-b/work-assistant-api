@@ -15,10 +15,10 @@ class DefaultReservationValidator implements ReservationValidator {
     private final ReservationRepository reservationRepository;
 
     @Override
-    public void canReserve(Member member, Book book) {
-        List<Reservation> reservationList = findAllWaitingReservationByBookId(book.getId());
-        validateNotExistsMyReservation(member, reservationList);
-        validateNotOverThanMaxReservationCountPerBook(reservationList);
+    public void validateCanReserve(Member member, Book book) {
+        List<Reservation> waitingReservations = findAllWaitingReservationByBookId(book.getId());
+        validateNotExistsMyReservation(member, waitingReservations);
+        validateNotOverThanMaxReservationCountPerBook(waitingReservations);
         validateNotOverThanMaxReservationCountPerMember(member.getId());
     }
 
@@ -26,18 +26,17 @@ class DefaultReservationValidator implements ReservationValidator {
         return reservationRepository.findAllByBookIdAndStatus(bookId, ReservationStatus.WAITING);
     }
 
-    private void validateNotExistsMyReservation(Member member, List<Reservation> reservationList) {
-        boolean existsMyReservation = reservationList.stream()
+    private void validateNotExistsMyReservation(Member member, List<Reservation> reservations) {
+        boolean existsMyReservation = reservations.stream()
                 .anyMatch(reservation -> reservation.isReservedBy(member));
         if (existsMyReservation) {
             throw new ReservationException(ReservationErrorCode.ALREADY_MYSELF_RESERVED);
         }
     }
 
-    private void validateNotOverThanMaxReservationCountPerBook(List<Reservation> reservationList) {
-        int maxCountPerBook = Reservation.MAX_COUNT_PER_BOOK;
-        if (reservationList.size() >= maxCountPerBook) {
-            String errorMessage = String.format("한 종의 책당 최대 예약 가능 개수는 %d개 입니다.", maxCountPerBook);
+    private void validateNotOverThanMaxReservationCountPerBook(List<Reservation> reservations) {
+        if (reservations.size() >= Reservation.MAX_COUNT_PER_BOOK) {
+            String errorMessage = String.format("한 종의 책당 최대 예약 가능 개수는 %d개 입니다.", Reservation.MAX_COUNT_PER_BOOK);
             throw new ReservationException(ReservationErrorCode.NOT_RESERVABLE, errorMessage);
         }
     }

@@ -6,7 +6,7 @@ import com.squadb.workassistantapi.member.domain.Member;
 
 public interface ReservationValidator {
 
-    void canReserve(Member member, Book book);
+    void validateCanReserve(Member member, Book book);
 
     void notExistsOtherMemberReservation(Book book, Member member);
 }

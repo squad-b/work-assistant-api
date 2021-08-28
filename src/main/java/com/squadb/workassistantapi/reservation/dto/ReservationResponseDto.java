@@ -3,15 +3,14 @@ package com.squadb.workassistantapi.reservation.dto;
 import com.squadb.workassistantapi.book.domain.BookCategory;
 import com.squadb.workassistantapi.reservation.domain.Reservation;
 import com.squadb.workassistantapi.reservation.domain.ReservationStatus;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
-
-import static lombok.AccessLevel.PRIVATE;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
-@AllArgsConstructor(access = PRIVATE)
 public class ReservationResponseDto {
 
     private String memberName;
@@ -19,11 +18,16 @@ public class ReservationResponseDto {
     private ReservationStatus reservationStatus;
     private LocalDateTime reservationDate;
 
-    public static ReservationResponseDto of(Reservation reservation) {
-        String memberName = reservation.getMember().getName();
-        BookCategory bookCategory = reservation.getBook().getCategory();
-        ReservationStatus reservationStatus = reservation.getStatus();
-        LocalDateTime reservationDate = reservation.getReservationDate();
-        return new ReservationResponseDto(memberName, bookCategory, reservationStatus, reservationDate);
+    private ReservationResponseDto(Reservation reservation) {
+        memberName = reservation.getMemberName();
+        bookCategory = reservation.getBookCategory();
+        reservationStatus = reservation.getStatus();
+        reservationDate = reservation.getReservationDate();
+    }
+
+    public static List<ReservationResponseDto> list(Page<Reservation> pageResult) {
+        return pageResult.getContent().stream()
+                .map(ReservationResponseDto::new)
+                .collect(Collectors.toList());
     }
 }

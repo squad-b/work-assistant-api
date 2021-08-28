@@ -49,9 +49,7 @@ class ReservationTest {
         Executable executable = () -> Reservation.createReservation(member, book, mockReservationValidator);
 
         //then
-        ReservationException resultException = assertThrows(ReservationException.class, executable);
-        ReservationErrorCode resultErrorCode = resultException.getErrorCode();
-        assertThat(resultErrorCode).isEqualTo(ReservationErrorCode.NOT_RESERVABLE);
+        verifyThrowsException(executable, ReservationErrorCode.NOT_RESERVABLE);
     }
 
     @Test
@@ -65,9 +63,7 @@ class ReservationTest {
         Executable executable = () -> Reservation.createReservation(member, book, mockReservationValidator);
 
         //then
-        ReservationException resultException = assertThrows(ReservationException.class, executable);
-        ReservationErrorCode resultErrorCode = resultException.getErrorCode();
-        assertThat(resultErrorCode).isEqualTo(ReservationErrorCode.REQUIRED_RESERVATION);
+        verifyThrowsException(executable, ReservationErrorCode.REQUIRED_RESERVATION);
     }
 
     @Test
@@ -86,9 +82,7 @@ class ReservationTest {
         Executable executable = () -> reservation.cancelBy(member);
 
         //then
-        ReservationException resultException = assertThrows(ReservationException.class, executable);
-        ReservationErrorCode resultErrorCode = resultException.getErrorCode();
-        assertThat(resultErrorCode).isEqualTo(ReservationErrorCode.ILLEGAL_STATUS);
+        verifyThrowsException(executable, ReservationErrorCode.ILLEGAL_STATUS);
     }
 
     @Test
@@ -107,9 +101,7 @@ class ReservationTest {
         Executable executable = () -> reservation.cancelBy(memberB);
 
         //then
-        ReservationException resultException = assertThrows(ReservationException.class, executable);
-        ReservationErrorCode resultErrorCode = resultException.getErrorCode();
-        assertThat(resultErrorCode).isEqualTo(ReservationErrorCode.NOT_AUTHORIZED);
+        verifyThrowsException(executable, ReservationErrorCode.NOT_AUTHORIZED);
     }
 
     @Test
@@ -151,15 +143,13 @@ class ReservationTest {
 
         willThrow(new ReservationException(ReservationErrorCode.ALREADY_RESERVED))
                 .given(mockReservationValidator)
-                .canReserve(member, book);
+                .validateCanReserve(member, book);
 
         //when
         Executable executable = () -> Reservation.createReservation(member, book, mockReservationValidator);
 
         //then
-        ReservationException reservationException = assertThrows(ReservationException.class, executable);
-        ReservationErrorCode resultErrorCode = reservationException.getErrorCode();
-        assertThat(resultErrorCode).isEqualTo(ReservationErrorCode.ALREADY_RESERVED);
+        verifyThrowsException(executable, ReservationErrorCode.ALREADY_RESERVED);
     }
 
     @Test
@@ -171,20 +161,24 @@ class ReservationTest {
 
         willThrow(new ReservationException(ReservationErrorCode.ALREADY_MYSELF_RESERVED))
                 .given(mockReservationValidator)
-                .canReserve(member, book);
+                .validateCanReserve(member, book);
 
         //when
         Executable executable = () -> Reservation.createReservation(member, book, mockReservationValidator);
 
         //then
-        ReservationException reservationException = assertThrows(ReservationException.class, executable);
-        ReservationErrorCode resultErrorCode = reservationException.getErrorCode();
-        assertThat(resultErrorCode).isEqualTo(ReservationErrorCode.ALREADY_MYSELF_RESERVED);
+        verifyThrowsException(executable, ReservationErrorCode.ALREADY_MYSELF_RESERVED);
     }
 
     private Book getMockBook(boolean isOutOfStock) {
         Book book = mock(Book.class);
         given(book.isOutOfStock()).willReturn(isOutOfStock);
         return book;
+    }
+
+    private void verifyThrowsException(Executable executable, ReservationErrorCode expectedErrorCode) {
+        ReservationException resultException = assertThrows(ReservationException.class, executable);
+        ReservationErrorCode resultErrorCode = resultException.getErrorCode();
+        assertThat(resultErrorCode).isEqualTo(expectedErrorCode);
     }
 }

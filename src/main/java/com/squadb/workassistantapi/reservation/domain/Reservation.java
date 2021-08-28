@@ -1,6 +1,7 @@
 package com.squadb.workassistantapi.reservation.domain;
 
 import com.squadb.workassistantapi.book.domain.Book;
+import com.squadb.workassistantapi.book.domain.BookCategory;
 import com.squadb.workassistantapi.member.domain.Member;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -16,6 +17,12 @@ import static java.util.Objects.isNull;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Reservation {
+
+    private static final int RETENTION_DAYS_OF_RENTAL = 3;
+
+    public static final int MAX_COUNT_PER_MEMBER = 3;
+
+    public static final int MAX_COUNT_PER_BOOK = 5;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,14 +42,6 @@ public class Reservation {
     @Column(nullable = false)
     private LocalDateTime reservationDate;
 
-    //대여유보기간
-    private static final int RETENTION_PERIOD_OF_RENTAL = 3;
-
-    //1인당 최대 예약 가능 개수
-    public static final int MAX_COUNT_PER_MEMBER = 3;
-
-    //한 종의 책에 대해 최대 예약 가능 개수
-    public static final int MAX_COUNT_PER_BOOK = 5;
 
     @Builder
     private Reservation(Member member, Book book, ReservationStatus status, LocalDateTime reservationDate) {
@@ -55,7 +54,7 @@ public class Reservation {
     public static Reservation createReservation(Member member, Book book, ReservationValidator reservationValidator) {
         validateNotNull(member, book);
         validateBookOutOfStock(book);
-        reservationValidator.canReserve(member, book);
+        reservationValidator.validateCanReserve(member, book);
         return Reservation.builder()
                 .member(member)
                 .book(book)
@@ -92,7 +91,7 @@ public class Reservation {
     }
 
     private void validateIsStatusWaiting() {
-        if (status != ReservationStatus.WAITING) {
+        if (!status.isWaiting()) {
             throw new ReservationException(ReservationErrorCode.ILLEGAL_STATUS);
         }
     }
@@ -107,7 +106,7 @@ public class Reservation {
     }
 
     private boolean isExpiringOn(LocalDateTime targetDate) {
-        LocalDateTime expiryDate = getExpiryDate();
+        LocalDateTime expiryDate = findExpiryDate();
         return expiryDate.isBefore(targetDate);
     }
 
@@ -115,8 +114,8 @@ public class Reservation {
      * 대여가능날짜를 포함해 대여유보기간이 지난다면 예약이 만료된다.
      * ex) 대어유보기간이 3일이고 대출가능 시간이 1일 15시라면 만료일은 4일 00시 이다.
      */
-    private LocalDateTime getExpiryDate() {
-        return reservationDate.plusDays(RETENTION_PERIOD_OF_RENTAL)
+    private LocalDateTime findExpiryDate() {
+        return reservationDate.plusDays(RETENTION_DAYS_OF_RENTAL)
                 .toLocalDate()
                 .atStartOfDay();
     }
@@ -126,7 +125,6 @@ public class Reservation {
         validateReservedBy(member);
         status = ReservationStatus.FINISHED;
     }
-
 
     private static void validateNotNull(Object... params) {
         for (Object param : params) {
@@ -138,5 +136,13 @@ public class Reservation {
         if (isNull(param)) {
             throw new ReservationException(ReservationErrorCode.REQUIRED_RESERVATION);
         }
+    }
+
+    public String getMemberName() {
+        return member.getName();
+    }
+
+    public BookCategory getBookCategory() {
+        return book.getCategory();
     }
 }

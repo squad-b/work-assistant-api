@@ -2,10 +2,10 @@ package com.squadb.workassistantapi.rental.application;
 
 import com.squadb.workassistantapi.book.application.BookService;
 import com.squadb.workassistantapi.book.domain.Book;
-import com.squadb.workassistantapi.book.domain.NotRentableException;
 import com.squadb.workassistantapi.member.application.MemberService;
 import com.squadb.workassistantapi.member.domain.Member;
 import com.squadb.workassistantapi.member.dto.LoginMember;
+import com.squadb.workassistantapi.rental.domain.NotRentableException;
 import com.squadb.workassistantapi.rental.domain.Rental;
 import com.squadb.workassistantapi.rental.domain.RentalRepository;
 import com.squadb.workassistantapi.rental.domain.RentalStatus;

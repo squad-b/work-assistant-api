@@ -1,11 +1,11 @@
 package com.squadb.workassistantapi.rental.presentation;
 
-import com.squadb.workassistantapi.book.domain.NotRentableException;
 import com.squadb.workassistantapi.book.domain.OutOfStockException;
 import com.squadb.workassistantapi.member.dto.LoginMember;
 import com.squadb.workassistantapi.member.infrastructure.config.CurrentLoginMember;
 import com.squadb.workassistantapi.rental.application.RentalService;
 import com.squadb.workassistantapi.rental.domain.NoAuthorizationException;
+import com.squadb.workassistantapi.rental.domain.NotRentableException;
 import com.squadb.workassistantapi.rental.domain.Rental;
 import com.squadb.workassistantapi.rental.dto.RentalRequestDto;
 import com.squadb.workassistantapi.rental.dto.RentalResponseDto;

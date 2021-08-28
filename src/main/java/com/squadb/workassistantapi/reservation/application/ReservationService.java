@@ -27,12 +27,13 @@ public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final BookRepository bookRepository;
 
+    @Transactional(readOnly = true)
     public Page<Reservation> findMyReservation(Long memberId, Pageable pageable) {
         return findAllWaitingReservationByMemberId(memberId, pageable);
     }
 
     private Page<Reservation> findAllWaitingReservationByMemberId(Long memberId, Pageable pageable) {
-        return reservationRepository.findAllByMemberIdAndStatus(memberId, ReservationStatus.WAITING,pageable);
+        return reservationRepository.findAllByMemberIdAndStatus(memberId, ReservationStatus.WAITING, pageable);
     }
 
     public Long reserve(Long bookId, Long memberId) {
@@ -52,11 +53,10 @@ public class ReservationService {
                 .orElseThrow(() -> new ReservationException(ReservationErrorCode.REQUIRED_RESERVATION));
     }
 
-    public Long cancel(Long reservationId, Long memberId) {
+    public void cancel(Long reservationId, Long memberId) {
         Member member = findMemberById(memberId);
         Reservation reservation = findReservationById(reservationId);
         reservation.cancelBy(member);
-        return reservation.getId();
     }
 
     private Reservation findReservationById(Long reservationId) {
@@ -64,6 +64,7 @@ public class ReservationService {
                 .orElseThrow(() -> new ReservationException(ReservationErrorCode.NOT_FOUND));
     }
 
+    @Transactional(readOnly = true)
     public Page<Reservation> findAllReservation(ReservationSearchAllDto reservationSearchAllDto, Pageable pageable) {
         return reservationRepository.findAllBySearchAll(reservationSearchAllDto, pageable);
     }

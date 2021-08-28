@@ -5,7 +5,7 @@ import com.squadb.workassistantapi.book.domain.OutOfStockException;
 import com.squadb.workassistantapi.member.application.MemberService;
 import com.squadb.workassistantapi.member.domain.MemberType;
 import com.squadb.workassistantapi.member.dto.LoginMember;
-import com.squadb.workassistantapi.member.presentation.MemberController;
+import com.squadb.workassistantapi.member.infrastructure.config.CurrentLoginMemberArgumentResolver;
 import com.squadb.workassistantapi.rental.application.RentalService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -41,7 +41,7 @@ class RentalControllerTest {
     @BeforeEach
     public void setup() {
         mockHttpSession = new MockHttpSession();
-        mockHttpSession.setAttribute(MemberController.LOGIN_ATTRIBUTE_NAME, new LoginMember(1L, MemberType.NORMAL));
+        mockHttpSession.setAttribute(CurrentLoginMemberArgumentResolver.LOGIN_ATTRIBUTE_NAME, new LoginMember(1L, MemberType.NORMAL));
     }
 
     @DisplayName("책 대여 api 성공 테스트")

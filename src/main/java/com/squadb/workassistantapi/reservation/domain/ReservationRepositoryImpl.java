@@ -30,7 +30,6 @@ public class ReservationRepositoryImpl implements ReservationRepositorySupport {
                 .fetch();
     }
 
-
     @Override
     public Page<Reservation> findAllByMemberIdAndStatus(Long memberId, ReservationStatus status, Pageable pageable) {
         QueryResults<Reservation> results = query.selectFrom(reservation)
@@ -61,7 +60,7 @@ public class ReservationRepositoryImpl implements ReservationRepositorySupport {
                 .where(memberNameEq(reservationSearchAllDto.getMemberName()))
                 .where(bookTitleContains(reservationSearchAllDto.getBookTitle()))
                 .where(reservationIdEq(reservationSearchAllDto.getReservationId()))
-                .where(statusEQ(reservationSearchAllDto.getReservationStatus()))
+                .where(statusEq(reservationSearchAllDto.getReservationStatus()))
                 .orderBy(reservation.id.desc())
                 .fetchResults();
         return new PageImpl<>(results.getResults(), pageable, results.getTotal());
@@ -109,7 +108,7 @@ public class ReservationRepositoryImpl implements ReservationRepositorySupport {
         return reservation.id.eq(reservationId);
     }
 
-    private BooleanExpression statusEQ(ReservationStatus reservationStatus) {
+    private BooleanExpression statusEq(ReservationStatus reservationStatus) {
         if (reservationStatus == null) {
             return null;
         }

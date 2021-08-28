@@ -3,6 +3,7 @@ package com.squadb.workassistantapi.member.presentation;
 import com.squadb.workassistantapi.member.application.MemberService;
 import com.squadb.workassistantapi.member.domain.MemberType;
 import com.squadb.workassistantapi.member.dto.LoginMember;
+import com.squadb.workassistantapi.member.infrastructure.config.CurrentLoginMemberArgumentResolver;
 import com.squadb.workassistantapi.rental.application.RentalService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -37,7 +38,7 @@ class MemberControllerTest {
     public void authorizedTest() throws Exception {
         // given
         LoginMember loginMember = new LoginMember(1L, MemberType.NORMAL);
-        mockSession.setAttribute(MemberController.LOGIN_ATTRIBUTE_NAME, loginMember);
+        mockSession.setAttribute(CurrentLoginMemberArgumentResolver.LOGIN_ATTRIBUTE_NAME, loginMember);
 
         // when //then
         mockMvc.perform(get("/auth").session(mockSession))

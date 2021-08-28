@@ -6,6 +6,7 @@ import com.squadb.workassistantapi.member.domain.Member;
 import com.squadb.workassistantapi.member.dto.*;
 import com.squadb.workassistantapi.member.infrastructure.config.CheckPermission;
 import com.squadb.workassistantapi.member.infrastructure.config.CurrentLoginMember;
+import com.squadb.workassistantapi.member.infrastructure.config.CurrentLoginMemberArgumentResolver;
 import com.squadb.workassistantapi.rental.application.RentalService;
 import com.squadb.workassistantapi.rental.domain.Rental;
 import com.squadb.workassistantapi.rental.dto.RentalRequestDto;
@@ -25,8 +26,6 @@ public class MemberController {
     private final MemberService memberService;
     private final RentalService rentalService;
 
-    public static final String LOGIN_ATTRIBUTE_NAME = "LOGIN_MEMBER";
-
     @GetMapping("/auth")
     public ResponseEntity<AuthResponseDto> isLogin(@CurrentLoginMember LoginMember loginMember) {
         if (loginMember == null) { return ResponseEntity.ok(AuthResponseDto.fail("UNAUTHORIZED")); }
@@ -37,7 +36,7 @@ public class MemberController {
     public ResponseEntity<AuthResponseDto> login(@RequestBody LoginRequestDto request, HttpSession session) {
         try {
             LoginMember loginMember = memberService.login(request.getEmail(), request.getPassword());
-            session.setAttribute(LOGIN_ATTRIBUTE_NAME, loginMember);
+            session.setAttribute(CurrentLoginMemberArgumentResolver.LOGIN_ATTRIBUTE_NAME, loginMember);
             return ResponseEntity.ok(AuthResponseDto.success(loginMember));
         } catch (LoginFailedException e) {
             return ResponseEntity.ok(AuthResponseDto.fail(e.getResult()));

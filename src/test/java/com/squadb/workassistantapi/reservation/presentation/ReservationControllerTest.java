@@ -8,7 +8,7 @@ import com.squadb.workassistantapi.book.domain.StockQuantity;
 import com.squadb.workassistantapi.member.domain.Member;
 import com.squadb.workassistantapi.member.domain.MemberType;
 import com.squadb.workassistantapi.member.dto.LoginMember;
-import com.squadb.workassistantapi.member.presentation.MemberController;
+import com.squadb.workassistantapi.member.infrastructure.config.CurrentLoginMemberArgumentResolver;
 import com.squadb.workassistantapi.reservation.domain.Reservation;
 import com.squadb.workassistantapi.reservation.domain.ReservationRepository;
 import com.squadb.workassistantapi.reservation.domain.ReservationStatus;
@@ -53,7 +53,7 @@ class ReservationControllerTest {
     @Autowired
     EntityManager em;
 
-    private static String BASE_URL = "/reservation/";
+    private static String BASE_URL = "/reservations/";
     private static MockHttpSession mockSession = new MockHttpSession();
     private static MemberType MEMBER_TYPE = MemberType.NORMAL;
 
@@ -116,7 +116,7 @@ class ReservationControllerTest {
 
     private void addToMemberToSession(Member member) {
         LoginMember loginMember = new LoginMember(member.getId(), MEMBER_TYPE);
-        mockSession.setAttribute(MemberController.LOGIN_ATTRIBUTE_NAME, loginMember);
+        mockSession.setAttribute(CurrentLoginMemberArgumentResolver.LOGIN_ATTRIBUTE_NAME, loginMember);
     }
 
     private Member createPersistedMember() {

@@ -46,7 +46,7 @@ class DefaultReservationValidatorTest {
                 .findAllByBookIdAndStatus(any(), any());
 
         //when
-        Executable executable = () -> reservationValidator.canReserve(member, book);
+        Executable executable = () -> reservationValidator.validateCanReserve(member, book);
 
         //then
         ReservationException resultException = assertThrows(ReservationException.class, executable);
@@ -56,7 +56,7 @@ class DefaultReservationValidatorTest {
 
     @Test
     @DisplayName("예약자가 있는 책에 대여신청을 하면 예외를 던진다.")
-    public void reserve_alreadyReservedBookByOther_ExceptionThrown () throws Exception {
+    public void reserve_alreadyReservedBookByOther_ExceptionThrown() throws Exception {
         //given
         Member member = mock(Member.class);
         Book book = mock(Book.class);

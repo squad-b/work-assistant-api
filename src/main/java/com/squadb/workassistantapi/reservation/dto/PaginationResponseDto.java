@@ -1,6 +1,8 @@
 package com.squadb.workassistantapi.reservation.dto;
 
+import com.squadb.workassistantapi.reservation.domain.Reservation;
 import lombok.Builder;
+import org.springframework.data.domain.Page;
 
 public class PaginationResponseDto {
     private int page;
@@ -15,4 +17,16 @@ public class PaginationResponseDto {
         this.pageCount = pageCount;
         this.totalCount = totalCount;
     }
+
+    public static PaginationResponseDto from(Page<Reservation> pageResult) {
+        new PaginationResponseDto(pageResult.getNumber(), pageResult.getSize(), pageResult.getTotalPages(), pageResult.getTotalElements());
+
+        return PaginationResponseDto.builder()
+                .page(pageResult.getNumber())
+                .pageSize(pageResult.getSize())
+                .pageCount(pageResult.getTotalPages())
+                .totalCount(pageResult.getTotalElements())
+                .build();
+    }
+
 }

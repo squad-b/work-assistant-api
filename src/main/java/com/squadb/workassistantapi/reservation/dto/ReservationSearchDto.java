@@ -11,4 +11,6 @@ public class ReservationSearchDto {
     private Long memberId;
     private Long bookId;
     private ReservationStatus reservationStatus;
+
+    // TODO: [2021/08/28 양동혁] enum binding exception 처리 
 }
