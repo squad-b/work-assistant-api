@@ -5,22 +5,17 @@ import com.squadb.workassistantapi.book.domain.Book;
 import com.squadb.workassistantapi.member.application.MemberService;
 import com.squadb.workassistantapi.member.domain.Member;
 import com.squadb.workassistantapi.member.dto.LoginMember;
-import com.squadb.workassistantapi.rental.domain.NotRentableException;
 import com.squadb.workassistantapi.rental.domain.Rental;
 import com.squadb.workassistantapi.rental.domain.RentalRepository;
 import com.squadb.workassistantapi.rental.domain.RentalStatus;
-import com.squadb.workassistantapi.reservation.domain.Reservation;
-import com.squadb.workassistantapi.reservation.domain.ReservationRepository;
-import com.squadb.workassistantapi.reservation.domain.ReservationStatus;
-import com.squadb.workassistantapi.reservation.domain.ReservationValidator;
-import com.squadb.workassistantapi.reservation.dto.ReservationSearchDto;
+import com.squadb.workassistantapi.rental.domain.RentalValidator;
+import com.squadb.workassistantapi.reservation.domain.ReservationFinisher;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 import static java.time.LocalDateTime.now;
 
@@ -31,8 +26,8 @@ public class RentalService {
     private final MemberService memberService;
     private final BookService bookService;
     private final RentalRepository rentalRepository;
-    private final ReservationRepository reservationRepository;
-    private final ReservationValidator reservationValidator;
+    private final RentalValidator rentalValidator;
+    private final ReservationFinisher reservationFinisher;
 
     @Transactional(readOnly = true)
     public Rental findById(final Long rentalId) {
@@ -43,37 +38,9 @@ public class RentalService {
     public Long rentBook(final Long bookId, final Long memberId, final boolean isLongTerm) {
         final Book book = bookService.findById(bookId);
         final Member member = memberService.findById(memberId);
-        validateNotExistsOtherMemberReservation(book, member);
-
-        final Rental rental = Rental.createRental(book, member, isLongTerm, now());
+        final Rental rental = Rental.createRental(book, member, isLongTerm, now(), rentalValidator, reservationFinisher);
         final Rental saveRental = rentalRepository.save(rental);
-        finishReservation(member, book);
         return saveRental.getId();
-    }
-
-    private void validateNotExistsOtherMemberReservation(Book book, Member member) {
-        try {
-            reservationValidator.notExistsOtherMemberReservation(book, member);
-        } catch (IllegalArgumentException e) {
-            throw new NotRentableException("권한이 없습니다.");
-        }
-    }
-
-    private void finishReservation(Member member, Book book) {
-        Optional<Reservation> optionalReservation = findWaitingReservationByMemberIdAndBookId(member, book);
-        try {
-            optionalReservation.ifPresent(reservation -> reservation.finishedBy(member));
-        } catch (IllegalArgumentException e) {
-            throw new NotRentableException("권한이 없습니다.");
-        }
-    }
-
-    private Optional<Reservation> findWaitingReservationByMemberIdAndBookId(Member member, Book book) {
-        Long memberId = member.getId();
-        Long bookId = book.getId();
-        ReservationStatus status = ReservationStatus.WAITING;
-        ReservationSearchDto reservationSearchDto = new ReservationSearchDto(memberId, bookId, status);
-        return reservationRepository.findReservationWithMemberBySearch(reservationSearchDto);
     }
 
     @Transactional(readOnly = true)

@@ -39,20 +39,6 @@ class ReservationTest {
     }
 
     @Test
-    @DisplayName("대여할 수 있는 책은 예약할 수 없다.")
-    public void reserve_BookInStock_ExceptionThrown() throws Exception {
-        //given
-        Member member = mock(Member.class);
-        Book book = getMockBook(false);
-
-        //when
-        Executable executable = () -> Reservation.createReservation(member, book, mockReservationValidator);
-
-        //then
-        verifyThrowsException(executable, ReservationErrorCode.NOT_RESERVABLE);
-    }
-
-    @Test
     @DisplayName("회원과 책은 필수정보이다.")
     public void createReservation_NullParameter_ExceptionThrown() throws Exception {
         //given

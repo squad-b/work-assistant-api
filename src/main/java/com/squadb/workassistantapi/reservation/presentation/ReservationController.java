@@ -1,5 +1,6 @@
 package com.squadb.workassistantapi.reservation.presentation;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.squadb.workassistantapi.member.dto.LoginMember;
 import com.squadb.workassistantapi.member.infrastructure.config.CheckPermission;
 import com.squadb.workassistantapi.member.infrastructure.config.CurrentLoginMember;
@@ -66,5 +67,13 @@ public class ReservationController {
     public CommonResponseDto<String> handleReservationException(ReservationException e) {
         log.error("{}", e.getMessage(), e);
         return CommonResponseDto.fail(e.getMessage());
+    }
+
+    @ResponseStatus(BAD_REQUEST)
+    @ExceptionHandler(InvalidFormatException.class)
+    public CommonResponseDto<String> handleReservationException(InvalidFormatException e) {
+        String errorMessage = "Enum 형식이 잘못되었습니다.";
+        log.error("{}", errorMessage, e);
+        return CommonResponseDto.fail(errorMessage);
     }
 }

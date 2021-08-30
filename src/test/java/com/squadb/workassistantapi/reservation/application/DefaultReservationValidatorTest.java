@@ -33,6 +33,25 @@ class DefaultReservationValidatorTest {
     ReservationRepository reservationRepository;
 
     @Test
+    @DisplayName("대여할 수 있는 책을 예약하면 예외를 던진다.")
+    public void reserve_BookInStock_ExceptionThrown() throws Exception {
+        //given
+        Member member = mock(Member.class);
+        Book book = getBookInStock();
+        Reservation reservation = mock(Reservation.class);
+        given(reservation.isReservedBy(any())).willReturn(false);
+        willReturn(List.of(reservation))
+                .given(reservationRepository)
+                .findAllByBookIdAndStatus(any(), any());
+
+        //when
+        Executable executable = () -> reservationValidator.validateCanReserve(member, book);
+
+        //then
+        verifyThrowsException(executable, ReservationErrorCode.NOT_RESERVABLE);
+    }
+
+    @Test
     @DisplayName("같은 회원이 이미 예약한 책을 다시 예약히면 예외를 던진다.")
     public void reserve_alreadyReservedBookMyself_ExceptionThrown() throws Exception {
         //given
@@ -49,30 +68,18 @@ class DefaultReservationValidatorTest {
         Executable executable = () -> reservationValidator.validateCanReserve(member, book);
 
         //then
-        ReservationException resultException = assertThrows(ReservationException.class, executable);
-        ReservationErrorCode errorCode = resultException.getErrorCode();
-        assertThat(errorCode).isEqualTo(ReservationErrorCode.ALREADY_MYSELF_RESERVED);
+        verifyThrowsException(executable, ReservationErrorCode.ALREADY_MYSELF_RESERVED);
     }
 
-    @Test
-    @DisplayName("예약자가 있는 책에 대여신청을 하면 예외를 던진다.")
-    public void reserve_alreadyReservedBookByOther_ExceptionThrown() throws Exception {
-        //given
-        Member member = mock(Member.class);
-        Book book = mock(Book.class);
-
-        Reservation reservation = mock(Reservation.class);
-        given(reservation.isReservedBy(any())).willReturn(false);
-        willReturn(List.of(reservation))
-                .given(reservationRepository)
-                .findAllByBookIdAndStatus(any(), any());
-
-        //when
-        Executable executable = () -> reservationValidator.notExistsOtherMemberReservation(book, member);
-
-        //then
+    private void verifyThrowsException(Executable executable, ReservationErrorCode expectedErrorCode) {
         ReservationException resultException = assertThrows(ReservationException.class, executable);
         ReservationErrorCode errorCode = resultException.getErrorCode();
-        assertThat(errorCode).isEqualTo(ReservationErrorCode.ALREADY_RESERVED);
+        assertThat(errorCode).isEqualTo(expectedErrorCode);
+    }
+
+    private Book getBookInStock() {
+        Book book = mock(Book.class);
+        given(book.isOutOfStock()).willReturn(false);
+        return book;
     }
 }

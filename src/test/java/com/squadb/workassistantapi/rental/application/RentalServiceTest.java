@@ -5,6 +5,8 @@ import com.squadb.workassistantapi.member.domain.Member;
 import com.squadb.workassistantapi.member.domain.MemberType;
 import com.squadb.workassistantapi.member.dto.LoginMember;
 import com.squadb.workassistantapi.rental.domain.Rental;
+import com.squadb.workassistantapi.rental.domain.RentalValidator;
+import com.squadb.workassistantapi.reservation.domain.ReservationFinisher;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,6 +26,7 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
+import static org.mockito.Mockito.mock;
 
 @ActiveProfiles("test")
 @SpringBootTest
@@ -106,7 +109,7 @@ class RentalServiceTest {
     }
 
     private Rental createRental(Book testBook) {
-        final Rental mockRental = Rental.createRental(testBook, testMember, false, LocalDateTime.now());
+        final Rental mockRental = Rental.createRental(testBook, testMember, false, LocalDateTime.now(), mock(RentalValidator.class), mock(ReservationFinisher.class));
         entityManager.persist(mockRental);
         return mockRental;
     }

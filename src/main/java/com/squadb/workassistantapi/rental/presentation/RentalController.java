@@ -5,7 +5,6 @@ import com.squadb.workassistantapi.member.dto.LoginMember;
 import com.squadb.workassistantapi.member.infrastructure.config.CurrentLoginMember;
 import com.squadb.workassistantapi.rental.application.RentalService;
 import com.squadb.workassistantapi.rental.domain.NoAuthorizationException;
-import com.squadb.workassistantapi.rental.domain.NotRentableException;
 import com.squadb.workassistantapi.rental.domain.Rental;
 import com.squadb.workassistantapi.rental.dto.RentalRequestDto;
 import com.squadb.workassistantapi.rental.dto.RentalResponseDto;
@@ -58,8 +57,8 @@ public class RentalController {
         return new ResponseEntity<>(RentalResponseDto.fail("UNAUTHORIZED"), HttpStatus.UNAUTHORIZED);
     }
 
-    @ExceptionHandler(NotRentableException.class)
-    public ResponseEntity<RentalResponseDto> handleIllegalStateException(NotRentableException e) {
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<RentalResponseDto> handleRunTimeException(RuntimeException e) {
         return new ResponseEntity<>(RentalResponseDto.fail(e.getMessage()), HttpStatus.BAD_REQUEST);
     }
 }

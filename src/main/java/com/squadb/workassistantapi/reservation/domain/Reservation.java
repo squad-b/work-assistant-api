@@ -42,7 +42,6 @@ public class Reservation {
     @Column(nullable = false)
     private LocalDateTime reservationDate;
 
-
     @Builder
     private Reservation(Member member, Book book, ReservationStatus status, LocalDateTime reservationDate) {
         this.member = member;
@@ -53,7 +52,6 @@ public class Reservation {
 
     public static Reservation createReservation(Member member, Book book, ReservationValidator reservationValidator) {
         validateNotNull(member, book);
-        validateBookOutOfStock(book);
         reservationValidator.validateCanReserve(member, book);
         return Reservation.builder()
                 .member(member)
@@ -61,12 +59,6 @@ public class Reservation {
                 .status(ReservationStatus.WAITING)
                 .reservationDate(LocalDateTime.now())
                 .build();
-    }
-
-    private static void validateBookOutOfStock(Book book) {
-        if (!book.isOutOfStock()) {
-            throw new ReservationException(ReservationErrorCode.NOT_RESERVABLE, "대여가능한 책은 예약할 수 없습니다.");
-        }
     }
 
     public void cancelBy(Member member) {

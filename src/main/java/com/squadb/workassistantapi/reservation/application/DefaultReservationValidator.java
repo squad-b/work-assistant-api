@@ -16,14 +16,11 @@ class DefaultReservationValidator implements ReservationValidator {
 
     @Override
     public void validateCanReserve(Member member, Book book) {
-        List<Reservation> waitingReservations = findAllWaitingReservationByBookId(book.getId());
+        List<Reservation> waitingReservations = reservationRepository.findAllByBookIdAndStatus(book.getId(), ReservationStatus.WAITING);
         validateNotExistsMyReservation(member, waitingReservations);
         validateNotOverThanMaxReservationCountPerBook(waitingReservations);
         validateNotOverThanMaxReservationCountPerMember(member.getId());
-    }
-
-    private List<Reservation> findAllWaitingReservationByBookId(Long bookId) {
-        return reservationRepository.findAllByBookIdAndStatus(bookId, ReservationStatus.WAITING);
+        validateBookOutOfStock(book);
     }
 
     private void validateNotExistsMyReservation(Member member, List<Reservation> reservations) {
@@ -42,24 +39,16 @@ class DefaultReservationValidator implements ReservationValidator {
     }
 
     private void validateNotOverThanMaxReservationCountPerMember(Long memberId) {
-        List<Reservation> reservationList = findAllWaitingReservationByMemberId(memberId);
-        int maxCountPerMember = Reservation.MAX_COUNT_PER_MEMBER;
-        if (reservationList.size() >= maxCountPerMember) {
-            String errorMessage = String.format("1인당 최대 예약 가능 개수는 %d개 입니다.", maxCountPerMember);
+        List<Reservation> waitingReservations = reservationRepository.findAllByMemberIdAndStatus(memberId, ReservationStatus.WAITING);
+        if (waitingReservations.size() >= Reservation.MAX_COUNT_PER_MEMBER) {
+            String errorMessage = String.format("1인당 최대 예약 가능 개수는 %d개 입니다.", Reservation.MAX_COUNT_PER_MEMBER);
             throw new ReservationException(ReservationErrorCode.NOT_RESERVABLE, errorMessage);
         }
     }
 
-    private List<Reservation> findAllWaitingReservationByMemberId(Long memberId) {
-        return reservationRepository.findAllByMemberIdAndStatus(memberId, ReservationStatus.WAITING);
-    }
-
-    public void notExistsOtherMemberReservation(Book book, Member member) {
-        List<Reservation> reservationList = findAllWaitingReservationByBookId(book.getId());
-        boolean existsOtherMemberReservation = reservationList.stream()
-                .anyMatch(reservation -> !reservation.isReservedBy(member));
-        if (existsOtherMemberReservation) {
-            throw new ReservationException(ReservationErrorCode.ALREADY_RESERVED);
+    private void validateBookOutOfStock(Book book) {
+        if (!book.isOutOfStock()) {
+            throw new ReservationException(ReservationErrorCode.NOT_RESERVABLE, "대여가능한 책은 예약할 수 없습니다.");
         }
     }
 }

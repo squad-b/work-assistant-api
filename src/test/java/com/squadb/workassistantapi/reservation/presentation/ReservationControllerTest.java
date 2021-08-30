@@ -81,9 +81,9 @@ class ReservationControllerTest {
                 .andExpect(status().isOk());
 
         //then
-        List<Reservation> reservationList = reservationRepository.findAll();
-        assertThat(reservationList.size()).isEqualTo(1);
-        Reservation reservation = reservationList.get(0);
+        List<Reservation> reservations = reservationRepository.findAll();
+        assertThat(reservations.size()).isEqualTo(1);
+        Reservation reservation = reservations.get(0);
         assertThat(reservation).isNotNull();
         assertThat(reservation.getMember()).isEqualTo(member);
         assertThat(reservation.getBook()).isEqualTo(book);
