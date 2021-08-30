@@ -14,6 +14,8 @@ import javax.servlet.http.HttpSession;
 @Component
 public class CurrentLoginMemberArgumentResolver implements HandlerMethodArgumentResolver {
 
+    public static final String LOGIN_ATTRIBUTE_NAME = "LOGIN_MEMBER";
+
     private final HttpSession httpSession;
 
     @Override
@@ -24,6 +26,6 @@ public class CurrentLoginMemberArgumentResolver implements HandlerMethodArgument
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-        return httpSession.getAttribute("LOGIN_MEMBER");
+        return httpSession.getAttribute(LOGIN_ATTRIBUTE_NAME);
     }
 }

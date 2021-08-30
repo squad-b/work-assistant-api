@@ -3,6 +3,7 @@ package com.squadb.workassistantapi.rental.domain;
 import com.squadb.workassistantapi.book.domain.Book;
 import com.squadb.workassistantapi.member.domain.Member;
 import com.squadb.workassistantapi.member.dto.LoginMember;
+import com.squadb.workassistantapi.reservation.domain.ReservationFinisher;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,7 @@ import static com.squadb.workassistantapi.rental.domain.RentalStatus.RETURN;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Rental {
+
     private static final int NORMAL_RENTAL_DAYS = 14;
 
     @Getter
@@ -56,7 +58,10 @@ public class Rental {
         this.book = book;
     }
 
-    public static Rental createRental(Book book, Member member, boolean isLongTerm, LocalDateTime rentalStartDate) {
+    public static Rental createRental(Book book, Member member, boolean isLongTerm, LocalDateTime rentalStartDate,
+                                      RentalValidator rentalValidator, ReservationFinisher reservationFinisher) {
+        rentalValidator.validateNotExistsOtherMemberReservation(book, member);
+        reservationFinisher.finish(book, member);
         book.decreaseStock();
         final LocalDateTime endDate = isLongTerm ? null : rentalStartDate.plusDays(NORMAL_RENTAL_DAYS);
         return new Rental(ON_RENTAL, rentalStartDate,endDate, member, book);

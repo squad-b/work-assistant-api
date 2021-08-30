@@ -56,4 +56,9 @@ public class RentalController {
     public ResponseEntity<RentalResponseDto> handleNoAuthorization() {
         return new ResponseEntity<>(RentalResponseDto.fail("UNAUTHORIZED"), HttpStatus.UNAUTHORIZED);
     }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<RentalResponseDto> handleRunTimeException(RuntimeException e) {
+        return new ResponseEntity<>(RentalResponseDto.fail(e.getMessage()), HttpStatus.BAD_REQUEST);
+    }
 }

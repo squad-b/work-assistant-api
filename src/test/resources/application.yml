@@ -1,9 +1,20 @@
 spring:
+  conmfig:
+    activate:
+      on-profile: test
   session:
     store-type: none
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create
   datasource:
     url: jdbc:h2:mem:wa-db
     username: sa
     password:
+
+book:
+  api:
+    url: test-url
+    auth-type: test-type
+    key: test-key

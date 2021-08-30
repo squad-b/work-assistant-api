@@ -6,6 +6,7 @@ import com.squadb.workassistantapi.book.dto.BookRegisterDto;
 import com.squadb.workassistantapi.book.infrastructure.BookSearchAgent;
 import com.squadb.workassistantapi.member.domain.MemberType;
 import com.squadb.workassistantapi.member.dto.LoginMember;
+import com.squadb.workassistantapi.member.infrastructure.config.CurrentLoginMemberArgumentResolver;
 import com.squadb.workassistantapi.rental.domain.NoAuthorizationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -39,7 +40,7 @@ class BookApiControllerTest {
     @BeforeEach
     public void setup() {
         mockHttpSession = new MockHttpSession();
-        mockHttpSession.setAttribute("LOGIN_MEMBER", new LoginMember(1L, MemberType.NORMAL));
+        mockHttpSession.setAttribute(CurrentLoginMemberArgumentResolver.LOGIN_ATTRIBUTE_NAME, new LoginMember(1L, MemberType.NORMAL));
     }
 
     @DisplayName("책 등록 파라미터가 유효하지 않으면 INVALID_BODY 란 메시지와 함께 status code 400을 리턴한다.")
