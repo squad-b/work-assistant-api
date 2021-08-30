@@ -51,11 +51,13 @@ apply plugin: "com.ewerk.gradle.plugins.querydsl" //QueryDSL
 
 //QueryDSL begin
 def querydslDir = "$buildDir/generated/querydsl"
+
 querydsl {
     library = "com.querydsl:querydsl-apt"
     jpa = true
     querydslSourcesDir = querydslDir
 }
+
 sourceSets {
     main {
         java {
@@ -63,9 +65,11 @@ sourceSets {
         }
     }
 }
+
 compileQuerydsl{
     options.annotationProcessorPath = configurations.querydsl
 }
+
 configurations {
     querydsl.extendsFrom compileClasspath
 }
