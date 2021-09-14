@@ -2,7 +2,6 @@ package com.squadb.workassistantapi.rental.domain;
 
 import com.squadb.workassistantapi.book.domain.Book;
 import com.squadb.workassistantapi.member.domain.Member;
-import com.squadb.workassistantapi.member.dto.LoginMember;
 import com.squadb.workassistantapi.reservation.domain.ReservationFinisher;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -90,15 +89,6 @@ public class Rental {
 
     public String getBookTitle() {
         return book.getTitle();
-    }
-
-    public void returnBy(LoginMember loginMember) {
-        if (!loginMember.isAdmin() && loginMember.is(member)) {
-            throw new NoAuthorizationException("반납할 권한이 없습니다.");
-        }
-        this.status = RETURN;
-        this.book.increaseStock();
-        this.returnDate = LocalDateTime.now();
     }
 
     public void returnBy(Member member, LocalDateTime returnDate) {

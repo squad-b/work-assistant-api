@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static java.time.LocalDateTime.now;
@@ -62,6 +63,8 @@ public class RentalService {
             log.warn("존재하지 않는 대여 목록 입니다. {}", rentalIdList);
             return;
         }
-        rentalList.forEach(rental -> rental.returnBy(loginMember));
+        final Member member = memberService.findById(loginMember.getId());
+        final LocalDateTime returnDate = now();
+        rentalList.forEach(rental -> rental.returnBy(member, returnDate));
     }
 }
