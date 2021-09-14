@@ -43,6 +43,7 @@ public class Rental {
     private LocalDateTime endDate;
 
     @Column
+    @Getter(AccessLevel.PACKAGE)
     private LocalDateTime returnDate;
 
     @Getter
@@ -98,6 +99,15 @@ public class Rental {
         this.status = RETURN;
         this.book.increaseStock();
         this.returnDate = LocalDateTime.now();
+    }
+
+    public void returnBy(Member member, LocalDateTime returnDate) {
+        if (!member.isAdmin() && !member.equals(this.member)) {
+            throw new NoAuthorizationException("관리자 또는 책의 대여자만 책 반납이 가능합니다.");
+        }
+        this.status = RETURN;
+        this.book.increaseStock();
+        this.returnDate = returnDate;
     }
 
     public boolean isReturned() {
