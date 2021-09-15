@@ -2,7 +2,6 @@ package com.squadb.workassistantapi.rental.domain;
 
 import com.squadb.workassistantapi.book.domain.Book;
 import com.squadb.workassistantapi.member.domain.Member;
-import com.squadb.workassistantapi.member.dto.LoginMember;
 import com.squadb.workassistantapi.reservation.domain.ReservationFinisher;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -43,6 +42,7 @@ public class Rental {
     private LocalDateTime endDate;
 
     @Column
+    @Getter(AccessLevel.PACKAGE)
     private LocalDateTime returnDate;
 
     @Getter
@@ -91,13 +91,13 @@ public class Rental {
         return book.getTitle();
     }
 
-    public void returnBy(LoginMember loginMember) {
-        if (!loginMember.isAdmin() && loginMember.is(member)) {
-            throw new NoAuthorizationException("반납할 권한이 없습니다.");
+    public void returnBy(Member member, LocalDateTime returnDate) {
+        if (!member.isAdmin() && !member.equals(this.member)) {
+            throw new NoAuthorizationException("관리자 또는 책의 대여자만 책 반납이 가능합니다.");
         }
         this.status = RETURN;
         this.book.increaseStock();
-        this.returnDate = LocalDateTime.now();
+        this.returnDate = returnDate;
     }
 
     public boolean isReturned() {

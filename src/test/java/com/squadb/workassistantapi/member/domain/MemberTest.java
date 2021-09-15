@@ -11,7 +11,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class MemberTest {
     public static final Member 관리자 = createMember("admin@miridih.com", "관리자", "1234", ADMIN);
-    public static final Member 일반회원 = createMember("normal@miridih.com", "김일반", "1234", NORMAL);
+    public static final Member 일반회원1 = createMember("normal@miridih.com", "김일반", "1234", NORMAL);
+    public static final Member 일반회원2 = createMember("normal2@miridih.com", "박일반", "1234", NORMAL);
 
     @DisplayName("회원은 비밀번호를 검사할 수 있다.")
     @Test
@@ -30,7 +31,7 @@ public class MemberTest {
         };
 
         // when //then
-        assertThatThrownBy(() -> 일반회원.checkEqualPassword("wrong password", wrongPasswordEncryptor))
+        assertThatThrownBy(() -> 일반회원1.checkEqualPassword("wrong password", wrongPasswordEncryptor))
                 .isInstanceOf(LoginFailedException.class);
     }
 

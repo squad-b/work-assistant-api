@@ -1,7 +1,6 @@
 package com.squadb.workassistantapi.member.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.squadb.workassistantapi.member.domain.Member;
 import com.squadb.workassistantapi.member.domain.MemberType;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -20,9 +19,4 @@ public class LoginMember implements Serializable {
 
     @JsonIgnore
     public boolean isAdmin() { return type.isAdmin(); }
-
-    @JsonIgnore
-    public boolean is(Member member) {
-        return member != null && member.getId() == this.id;
-    }
 }
