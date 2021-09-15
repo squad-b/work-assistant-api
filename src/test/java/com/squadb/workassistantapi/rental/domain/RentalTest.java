@@ -13,6 +13,7 @@ import static com.squadb.workassistantapi.book.domain.IsbnTest.isbn;
 import static com.squadb.workassistantapi.member.domain.MemberTest.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.mock;
 
 class RentalTest {
@@ -36,6 +37,30 @@ class RentalTest {
         returnDate = LocalDateTime.now();
     }
 
+    @DisplayName("책 대여시 책을 다른사람이 예약하고 있다면 책 대여를 할 수 없다.")
+    @Test
+    void test1() {
+
+    }
+
+    @DisplayName("유저가 예약한 책을 대여시 책 예약은 종료된다.")
+    @Test
+    void test2() {
+
+    }
+
+    @DisplayName("책을 대여시 기본 책 대여일은 14일이다.")
+    @Test
+    void test3() {
+
+    }
+
+    @DisplayName("책을 장기대여 하면 책 대여 마감일이 저장되지 않는다.")
+    @Test
+    void test4() {
+
+    }
+
     @DisplayName("책 대여시 책의 재고가 하나 줄어야 한다.")
     @Test
     void createRentalTest() {
@@ -46,27 +71,13 @@ class RentalTest {
     @DisplayName("일반회원은 자신이 빌린 책을 반납할 수 있다.")
     @Test
     void normalMemberBookReturnTest() {
-        // when
-        rental.returnBy(일반회원1, returnDate);
-
-        // then
-        verifySuccessReturnBook();
+        assertDoesNotThrow(() -> rental.returnBy(일반회원1, returnDate));
     }
 
     @DisplayName("관리자는 다른사람이 빌린 책도 반납할 수 있다.")
     @Test
     void adminMemberBookReturnTest() {
-        // when
-        rental.returnBy(관리자, returnDate);
-
-        // then
-        verifySuccessReturnBook();
-    }
-
-    private void verifySuccessReturnBook() {
-        assertThat(rental.isReturned()).isTrue();
-        assertThat(book.getStockQuantity()).isEqualTo(StockQuantity.valueOf(INITIAL_BOOK_STOCK));
-        assertThat(rental.getReturnDate()).isEqualTo(returnDate);
+        assertDoesNotThrow(() -> rental.returnBy(관리자, returnDate));
     }
 
     @DisplayName("일반회원은 다른사람이 빌린 책을 반납할 수 없다.")
