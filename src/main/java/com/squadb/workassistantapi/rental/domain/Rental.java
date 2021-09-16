@@ -7,6 +7,7 @@ import com.squadb.workassistantapi.reservation.domain.ReservationFinisher;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.util.CollectionUtils;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -78,9 +79,14 @@ public class Rental {
     }
 
     private static void validateExistsOnlyMemberReservation(Book book, Member member, List<Reservation> reservations) {
+        if (CollectionUtils.isEmpty(reservations)) {
+            return;
+        }
+
         long reservationCountByMemberAndBook = reservations.stream()
                 .filter(reservation -> reservation.isWaiting(member, book))
                 .count();
+
         if ((long) reservations.size() != reservationCountByMemberAndBook) {
             throw new IllegalStateException("다른 고객이 예약중이라 대여할 수 없습니다.");
         }

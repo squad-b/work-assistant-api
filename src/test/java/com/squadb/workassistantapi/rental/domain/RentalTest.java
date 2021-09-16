@@ -10,6 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 import static com.squadb.workassistantapi.book.domain.IsbnTest.isbn;
@@ -69,14 +70,28 @@ class RentalTest {
 
     @DisplayName("책을 대여시 기본 책 대여일은 14일이다.")
     @Test
-    void test3() {
+    void normalRentalEndDateTest() {
+        // given
+        LocalDateTime rentalDate = now();
 
+        // then
+        Rental rental = Rental.createRental(book, 고객A, Collections.emptyList(), false, rentalDate);
+
+        // then
+        assertThat(rental.getEndDate()).isEqualTo(rentalDate.plusDays(14));
     }
 
     @DisplayName("책을 장기대여 하면 책 대여 마감일이 저장되지 않는다.")
     @Test
-    void test4() {
+    void longTermRentalEndDateTest() {
+        // given
+        LocalDateTime rentalDate = now();
 
+        // then
+        Rental rental = Rental.createRental(book, 고객A, Collections.emptyList(), true, rentalDate);
+
+        // then
+        assertThat(rental.getEndDate()).isNull();
     }
 
     @DisplayName("책 대여시 책의 재고가 하나 줄어야 한다.")
