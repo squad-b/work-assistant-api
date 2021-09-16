@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 
 import static com.squadb.workassistantapi.book.domain.IsbnTest.isbn;
+import static com.squadb.workassistantapi.member.domain.MemberTest.고객A;
 import static com.squadb.workassistantapi.member.domain.MemberTest.관리자;
-import static com.squadb.workassistantapi.member.domain.MemberTest.일반회원1;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -22,7 +22,7 @@ class BookTest {
                 .title("Spring")
                 .stockQuantity(StockQuantity.valueOf(1))
                 .registrationDate(LocalDateTime.now())
-                .registrant(일반회원1)
+                .registrant(고객A)
                 .build());
     }
 

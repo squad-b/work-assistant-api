@@ -2,15 +2,19 @@ package com.squadb.workassistantapi.rental.domain;
 
 import com.squadb.workassistantapi.book.domain.Book;
 import com.squadb.workassistantapi.book.domain.StockQuantity;
+import com.squadb.workassistantapi.reservation.domain.Reservation;
 import com.squadb.workassistantapi.reservation.domain.ReservationFinisher;
+import com.squadb.workassistantapi.reservation.domain.ReservationValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static com.squadb.workassistantapi.book.domain.IsbnTest.isbn;
 import static com.squadb.workassistantapi.member.domain.MemberTest.*;
+import static java.time.LocalDateTime.now;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -31,22 +35,36 @@ class RentalTest {
                 .title("JPA")
                 .isbn(isbn)
                 .stockQuantity(StockQuantity.valueOf(INITIAL_BOOK_STOCK))
-                .registrationDate(LocalDateTime.now())
+                .registrationDate(now())
                 .build();
-        rental = Rental.createRental(book, 일반회원1, false, LocalDateTime.now(), mock(RentalValidator.class), mock(ReservationFinisher.class));
-        returnDate = LocalDateTime.now();
+        rental = Rental.createRental(book, 고객A, false, now(), mock(RentalValidator.class), mock(ReservationFinisher.class));
+        returnDate = now();
     }
 
     @DisplayName("책 대여시 책을 다른사람이 예약하고 있다면 책 대여를 할 수 없다.")
     @Test
-    void test1() {
+    void rentalValidateTest() {
+        // given
+        Reservation 고객A_책_예약 = Reservation.createReservation(고객A, book, mock(ReservationValidator.class));
+        Reservation 고객B_책_예약 = Reservation.createReservation(고객B, book, mock(ReservationValidator.class));
 
+        // when
+        assertThatThrownBy(() -> Rental.createRental(book, 고객B, List.of(고객A_책_예약, 고객B_책_예약), false, now()))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("다른 고객이 예약중이라 대여할 수 없습니다.");
     }
 
     @DisplayName("유저가 예약한 책을 대여시 책 예약은 종료된다.")
     @Test
-    void test2() {
+    void finishMemberReservationTest() {
+        // given
+        Reservation 고객A_책_예약 = Reservation.createReservation(고객A, book, mock(ReservationValidator.class));
 
+        // when
+        Rental.createRental(book, 고객A, List.of(고객A_책_예약), false, now());
+
+        // then
+        assertThat(고객A_책_예약.isFinished()).isTrue();
     }
 
     @DisplayName("책을 대여시 기본 책 대여일은 14일이다.")
@@ -71,7 +89,7 @@ class RentalTest {
     @DisplayName("일반회원은 자신이 빌린 책을 반납할 수 있다.")
     @Test
     void normalMemberBookReturnTest() {
-        assertDoesNotThrow(() -> rental.returnBy(일반회원1, returnDate));
+        assertDoesNotThrow(() -> rental.returnBy(고객A, returnDate));
     }
 
     @DisplayName("관리자는 다른사람이 빌린 책도 반납할 수 있다.")
@@ -84,7 +102,7 @@ class RentalTest {
     @Test
     void normalMemberBookReturnFailTest() {
         // when then
-        assertThatThrownBy(() -> rental.returnBy(일반회원2, returnDate))
+        assertThatThrownBy(() -> rental.returnBy(고객B, returnDate))
                 .isInstanceOf(NoAuthorizationException.class)
                 .hasMessageContaining("관리자 또는 책의 대여자만 책 반납이 가능합니다.");
     }
@@ -93,7 +111,7 @@ class RentalTest {
     @Test
     void returnStatusTest() {
         // when
-        rental.returnBy(일반회원1, returnDate);
+        rental.returnBy(고객A, returnDate);
 
         // then
         assertThat(rental.isReturned()).isTrue();
@@ -103,7 +121,7 @@ class RentalTest {
     @Test
     void increaseBookStockTest() {
         // when
-        rental.returnBy(일반회원1, returnDate);
+        rental.returnBy(고객A, returnDate);
 
         // then
         assertThat(book.getStockQuantity()).isEqualTo(StockQuantity.valueOf(INITIAL_BOOK_STOCK));
@@ -113,7 +131,7 @@ class RentalTest {
     @Test
     void recordReturnDateTest() {
         // when
-        rental.returnBy(일반회원1, returnDate);
+        rental.returnBy(고객A, returnDate);
 
         // then
         assertThat(rental.getReturnDate()).isEqualTo(returnDate);
