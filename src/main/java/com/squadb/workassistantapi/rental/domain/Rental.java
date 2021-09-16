@@ -74,7 +74,7 @@ public class Rental {
         }
 
         long reservationCountByMemberAndBook = reservations.stream()
-                .filter(reservation -> reservation.isWaiting(member, book))
+                .filter(reservation -> reservation.isWaitingBy(member, book))
                 .count();
 
         if ((long) reservations.size() != reservationCountByMemberAndBook) {
@@ -88,7 +88,7 @@ public class Rental {
 
     private static void finishBookReservation(Book book, Member member, List<Reservation> reservations) {
         List<Reservation> reservationsByMemberAndBook = reservations.stream()
-                .filter(reservation -> reservation.isWaiting(member, book))
+                .filter(reservation -> reservation.isWaitingBy(member, book))
                 .collect(Collectors.toList());
 
         for (Reservation reservation : reservationsByMemberAndBook) {

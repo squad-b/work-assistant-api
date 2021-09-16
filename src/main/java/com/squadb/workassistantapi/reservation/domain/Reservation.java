@@ -97,7 +97,7 @@ public class Reservation {
         return false;
     }
 
-    public boolean isWaiting(Member member, Book book) {
+    public boolean isWaitingBy(Member member, Book book) {
         return this.status.isWaiting() && this.book.equals(book) && isReservedBy(member);
     }
 
