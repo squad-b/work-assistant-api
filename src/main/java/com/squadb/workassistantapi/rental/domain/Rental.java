@@ -3,7 +3,6 @@ package com.squadb.workassistantapi.rental.domain;
 import com.squadb.workassistantapi.book.domain.Book;
 import com.squadb.workassistantapi.member.domain.Member;
 import com.squadb.workassistantapi.reservation.domain.Reservation;
-import com.squadb.workassistantapi.reservation.domain.ReservationFinisher;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -60,15 +59,6 @@ public class Rental {
         this.endDate = endDate;
         this.member = member;
         this.book = book;
-    }
-
-    public static Rental createRental(Book book, Member member, boolean isLongTerm, LocalDateTime rentalStartDate,
-                                      RentalValidator rentalValidator, ReservationFinisher reservationFinisher) {
-        rentalValidator.validateNotExistsOtherMemberReservation(book, member);
-        reservationFinisher.finish(book, member);
-        book.decreaseStock();
-        final LocalDateTime endDate = isLongTerm ? null : rentalStartDate.plusDays(NORMAL_RENTAL_DAYS);
-        return new Rental(ON_RENTAL, rentalStartDate, endDate, member, book);
     }
 
     public static Rental createRental(Book book, Member member, List<Reservation> reservations, boolean isLongTerm, LocalDateTime rentalStartDate) {

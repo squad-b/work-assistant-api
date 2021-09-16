@@ -4,14 +4,12 @@ import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.squadb.workassistantapi.reservation.dto.ReservationSearchAllDto;
-import com.squadb.workassistantapi.reservation.dto.ReservationSearchDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
-import java.util.Optional;
 
 import static com.squadb.workassistantapi.book.domain.QBook.book;
 import static com.squadb.workassistantapi.member.domain.QMember.member;
@@ -72,19 +70,6 @@ public class ReservationRepositoryImpl implements ReservationRepositorySupport {
                 .join(reservation.book).fetchJoin()
                 .where(reservation.status.eq(reservationStatus))
                 .fetch();
-    }
-
-    @Override
-    public Optional<Reservation> findReservationWithMemberBySearch(ReservationSearchDto reservationSearchDto) {
-        Long memberId = reservationSearchDto.getMemberId();
-        Long bookId = reservationSearchDto.getBookId();
-        Reservation reservation = query.selectFrom(QReservation.reservation)
-                .join(QReservation.reservation.member, member).fetchJoin()
-                .join(QReservation.reservation.book, book)
-                .where(member.id.eq(memberId), book.id.eq(bookId))
-                .fetchOne();
-        return Optional.ofNullable(reservation);
-
     }
 
     private BooleanExpression memberNameEq(String memberName) {

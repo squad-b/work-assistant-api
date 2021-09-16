@@ -3,7 +3,6 @@ package com.squadb.workassistantapi.rental.domain;
 import com.squadb.workassistantapi.book.domain.Book;
 import com.squadb.workassistantapi.book.domain.StockQuantity;
 import com.squadb.workassistantapi.reservation.domain.Reservation;
-import com.squadb.workassistantapi.reservation.domain.ReservationFinisher;
 import com.squadb.workassistantapi.reservation.domain.ReservationValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -38,7 +37,7 @@ class RentalTest {
                 .stockQuantity(StockQuantity.valueOf(INITIAL_BOOK_STOCK))
                 .registrationDate(now())
                 .build();
-        rental = Rental.createRental(book, 고객A, false, now(), mock(RentalValidator.class), mock(ReservationFinisher.class));
+        rental = Rental.createRental(book, 고객A, Collections.emptyList(), false, now());
         returnDate = now();
     }
 
