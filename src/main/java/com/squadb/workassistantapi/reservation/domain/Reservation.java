@@ -97,6 +97,10 @@ public class Reservation {
         return false;
     }
 
+    public boolean isWaitingBy(Member member, Book book) {
+        return this.status.isWaiting() && this.book.equals(book) && isReservedBy(member);
+    }
+
     private boolean isExpiringOn(LocalDateTime targetDate) {
         LocalDateTime expiryDate = findExpiryDate();
         return expiryDate.isBefore(targetDate);
@@ -136,5 +140,9 @@ public class Reservation {
 
     public BookCategory getBookCategory() {
         return book.getCategory();
+    }
+
+    public boolean isFinished() {
+        return status.isFinished();
     }
 }

@@ -2,13 +2,16 @@ package com.squadb.workassistantapi.rental.domain;
 
 import com.squadb.workassistantapi.book.domain.Book;
 import com.squadb.workassistantapi.member.domain.Member;
-import com.squadb.workassistantapi.reservation.domain.ReservationFinisher;
+import com.squadb.workassistantapi.reservation.domain.Reservation;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.util.CollectionUtils;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.squadb.workassistantapi.rental.domain.RentalStatus.ON_RENTAL;
 import static com.squadb.workassistantapi.rental.domain.RentalStatus.RETURN;
@@ -58,13 +61,39 @@ public class Rental {
         this.book = book;
     }
 
-    public static Rental createRental(Book book, Member member, boolean isLongTerm, LocalDateTime rentalStartDate,
-                                      RentalValidator rentalValidator, ReservationFinisher reservationFinisher) {
-        rentalValidator.validateNotExistsOtherMemberReservation(book, member);
-        reservationFinisher.finish(book, member);
+    public static Rental createRental(Book book, Member member, List<Reservation> reservations, boolean isLongTerm, LocalDateTime rentalStartDate) {
+        validateExistsOnlyMemberReservation(book, member, reservations);
         book.decreaseStock();
-        final LocalDateTime endDate = isLongTerm ? null : rentalStartDate.plusDays(NORMAL_RENTAL_DAYS);
-        return new Rental(ON_RENTAL, rentalStartDate,endDate, member, book);
+        finishBookReservation(book, member, reservations);
+        return new Rental(ON_RENTAL, rentalStartDate, calculateEndDate(isLongTerm, rentalStartDate), member, book);
+    }
+
+    private static void validateExistsOnlyMemberReservation(Book book, Member member, List<Reservation> reservations) {
+        if (CollectionUtils.isEmpty(reservations)) {
+            return;
+        }
+
+        long reservationCountByMemberAndBook = reservations.stream()
+                .filter(reservation -> reservation.isWaitingBy(member, book))
+                .count();
+
+        if ((long) reservations.size() != reservationCountByMemberAndBook) {
+            throw new IllegalStateException("다른 고객이 예약중이라 대여할 수 없습니다.");
+        }
+    }
+
+    private static LocalDateTime calculateEndDate(boolean isLongTerm, LocalDateTime rentalStartDate) {
+        return isLongTerm ? null : rentalStartDate.plusDays(NORMAL_RENTAL_DAYS);
+    }
+
+    private static void finishBookReservation(Book book, Member member, List<Reservation> reservations) {
+        List<Reservation> reservationsByMemberAndBook = reservations.stream()
+                .filter(reservation -> reservation.isWaitingBy(member, book))
+                .collect(Collectors.toList());
+
+        for (Reservation reservation : reservationsByMemberAndBook) {
+            reservation.finishedBy(member);
+        }
     }
 
     public Long getMemberId() {

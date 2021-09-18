@@ -9,7 +9,11 @@ public enum ReservationStatus {
     CANCELED, //요청에 의한 취소
     REVOKED; //만료일이 지나서 수행된 취소
 
-    public boolean isWaiting() {
+    boolean isWaiting() {
         return this == WAITING;
+    }
+
+    boolean isFinished() {
+        return this == FINISHED;
     }
 }
