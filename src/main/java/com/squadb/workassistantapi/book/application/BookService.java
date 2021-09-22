@@ -4,6 +4,7 @@ import com.squadb.workassistantapi.book.domain.Book;
 import com.squadb.workassistantapi.book.domain.BookRepository;
 import com.squadb.workassistantapi.book.domain.Isbn;
 import com.squadb.workassistantapi.book.dto.BookRegisterDto;
+import com.squadb.workassistantapi.book.dto.BookUpdateRequestDto;
 import com.squadb.workassistantapi.member.domain.Member;
 import com.squadb.workassistantapi.member.domain.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,13 @@ public class BookService {
         final Member registrant = memberRepository.findById(registrantId).orElseThrow(() -> new IllegalArgumentException("책 등록자가 없습니다. " + registrantId));
         final Book saveBook = bookRepository.save(bookDto.toEntity(registrant));
         return saveBook.getId();
+    }
+
+    @Transactional
+    public void update(BookUpdateRequestDto bookUpdateRequestDto, Long bookId, Long updaterId) {
+        final Member updater = memberRepository.findById(updaterId).orElseThrow(() -> new IllegalArgumentException("책 수정자가 없습니다. " + updaterId));
+        final Book book = findById(bookId);
+        book.update(bookUpdateRequestDto.getBookCategory(), bookUpdateRequestDto.getStockQuantity(), updater);
     }
 
     private void checkIsbnDuplication(final String isbn) {

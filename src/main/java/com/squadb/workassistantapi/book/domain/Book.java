@@ -88,7 +88,7 @@ public class Book {
                 LocalDateTime publishingDate, String publisher, BookCategory category, Member registrant,
                 LocalDateTime registrationDate) {
         validateNotNull(isbn, title, stockQuantity, registrant, registrationDate);
-        validateAdminRegistrant(registrant);
+        validateAdmin(registrant);
         this.isbn = isbn;
         this.title = title;
         this.description = description;
@@ -102,8 +102,14 @@ public class Book {
         this.registrant = registrant;
     }
 
-    private void validateAdminRegistrant(Member registrant) {
-        if (!registrant.isAdmin()) { throw new NoAuthorizationException("관리자만 책을 등록할 수 있습니다."); }
+    public void update(BookCategory category, int stockQuantity, Member updater) {
+        validateAdmin(updater);
+        this.category = category;
+        this.stockQuantity = StockQuantity.valueOf(stockQuantity);
+    }
+
+    private void validateAdmin(Member member) {
+        if (!member.isAdmin()) { throw new NoAuthorizationException("관리자만 책을 등록, 수정할 수 있습니다."); }
     }
 
     private void validateNotNull(Isbn isbn, String title, StockQuantity stockQuantity,
@@ -119,5 +125,9 @@ public class Book {
 
     public int getStockQuantityValue() {
         return stockQuantity.getValue();
+    }
+
+    public String getCategoryKoreanName() {
+        return category.getKorean();
     }
 }
