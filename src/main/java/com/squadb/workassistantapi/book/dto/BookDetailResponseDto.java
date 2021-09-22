@@ -24,6 +24,7 @@ public class BookDetailResponseDto {
     private String description;
     private String publishingDate;
     private String registrationDate;
+    private String category;
 
     public static BookDetailResponseDto of(Book book) {
         BookDetailResponseDto bookDetailResponseDto = new BookDetailResponseDto();
@@ -35,6 +36,7 @@ public class BookDetailResponseDto {
         bookDetailResponseDto.imageUrl = book.getImageUrl();
         bookDetailResponseDto.stockQuantity = book.getStockQuantityValue();
         bookDetailResponseDto.description = book.getDescription();
+        bookDetailResponseDto.category = book.getCategoryKoreanName();
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         bookDetailResponseDto.publishingDate = book.getPublishingDate().format(formatter);
