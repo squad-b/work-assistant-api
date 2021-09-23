@@ -6,5 +6,5 @@ import lombok.Data;
 @Data
 public class BookUpdateRequestDto {
     private BookCategory bookCategory;
-    private int stockQuantity;
+    private Integer stockQuantity;
 }
