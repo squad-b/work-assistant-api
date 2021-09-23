@@ -102,10 +102,10 @@ public class Book {
         this.registrant = registrant;
     }
 
-    public void update(BookCategory category, int stockQuantity, Member updater) {
+    public void update(BookCategory category, StockQuantity stockQuantity, Member updater) {
         validateAdmin(updater);
         this.category = category;
-        this.stockQuantity = StockQuantity.valueOf(stockQuantity);
+        this.stockQuantity = stockQuantity;
     }
 
     private void validateAdmin(Member member) {

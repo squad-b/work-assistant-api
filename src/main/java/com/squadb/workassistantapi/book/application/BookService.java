@@ -3,6 +3,7 @@ package com.squadb.workassistantapi.book.application;
 import com.squadb.workassistantapi.book.domain.Book;
 import com.squadb.workassistantapi.book.domain.BookRepository;
 import com.squadb.workassistantapi.book.domain.Isbn;
+import com.squadb.workassistantapi.book.domain.StockQuantity;
 import com.squadb.workassistantapi.book.dto.BookRegisterDto;
 import com.squadb.workassistantapi.book.dto.BookUpdateRequestDto;
 import com.squadb.workassistantapi.member.domain.Member;
@@ -39,7 +40,7 @@ public class BookService {
     public void update(BookUpdateRequestDto bookUpdateRequestDto, Long bookId, Long updaterId) {
         final Member updater = memberRepository.findById(updaterId).orElseThrow(() -> new IllegalArgumentException("책 수정자가 없습니다. " + updaterId));
         final Book book = findById(bookId);
-        book.update(bookUpdateRequestDto.getBookCategory(), bookUpdateRequestDto.getStockQuantity(), updater);
+        book.update(bookUpdateRequestDto.getBookCategory(), StockQuantity.valueOf(bookUpdateRequestDto.getStockQuantity()), updater);
     }
 
     private void checkIsbnDuplication(final String isbn) {

@@ -46,14 +46,14 @@ class BookTest {
     @Test
     void updateBookNormalMemberTest() {
         // when, then
-        assertThatThrownBy(() -> book.update(DEVELOP, 2, 고객A));
+        assertThatThrownBy(() -> book.update(DEVELOP, StockQuantity.valueOf(2), 고객A));
     }
 
     @DisplayName("책 수정 기능이 정상적으로 동작한다.")
     @Test
     void updateBookTest() {
         // when
-        book.update(DEVELOP, 2, 관리자);
+        book.update(DEVELOP, StockQuantity.valueOf(2), 관리자);
 
         // then
         assertEquals(book.getCategory(), DEVELOP);
