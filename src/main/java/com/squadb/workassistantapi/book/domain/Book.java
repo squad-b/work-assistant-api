@@ -115,7 +115,7 @@ public class Book {
 
     private void validateNotNull(StockQuantity stockQuantity) {
         if (stockQuantity == null) {
-            throw new IllegalArgumentException("책 수량이 존재하지 않습니다.");
+            throw new IllegalArgumentException("책 수량이 null일 수 없습니다.");
         }
     }
 
