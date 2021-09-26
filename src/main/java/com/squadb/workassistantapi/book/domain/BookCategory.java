@@ -8,7 +8,7 @@ public enum BookCategory {
     DEVELOP("개발"),
     MANAGEMENT("경영"),
     PLAN("기획"),
-    MARKETING("마켓팅"),
+    MARKETING("마케팅"),
     SELF_IMPROVEMENT("자기계발"),
     LICENSE("자격증"),
     DESIGN("디자인"),
