@@ -6,7 +6,6 @@ import com.squadb.workassistantapi.book.domain.Book;
 import com.squadb.workassistantapi.book.dto.*;
 import com.squadb.workassistantapi.book.infrastructure.BookSearchAgent;
 import com.squadb.workassistantapi.member.dto.LoginMember;
-import com.squadb.workassistantapi.member.infrastructure.config.CheckPermission;
 import com.squadb.workassistantapi.member.infrastructure.config.CurrentLoginMember;
 import com.squadb.workassistantapi.rental.domain.NoAuthorizationException;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +41,6 @@ public class BookApiController {
         return new ResponseEntity<>(BookRegisterResponseDto.success(bookId), HttpStatus.OK);
     }
 
-    @CheckPermission
     @PutMapping(value = "/books/{bookId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> updateBook(@RequestBody BookUpdateRequestDto bookUpdateRequestDto,
                                            @PathVariable Long bookId, @CurrentLoginMember LoginMember loginMember) {
