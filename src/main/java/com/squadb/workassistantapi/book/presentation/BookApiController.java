@@ -41,6 +41,13 @@ public class BookApiController {
         return new ResponseEntity<>(BookRegisterResponseDto.success(bookId), HttpStatus.OK);
     }
 
+    @PutMapping(value = "/books/{bookId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> updateBook(@RequestBody BookUpdateRequestDto bookUpdateRequestDto,
+                                           @PathVariable Long bookId, @CurrentLoginMember LoginMember loginMember) {
+        bookService.update(bookUpdateRequestDto, bookId, loginMember.getId());
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @GetMapping(value = "/books", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<BookListResponseDto>> findAll() {
         List<Book> bookList = bookService.findAll(Sort.by(Sort.Direction.DESC, "id"));
