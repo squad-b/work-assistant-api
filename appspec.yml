@@ -1,8 +1,8 @@
 version: 0.0
 os: linux
 files:
-  - source:  /
-    destination: /home/ubuntu/app/zip/
+  - source: /
+    destination: /home/ubuntu/app/deploy/
     overwrite: yes
 
 permissions:
@@ -12,9 +12,6 @@ permissions:
     group: ubuntu
 
 hooks:
-  BeforeInstall:
-    - location: deploy-before.sh
-      runas: ubuntu
   ApplicationStart:
     - location: deploy.sh
       runas: ubuntu
