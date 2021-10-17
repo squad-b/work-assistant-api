@@ -8,18 +8,6 @@ SESSION_PROPERTIES=$REPOSITORY_DIR/application-production-session-storage.yaml
 THIRD_PARTY_PROPERTIES=$REPOSITORY_DIR/application-thid-party.yaml
 DB_PROPERTIES=$REPOSITORY_DIR/application-production-db.yaml
 
-echo "change directory"
-
-cd $REPOSITORY_DIR/$APP_NAME
-
-echo "git pull"
-
-git pull
-
-echo "app build"
-
-./gradlew clean build
-
 echo "copy executable jar file"
 
 cp $REPOSITORY_DIR/$APP_NAME/build/libs/*.jar $REPOSITORY_DIR
