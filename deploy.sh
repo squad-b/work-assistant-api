@@ -5,7 +5,7 @@ APP_NAME=work-assistant-api
 PID_PATH=$REPOSITORY_DIR/PID
 
 SESSION_PROPERTIES=$REPOSITORY_DIR/application-production-session-storage.yaml
-THIRD_PARTY_PROPERTIES=$REPOSITORY_DIR/application-thid-party.yaml
+THIRD_PARTY_PROPERTIES=$REPOSITORY_DIR/application-third-party.yaml
 DB_PROPERTIES=$REPOSITORY_DIR/application-production-db.yaml
 
 echo "copy executable jar file"
