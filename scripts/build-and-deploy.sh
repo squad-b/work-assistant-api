@@ -42,6 +42,6 @@ JAR_NAME=$(ls -tr $REPOSITORY_DIR/ | grep .jar | tail -n 1)
 echo "jar name : $REPOSITORY_DIR/$JAR_NAME"
 
 nohup java -jar \
-  -Dspring.config.location=classpath:/application.yaml,$SESSION_PROPERTIES,$THIRD_PARTY_PROPERTIES,$DB_PROPERTIES \
+  -Dspring.config.location=classpath:/application-production.yaml,$SESSION_PROPERTIES,$THIRD_PARTY_PROPERTIES,$DB_PROPERTIES \
   -Dspring.profiles.active=production \
    $REPOSITORY_DIR/$JAR_NAME 2>&1 & echo $! > $PID_PATH
